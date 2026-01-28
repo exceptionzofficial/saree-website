@@ -1,0 +1,318 @@
+.about {
+    padding-top: var(--header-height);
+}
+
+/* Hero Section */
+.about__hero {
+    padding: var(--space-20) var(--space-4);
+    background: var(--gradient-primary);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.about__hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=1920');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+}
+
+.about__hero-content {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.about__hero-tag {
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    background: var(--secondary);
+    color: var(--dark);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-6);
+}
+
+.about__hero-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    color: white;
+    line-height: 1.2;
+    margin-bottom: var(--space-6);
+}
+
+.about__hero-accent {
+    color: var(--secondary);
+}
+
+.about__hero-text {
+    font-size: var(--text-lg);
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.8;
+}
+
+/* Story Section */
+.about__story-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+}
+
+.about__story-text h2 {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    color: var(--text-primary);
+    margin-bottom: var(--space-6);
+}
+
+.about__story-text p {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--space-4);
+}
+
+.about__story-image {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.about__story-image img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
+
+/* Section Header */
+.about__section-header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+}
+
+.about__section-tag {
+    display: inline-block;
+    font-size: var(--text-sm);
+    color: var(--secondary-dark);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: var(--space-2);
+}
+
+.about__section-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    color: var(--text-primary);
+}
+
+/* Values Section */
+.about__values {
+    background: var(--background);
+}
+
+.about__values-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+}
+
+.about__value-card {
+    text-align: center;
+    padding: var(--space-8);
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+.about__value-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.about__value-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--radius-xl);
+}
+
+.about__value-card h3 {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+}
+
+.about__value-card p {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Stats Section */
+.about__stats {
+    padding: var(--space-16) var(--space-4);
+    background: var(--dark);
+}
+
+.about__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+    text-align: center;
+}
+
+.about__stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.about__stat-number {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    color: var(--secondary);
+}
+
+.about__stat-label {
+    font-size: var(--text-sm);
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Mission Section */
+.about__mission {
+    background: var(--surface);
+}
+
+.about__mission-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about__mission-content h2 {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    color: var(--text-primary);
+    margin-bottom: var(--space-6);
+}
+
+.about__mission-text {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    padding: var(--space-8);
+    background: var(--background);
+    border-radius: var(--radius-xl);
+    border-left: 4px solid var(--secondary);
+}
+
+/* CTA Section */
+.about__cta {
+    padding: var(--space-20) var(--space-4);
+    background: var(--gradient-primary);
+    text-align: center;
+}
+
+.about__cta h2 {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    color: white;
+    margin-bottom: var(--space-3);
+}
+
+.about__cta p {
+    font-size: var(--text-lg);
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--space-8);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .about__values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about__stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-8);
+    }
+}
+
+@media (max-width: 768px) {
+    .about__hero {
+        padding: var(--space-12) var(--space-4);
+    }
+
+    .about__hero-title {
+        font-size: var(--text-3xl);
+    }
+
+    .about__story-content {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+    }
+
+    .about__story-image {
+        order: -1;
+    }
+
+    .about__story-image img {
+        height: 300px;
+    }
+
+    .about__values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about__value-card {
+        padding: var(--space-6);
+    }
+
+    .about__stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about__stat-number {
+        font-size: var(--text-3xl);
+    }
+
+    .about__mission-text {
+        font-size: var(--text-lg);
+        padding: var(--space-6);
+    }
+
+    .about__cta h2 {
+        font-size: var(--text-2xl);
+    }
+}
+
+@media (max-width: 480px) {
+    .about__hero-title {
+        font-size: var(--text-2xl);
+    }
+
+    .about__hero-text {
+        font-size: var(--text-base);
+    }
+}

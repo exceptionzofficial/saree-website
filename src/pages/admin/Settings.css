@@ -1,0 +1,172 @@
+.admin-settings {
+    padding: var(--space-6);
+    max-width: 900px;
+}
+
+/* Header */
+.admin-settings__header {
+    margin-bottom: var(--space-6);
+}
+
+.admin-settings__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    color: var(--text-primary);
+    margin-bottom: var(--space-1);
+}
+
+.admin-settings__subtitle {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+}
+
+/* Form */
+.admin-settings__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+/* Section */
+.admin-settings__section {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-settings__section-header {
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-settings__section-header h2 {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    color: var(--text-primary);
+    margin-bottom: var(--space-1);
+}
+
+.admin-settings__section-header p {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+/* Grid */
+.admin-settings__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+}
+
+/* Field */
+.admin-settings__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.admin-settings__field--full {
+    grid-column: span 2;
+}
+
+.admin-settings__field label {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.admin-settings__field input,
+.admin-settings__field textarea {
+    padding: var(--space-3) var(--space-4);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+    transition: all var(--transition-fast);
+}
+
+.admin-settings__field input:focus,
+.admin-settings__field textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(139, 34, 82, 0.1);
+}
+
+.admin-settings__hint {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+
+/* QR Upload */
+.admin-settings__qr-upload {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.admin-settings__qr-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    background: var(--background);
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+}
+
+.admin-settings__upload-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--background);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.admin-settings__upload-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Actions */
+.admin-settings__actions {
+    padding-top: var(--space-4);
+}
+
+.btn--saved {
+    background: #16A34A !important;
+}
+
+.btn--saved:hover {
+    background: #15803D !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-settings {
+        padding: var(--space-4);
+    }
+
+    .admin-settings__section {
+        padding: var(--space-4);
+    }
+
+    .admin-settings__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-settings__field--full {
+        grid-column: span 1;
+    }
+
+    .admin-settings__qr-upload {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
