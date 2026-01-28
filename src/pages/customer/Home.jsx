@@ -59,6 +59,7 @@ const Home = () => {
             {/* Hero Section */}
             <section className="home__hero">
                 <div className="home__hero-bg"></div>
+                <div className="home__hero-particles"></div>
                 <div className="home__hero-content">
                     <span className="home__hero-tag">New Collection 2026</span>
                     <h1 className="home__hero-title">

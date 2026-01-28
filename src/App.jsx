@@ -6,6 +6,7 @@ import { OrderProvider } from './context/OrderContext';
 // Customer Components
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
+import AnnouncementBar from './components/common/AnnouncementBar';
 
 // Customer Pages
 import Home from './pages/customer/Home';
@@ -31,6 +32,7 @@ import './App.css';
 // Customer Layout Component
 const CustomerLayout = ({ children }) => (
   <>
+    <AnnouncementBar />
     <Header />
     {children}
     <Footer />

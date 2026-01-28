@@ -30,6 +30,8 @@ const ProductDetail = () => {
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const [activeAccordion, setActiveAccordion] = useState('details');
+    const [isZooming, setIsZooming] = useState(false);
+    const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
     if (!product) {
         return (
@@ -56,6 +58,22 @@ const ProductDetail = () => {
 
     const toggleAccordion = (section) => {
         setActiveAccordion(activeAccordion === section ? '' : section);
+    };
+
+    // Handle mouse move for zoom
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        setZoomPosition({ x, y });
+    };
+
+    const handleMouseEnter = () => {
+        setIsZooming(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsZooming(false);
     };
 
     // Get related products (same category, excluding current)
@@ -129,17 +147,46 @@ const ProductDetail = () => {
                 <div className="product-detail__main">
                     {/* Images Section */}
                     <div className="product-detail__images">
-                        <div className="product-detail__main-image">
+                        <div
+                            className="product-detail__main-image"
+                            onMouseMove={handleMouseMove}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                        >
                             <img
                                 src={product.images[selectedImage]}
                                 alt={product.name}
+                                className="product-detail__image"
                             />
                             {product.discount > 0 && (
                                 <span className="product-detail__discount-badge">
                                     -{product.discount}%
                                 </span>
                             )}
+                            {/* Zoom Lens */}
+                            {isZooming && (
+                                <div
+                                    className="product-detail__zoom-lens"
+                                    style={{
+                                        left: `${zoomPosition.x}%`,
+                                        top: `${zoomPosition.y}%`
+                                    }}
+                                />
+                            )}
                         </div>
+
+                        {/* Zoomed Preview */}
+                        {isZooming && (
+                            <div className="product-detail__zoom-result">
+                                <div
+                                    className="product-detail__zoom-image"
+                                    style={{
+                                        backgroundImage: `url(${product.images[selectedImage]})`,
+                                        backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`
+                                    }}
+                                />
+                            </div>
+                        )}
 
                         {product.images.length > 1 && (
                             <div className="product-detail__thumbnails">

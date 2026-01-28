@@ -15,6 +15,7 @@ const defaultSettings = {
     shippingCharge: 99,
     freeShippingAbove: 2000,
     gstNumber: 'GSTIN1234567890',
+    announcements: [],
 };
 
 export const OrderProvider = ({ children }) => {

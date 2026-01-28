@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Save, Upload, Check } from 'lucide-react';
+import { Save, Upload, Check, Plus, X, Megaphone } from 'lucide-react';
 import { useOrders } from '../../context/OrderContext';
 import './Settings.css';
 
@@ -12,9 +12,11 @@ const AdminSettings = () => {
         storeEmail: settings.storeEmail || '',
         storePhone: settings.storePhone || '',
         storeAddress: settings.storeAddress || '',
-        freeShippingThreshold: settings.freeShippingThreshold || 2000,
-        shippingCharge: settings.shippingCharge || 99
+        freeShippingThreshold: settings.freeShippingThreshold || settings.freeShippingAbove || 2000,
+        shippingCharge: settings.shippingCharge || 99,
+        announcements: settings.announcements || []
     });
+    const [newAnnouncement, setNewAnnouncement] = useState('');
     const [saved, setSaved] = useState(false);
 
     const handleChange = (e) => {
@@ -36,6 +38,23 @@ const AdminSettings = () => {
         }
     };
 
+    const addAnnouncement = () => {
+        if (newAnnouncement.trim()) {
+            setFormData(prev => ({
+                ...prev,
+                announcements: [...prev.announcements, newAnnouncement.trim()]
+            }));
+            setNewAnnouncement('');
+        }
+    };
+
+    const removeAnnouncement = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            announcements: prev.announcements.filter((_, i) => i !== index)
+        }));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         updateSettings(formData);
@@ -53,6 +72,55 @@ const AdminSettings = () => {
             </div>
 
             <form className="admin-settings__form" onSubmit={handleSubmit}>
+                {/* Announcement Settings */}
+                <div className="admin-settings__section">
+                    <div className="admin-settings__section-header">
+                        <h2><Megaphone size={20} style={{ marginRight: '8px', display: 'inline' }} />Announcement Bar</h2>
+                        <p>Add scrolling announcements to display at the top of your store</p>
+                    </div>
+
+                    <div className="admin-settings__announcements">
+                        <div className="admin-settings__announcement-add">
+                            <input
+                                type="text"
+                                value={newAnnouncement}
+                                onChange={(e) => setNewAnnouncement(e.target.value)}
+                                placeholder="🚚 Free delivery on orders above ₹2000!"
+                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAnnouncement())}
+                            />
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={addAnnouncement}
+                            >
+                                <Plus size={18} />
+                                Add
+                            </button>
+                        </div>
+
+                        {formData.announcements.length > 0 && (
+                            <div className="admin-settings__announcement-list">
+                                {formData.announcements.map((text, index) => (
+                                    <div key={index} className="admin-settings__announcement-item">
+                                        <span>{text}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeAnnouncement(index)}
+                                            className="admin-settings__announcement-remove"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <span className="admin-settings__hint">
+                            Add emoji-enhanced announcements for promotions, offers, or news. They will scroll automatically!
+                        </span>
+                    </div>
+                </div>
+
                 {/* Payment Settings */}
                 <div className="admin-settings__section">
                     <div className="admin-settings__section-header">
