@@ -4,7 +4,7 @@
     /* Account for announcement bar */
     left: 0;
     right: 0;
-    z-index: var(--z-sticky);
+    z-index: var(--z-fixed);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -234,7 +234,7 @@
     bottom: 0;
     width: 280px;
     background: white;
-    z-index: calc(var(--z-modal) + 10);
+    z-index: 9999;
     transform: translateX(-100%);
     transition: transform var(--transition-normal) ease-out;
     overflow-y: auto;
@@ -293,13 +293,19 @@
 /* Overlay */
 .header__overlay {
     position: fixed;
-    top: 0;
+    top: calc(var(--header-height) + 36px);
     left: 0;
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
-    z-index: calc(var(--z-modal) + 5);
+    z-index: 9998;
     animation: fadeIn 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .header__overlay {
+        top: calc(var(--header-height) + 32px);
+    }
 }
 
 @media (min-width: 769px) {
