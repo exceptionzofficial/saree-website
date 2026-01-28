@@ -54,73 +54,75 @@ const Header = () => {
     ];
 
     return (
-        <header className={`header ${isScrolled ? 'header--scrolled' : ''}`}>
-            <div className="header__container">
-                {/* Mobile Menu Toggle */}
-                <button
-                    className="header__menu-toggle"
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    aria-label="Toggle menu"
-                >
-                    {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-
-                {/* Logo */}
-                <Link to="/" className="header__logo">
-                    <span className="header__logo-text">Saree</span>
-                    <span className="header__logo-accent">Elegance</span>
-                </Link>
-
-                {/* Desktop Navigation */}
-                <nav className="header__nav">
-                    {navLinks.map(link => (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            className={`header__nav-link ${location.pathname === link.path ? 'header__nav-link--active' : ''}`}
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
-                </nav>
-
-                {/* Actions */}
-                <div className="header__actions">
+        <>
+            <header className={`header ${isScrolled ? 'header--scrolled' : ''}`}>
+                <div className="header__container">
+                    {/* Mobile Menu Toggle */}
                     <button
-                        className="header__action-btn"
-                        onClick={() => setIsSearchOpen(!isSearchOpen)}
-                        aria-label="Search"
+                        className="header__menu-toggle"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label="Toggle menu"
                     >
-                        <Search size={22} />
+                        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
 
-                    <Link to="/cart" className="header__action-btn header__cart-btn">
-                        <ShoppingBag size={22} />
-                        {cartCount > 0 && (
-                            <span className="header__cart-count">{cartCount}</span>
-                        )}
+                    {/* Logo */}
+                    <Link to="/" className="header__logo">
+                        <span className="header__logo-text">Saree</span>
+                        <span className="header__logo-accent">Elegance</span>
                     </Link>
+
+                    {/* Desktop Navigation */}
+                    <nav className="header__nav">
+                        {navLinks.map(link => (
+                            <Link
+                                key={link.path}
+                                to={link.path}
+                                className={`header__nav-link ${location.pathname === link.path ? 'header__nav-link--active' : ''}`}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </nav>
+
+                    {/* Actions */}
+                    <div className="header__actions">
+                        <button
+                            className="header__action-btn"
+                            onClick={() => setIsSearchOpen(!isSearchOpen)}
+                            aria-label="Search"
+                        >
+                            <Search size={22} />
+                        </button>
+
+                        <Link to="/cart" className="header__action-btn header__cart-btn">
+                            <ShoppingBag size={22} />
+                            {cartCount > 0 && (
+                                <span className="header__cart-count">{cartCount}</span>
+                            )}
+                        </Link>
+                    </div>
                 </div>
-            </div>
 
-            {/* Search Bar */}
-            <div className={`header__search ${isSearchOpen ? 'header__search--open' : ''}`}>
-                <form onSubmit={handleSearch} className="header__search-form">
-                    <Search size={20} className="header__search-icon" />
-                    <input
-                        type="text"
-                        placeholder="Search for sarees..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="header__search-input"
-                    />
-                    <button type="submit" className="header__search-submit">
-                        Search
-                    </button>
-                </form>
-            </div>
+                {/* Search Bar */}
+                <div className={`header__search ${isSearchOpen ? 'header__search--open' : ''}`}>
+                    <form onSubmit={handleSearch} className="header__search-form">
+                        <Search size={20} className="header__search-icon" />
+                        <input
+                            type="text"
+                            placeholder="Search for sarees..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="header__search-input"
+                        />
+                        <button type="submit" className="header__search-submit">
+                            Search
+                        </button>
+                    </form>
+                </div>
+            </header>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu - Outside header to avoid stacking context issues from backdrop-filter */}
             <div className={`header__mobile-menu ${isMenuOpen ? 'header__mobile-menu--open' : ''}`}>
                 <nav className="header__mobile-nav">
                     {navLinks.map(link => (
@@ -142,14 +144,14 @@ const Header = () => {
                 </nav>
             </div>
 
-            {/* Overlay */}
+            {/* Overlay - Outside header to avoid stacking context issues */}
             {isMenuOpen && (
                 <div
                     className="header__overlay"
                     onClick={() => setIsMenuOpen(false)}
                 ></div>
             )}
-        </header>
+        </>
     );
 };
 
