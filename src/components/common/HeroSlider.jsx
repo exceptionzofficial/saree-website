@@ -146,8 +146,6 @@ const HeroSlider = () => {
                 <ChevronRight size={24} />
             </button>
 
-            {/* Decorative bottom curve */}
-            <div className="hero-slider__decoration"></div>
         </section>
     );
 };

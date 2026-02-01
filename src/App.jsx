@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { ProductProvider } from './context/ProductContext';
 import { OrderProvider } from './context/OrderContext';
@@ -7,6 +7,7 @@ import { OrderProvider } from './context/OrderContext';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import AnnouncementBar from './components/common/AnnouncementBar';
+import CategoryNav from './components/common/CategoryNav';
 
 // Customer Pages
 import Home from './pages/customer/Home';
@@ -18,6 +19,8 @@ import OrderConfirmation from './pages/customer/OrderConfirmation';
 import TrackOrder from './pages/customer/TrackOrder';
 import About from './pages/customer/About';
 import Contact from './pages/customer/Contact';
+import BecomeMember from './pages/customer/BecomeMember';
+import Login from './pages/auth/Login';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -30,14 +33,22 @@ import AdminSettings from './pages/admin/Settings';
 import './App.css';
 
 // Customer Layout Component
-const CustomerLayout = ({ children }) => (
-  <>
-    <AnnouncementBar />
-    <Header />
-    {children}
-    <Footer />
-  </>
-);
+const CustomerLayout = ({ children }) => {
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+
+  return (
+    <>
+      <AnnouncementBar />
+      <Header />
+      <CategoryNav />
+      <div className={isHome ? '' : 'page-container'}>
+        {children}
+      </div>
+      <Footer />
+    </>
+  );
+};
 
 function App() {
   return (
@@ -90,6 +101,16 @@ function App() {
               <Route path="/contact" element={
                 <CustomerLayout>
                   <Contact />
+                </CustomerLayout>
+              } />
+              <Route path="/membership" element={
+                <CustomerLayout>
+                  <BecomeMember />
+                </CustomerLayout>
+              } />
+              <Route path="/login" element={
+                <CustomerLayout>
+                  <Login />
                 </CustomerLayout>
               } />
 

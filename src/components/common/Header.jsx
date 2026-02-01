@@ -89,10 +89,9 @@ const Header = () => {
                         ))}
                     </nav>
 
-                    {/* Actions */}
                     <div className="header__actions">
-                        <Link to="/seller/register" className="header__seller-btn btn btn-outline btn-sm">
-                            Become a Seller
+                        <Link to="/membership" className="header__seller-btn btn btn-outline btn-sm">
+                            Become a Member
                         </Link>
 
                         <Link to="/login" className="header__login-link">
@@ -152,8 +151,8 @@ const Header = () => {
                     <Link to="/login" className="header__mobile-link">
                         Login / Register
                     </Link>
-                    <Link to="/seller/register" className="header__mobile-link">
-                        Become a Seller
+                    <Link to="/membership" className="header__mobile-link">
+                        Become a Member
                     </Link>
                     <div className="header__mobile-divider"></div>
                     <Link to="/track-order" className="header__mobile-link">

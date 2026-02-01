@@ -1,0 +1,230 @@
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--background-alt) 0%, var(--surface) 100%);
+    padding: var(--space-8) var(--space-4);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-page::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: var(--primary);
+    filter: blur(150px);
+    opacity: 0.1;
+    top: -150px;
+    right: -150px;
+    border-radius: 50%;
+}
+
+.auth-page::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: var(--secondary);
+    filter: blur(150px);
+    opacity: 0.1;
+    bottom: -200px;
+    left: -200px;
+    border-radius: 50%;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: start;
+    z-index: 10;
+}
+
+.auth-card {
+    background: var(--surface);
+    padding: var(--space-10);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-light);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+.auth-title {
+    font-size: var(--text-3xl);
+    margin-bottom: var(--space-2);
+    color: var(--text-primary);
+}
+
+.auth-subtitle {
+    color: var(--text-muted);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.form-group label {
+    font-weight: 500;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding-left: calc(var(--space-4) + 30px);
+    height: 52px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    transition: all var(--transition-normal);
+}
+
+.input-with-icon input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(0, 132, 204, 0.1);
+}
+
+.form-help {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+
+.auth-footer {
+    margin-top: var(--space-8);
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.auth-footer a {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* Referral Benefits Section */
+.referral-benefits {
+    padding: var(--space-4);
+}
+
+.benefits-title {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-8);
+    color: var(--text-primary);
+    position: relative;
+    padding-bottom: var(--space-3);
+}
+
+.benefits-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--gradient-secondary);
+    border-radius: var(--radius-full);
+}
+
+.benefits-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.benefit-card {
+    display: flex;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-xl);
+    transition: transform var(--transition-normal);
+}
+
+.benefit-card:hover {
+    transform: translateX(10px);
+    background: var(--surface);
+}
+
+.benefit-card.highlight {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(212, 175, 55, 0.1) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.benefit-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+}
+
+.benefit-content h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-1);
+    color: var(--text-primary);
+}
+
+.benefit-content p {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.benefits-note {
+    margin-top: var(--space-8);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    font-style: italic;
+    background: rgba(0, 132, 204, 0.05);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+}
+
+@media (max-width: 992px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+        max-width: 550px;
+    }
+
+    .referral-benefits {
+        order: -1;
+    }
+}

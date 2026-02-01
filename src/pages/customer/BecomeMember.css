@@ -1,0 +1,320 @@
+.seller-page {
+    background-color: var(--background);
+}
+
+.seller-section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto var(--space-12);
+}
+
+.seller-section-header h2 {
+    font-size: var(--text-3xl);
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+}
+
+.seller-section-header p {
+    color: var(--text-secondary);
+}
+
+/* Hero Section */
+.seller-hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+    padding: var(--space-20) 0;
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.seller-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1582236521508-3064f7ea7bc4?auto=format&fit=crop&q=80&w=1920') center/cover;
+    opacity: 0.15;
+    z-index: 1;
+}
+
+.seller-hero__content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.seller-hero__tag {
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    background: var(--secondary);
+    color: white;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-6);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.seller-hero__title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: var(--space-6);
+    color: white;
+}
+
+.seller-hero__title span {
+    color: var(--secondary);
+}
+
+.seller-hero__text {
+    font-size: var(--text-lg);
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--space-10);
+    line-height: 1.8;
+}
+
+/* Benefits Section */
+.seller-benefits {
+    padding: var(--space-20) 0;
+    background: white;
+}
+
+.seller-benefits__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-8);
+}
+
+.seller-benefit-card {
+    padding: var(--space-8);
+    background: var(--background);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    transition: all var(--transition-normal);
+    border: 1px solid var(--border-light);
+}
+
+.seller-benefit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+    background: white;
+}
+
+.benefit-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-6);
+}
+
+.seller-benefit-card h3 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-3);
+}
+
+.seller-benefit-card p {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+/* Plans Section */
+.seller-plans {
+    padding: var(--space-20) 0;
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-8);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.plan-card {
+    background: white;
+    padding: var(--space-10);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid transparent;
+}
+
+.plan-card--recommended {
+    border-color: var(--secondary);
+    transform: scale(1.05);
+    z-index: 2;
+}
+
+.plan-badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--secondary);
+    color: white;
+    padding: var(--space-2) var(--space-6);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.plan-name {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-2);
+}
+
+.plan-price {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: var(--space-6);
+}
+
+.plan-features {
+    list-style: none;
+    margin-bottom: var(--space-8);
+    flex-grow: 1;
+}
+
+.plan-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+}
+
+.plan-features li svg {
+    color: #10B981;
+    flex-shrink: 0;
+}
+
+.plan-features li.feature-locked {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+/* Register Section */
+.seller-register {
+    padding: var(--space-20) 0;
+    background: white;
+}
+
+.register-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: var(--space-16);
+    background: var(--dark);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-12);
+    color: white;
+    overflow: hidden;
+    position: relative;
+}
+
+.register-info h2 {
+    color: white;
+    font-size: var(--text-3xl);
+    margin-bottom: var(--space-6);
+}
+
+.register-info p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--space-10);
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.info-item {
+    display: flex;
+    gap: var(--space-4);
+}
+
+.info-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary);
+    flex-shrink: 0;
+}
+
+.info-item h4 {
+    color: white;
+    margin-bottom: 2px;
+}
+
+.info-item p {
+    margin: 0;
+    font-size: var(--text-sm);
+}
+
+.register-form-card {
+    background: white;
+    padding: var(--space-8);
+    border-radius: var(--radius-xl);
+    color: var(--text-primary);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+.form-group {
+    margin-bottom: var(--space-4);
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-1);
+    color: var(--text-secondary);
+}
+
+.register-form-card input,
+.register-form-card textarea {
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .register-container {
+        grid-template-columns: 1fr;
+        gap: var(--space-10);
+        padding: var(--space-8);
+    }
+
+    .plan-card--recommended {
+        transform: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

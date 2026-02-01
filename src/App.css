@@ -38,9 +38,13 @@ html {
   padding: var(--space-16) var(--space-4);
 }
 
+.page-container {
+  padding-top: calc(36px + var(--header-height) + 50px);
+}
+
 @media (max-width: 768px) {
-  .section {
-    padding: var(--space-10) var(--space-4);
+  .page-container {
+    padding-top: calc(32px + var(--header-height));
   }
 }
 

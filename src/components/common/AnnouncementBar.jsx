@@ -9,9 +9,10 @@ const AnnouncementBar = () => {
 
     // Default announcements if none set by admin
     const defaultAnnouncements = [
+        '🏆 Refer 7 friends & get a Pure Gold Coin! ✨',
+        '💵 Refer 5 friends & get 100% Money Back on your saree!',
         '🚚 Free Delivery on orders above ₹2000!',
         '✨ New Arrivals - Kanchipuram Silk Collection',
-        '🎁 Extra 10% off on your first order',
         '💫 Authentic Handwoven Sarees from Master Weavers'
     ];
 
