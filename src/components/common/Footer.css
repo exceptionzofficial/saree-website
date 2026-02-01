@@ -87,24 +87,39 @@
 /* Brand Section */
 .footer__logo {
     display: flex;
-    align-items: baseline;
-    gap: var(--space-1);
+    align-items: center;
+    gap: var(--space-3);
     text-decoration: none;
     margin-bottom: var(--space-4);
 }
 
+.footer__logo-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.footer__logo-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1;
+}
+
 .footer__logo-text {
     font-family: var(--font-heading);
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     font-weight: 700;
     color: white;
+    letter-spacing: 0.5px;
 }
 
 .footer__logo-accent {
     font-family: var(--font-heading);
-    font-size: var(--text-lg);
+    font-size: var(--text-sm);
     font-weight: 500;
     color: var(--secondary);
+    letter-spacing: 2px;
 }
 
 .footer__tagline {

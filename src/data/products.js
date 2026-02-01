@@ -1,11 +1,11 @@
 // Sample Saree Products Data
 export const categories = [
-  { id: 'silk', name: 'Silk Sarees', icon: '✨', description: 'Luxurious pure silk sarees' },
-  { id: 'cotton', name: 'Cotton Sarees', icon: '🌿', description: 'Comfortable everyday wear' },
-  { id: 'banarasi', name: 'Banarasi Sarees', icon: '👑', description: 'Traditional handwoven elegance' },
-  { id: 'chiffon', name: 'Chiffon Sarees', icon: '🌸', description: 'Light and flowy designs' },
-  { id: 'georgette', name: 'Georgette Sarees', icon: '💫', description: 'Modern party wear' },
-  { id: 'kanjivaram', name: 'Kanjivaram Sarees', icon: '🏆', description: 'South Indian heritage' },
+  { id: 'silk', name: 'Silk Sarees', image: 'https://nilormy.com/cdn/shop/files/RD_08167.png?v=1704447564', description: 'Luxurious pure silk sarees' },
+  { id: 'cotton', name: 'Cotton Sarees', image: 'https://mysilklove.com/cdn/shop/files/MSLe1_2429ff66-94e6-4751-a09b-90ee5c6d49db.jpg?v=1684410227&width=2048', description: 'Comfortable everyday wear' },
+  { id: 'banarasi', name: 'Banarasi Sarees', image: 'https://jdinstituteoffashiontechnology.b-cdn.net/wp-content/uploads/2024/02/Banarasi-Sarees-A-Timeless-Treasure-of-Indian-Textile-3.jpg', description: 'Traditional handwoven elegance' },
+  { id: 'chiffon', name: 'Chiffon Sarees', image: 'https://medias.utsavfashion.com/media/catalog/product/cache/1/image/500x/040ec09b1e35df139433887a97daa66f/e/m/embroidered-chiffon-saree-in-blue-v1-spf12552.jpg', description: 'Light and flowy designs' },
+  { id: 'georgette', name: 'Georgette Sarees', image: 'https://static.wixstatic.com/media/4594f8_ff7347cb7afc43cf909da1d7669e0f1c~mv2.jpg/v1/fill/w_480,h_644,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/4594f8_ff7347cb7afc43cf909da1d7669e0f1c~mv2.jpg', description: 'Modern party wear' },
+  { id: 'kanjivaram', name: 'Kanjivaram Sarees', image: 'https://assets2.andaazfashion.com/media/catalog/product/k/a/kanjivaram-silk-saree-in-navy-blue-color-sarv08832.jpg', description: 'South Indian heritage' },
 ];
 
 export const colors = [
@@ -427,7 +427,7 @@ export const getProductById = (id) => products.find(p => p.id === parseInt(id));
 
 export const getProductBySlug = (slug) => products.find(p => p.slug === slug);
 
-export const getProductsByCategory = (category) => 
+export const getProductsByCategory = (category) =>
   products.filter(p => p.category === category);
 
 export const getFeaturedProducts = () => products.filter(p => p.featured);
@@ -436,7 +436,7 @@ export const getBestsellers = () => products.filter(p => p.bestseller);
 
 export const searchProducts = (query) => {
   const lowercaseQuery = query.toLowerCase();
-  return products.filter(p => 
+  return products.filter(p =>
     p.name.toLowerCase().includes(lowercaseQuery) ||
     p.description.toLowerCase().includes(lowercaseQuery) ||
     p.category.toLowerCase().includes(lowercaseQuery) ||

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Truck, Shield, Award, RefreshCw } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
 import ProductCard from '../../components/common/ProductCard';
+import HeroSlider from '../../components/common/HeroSlider';
 import './Home.css';
 
 const Home = () => {
@@ -49,38 +50,15 @@ const Home = () => {
         {
             name: 'Anita Patel',
             location: 'Bangalore',
-            text: 'I\'ve been ordering from Saree Elegance for 2 years now. Never disappointed! Highly recommend.',
+            text: 'I\'ve been ordering from GURUBAGAVAN SAREES for 2 years now. Never disappointed! Highly recommend.',
             rating: 5
         }
     ];
 
     return (
         <main className="home">
-            {/* Hero Section */}
-            <section className="home__hero">
-                <div className="home__hero-bg"></div>
-                <div className="home__hero-particles"></div>
-                <div className="home__hero-content">
-                    <span className="home__hero-tag">New Collection 2026</span>
-                    <h1 className="home__hero-title">
-                        Drape Yourself in
-                        <span className="home__hero-accent"> Timeless Elegance</span>
-                    </h1>
-                    <p className="home__hero-text">
-                        Discover our exquisite collection of handcrafted sarees from the finest
-                        weavers across India. Each piece tells a story of tradition and artistry.
-                    </p>
-                    <div className="home__hero-actions">
-                        <Link to="/shop" className="btn btn-secondary btn-lg">
-                            Shop Now <ArrowRight size={20} />
-                        </Link>
-                        <Link to="/about" className="btn btn-outline btn-lg home__hero-btn-outline">
-                            Our Story
-                        </Link>
-                    </div>
-                </div>
-                <div className="home__hero-decoration"></div>
-            </section>
+            {/* Hero Slider */}
+            <HeroSlider />
 
             {/* Features Section */}
             <section className="home__features">
@@ -103,7 +81,7 @@ const Home = () => {
                     <div className="home__section-header">
                         <span className="home__section-tag">Browse By</span>
                         <h2 className="home__section-title">Shop by Category</h2>
-                        <div className="divider-gold"></div>
+                        <div className="divider-accent"></div>
                     </div>
 
                     <div className="home__categories-grid">
@@ -113,7 +91,9 @@ const Home = () => {
                                 to={`/shop?category=${category.id}`}
                                 className="home__category-card"
                             >
-                                <span className="home__category-icon">{category.icon}</span>
+                                <div className="home__category-image-wrapper">
+                                    <img src={category.image} alt={category.name} className="home__category-image" />
+                                </div>
                                 <h3 className="home__category-name">{category.name}</h3>
                                 <p className="home__category-description">{category.description}</p>
                                 <span className="home__category-link">
@@ -131,7 +111,7 @@ const Home = () => {
                     <div className="home__section-header">
                         <span className="home__section-tag">Handpicked For You</span>
                         <h2 className="home__section-title">Featured Collection</h2>
-                        <div className="divider-gold"></div>
+                        <div className="divider-accent"></div>
                     </div>
 
                     <div className="home__products-grid">
@@ -170,7 +150,7 @@ const Home = () => {
                     <div className="home__section-header">
                         <span className="home__section-tag">Most Loved</span>
                         <h2 className="home__section-title">Bestselling Sarees</h2>
-                        <div className="divider-gold"></div>
+                        <div className="divider-accent"></div>
                     </div>
 
                     <div className="home__products-grid">
@@ -187,7 +167,7 @@ const Home = () => {
                     <div className="home__section-header">
                         <span className="home__section-tag">What Our Customers Say</span>
                         <h2 className="home__section-title">Customer Stories</h2>
-                        <div className="divider-gold"></div>
+                        <div className="divider-accent"></div>
                     </div>
 
                     <div className="home__testimonials-grid">

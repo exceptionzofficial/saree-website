@@ -8,6 +8,8 @@ import {
     Send,
     Heart
 } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
+import logo from '../../assets/logo.png';
 import './Footer.css';
 
 const Footer = () => {
@@ -59,12 +61,15 @@ const Footer = () => {
                     {/* Brand Section */}
                     <div className="footer__brand">
                         <Link to="/" className="footer__logo">
-                            <span className="footer__logo-text">Saree</span>
-                            <span className="footer__logo-accent">Elegance</span>
+                            <img src={logo} alt="GURUBAGAVAN SAREES" className="footer__logo-img" />
+                            <div className="footer__logo-text-wrapper">
+                                <span className="footer__logo-text">GURUBAGAVAN</span>
+                                <span className="footer__logo-accent">SAREES</span>
+                            </div>
                         </Link>
                         <p className="footer__tagline">
-                            Draping you in timeless elegance. We bring the finest handcrafted
-                            sarees from across India to your doorstep.
+                            Draping you in traditional excellence. Experience the finest
+                            handpicked sarees curated for your special moments.
                         </p>
                         <div className="footer__social">
                             <a href="#" className="footer__social-link" aria-label="Instagram">
@@ -112,9 +117,9 @@ const Footer = () => {
                                 <Phone size={18} />
                                 <span>+91 98765 43210</span>
                             </a>
-                            <a href="mailto:contact@sareeelegance.com" className="footer__contact-item">
+                            <a href="mailto:contact@gurubagavansarees.com" className="footer__contact-item">
                                 <Mail size={18} />
-                                <span>contact@sareeelegance.com</span>
+                                <span>contact@gurubagavansarees.com</span>
                             </a>
                             <div className="footer__contact-item">
                                 <MapPin size={18} />
@@ -129,7 +134,7 @@ const Footer = () => {
             <div className="footer__bottom">
                 <div className="footer__container footer__bottom-content">
                     <p className="footer__copyright">
-                        © {currentYear} Saree Elegance. All rights reserved.
+                        © {currentYear} GURUBAGAVAN SAREES. All rights reserved.
                     </p>
                     <p className="footer__made-with">
                         Made with <Heart size={14} className="footer__heart" /> in India

@@ -17,40 +17,40 @@
 
 :root {
   /* Color Palette */
-  --primary: #8B2252;
-  --primary-light: #A8325F;
-  --primary-dark: #6B1A40;
-  --secondary: #D4AF37;
-  --secondary-light: #E5C455;
-  --secondary-dark: #B8982E;
-  --accent: #722F37;
-  --accent-light: #8B3A44;
+  --primary: #0084CC;
+  --primary-light: #339AD6;
+  --primary-dark: #006AA3;
+  --secondary: #E31E24;
+  --secondary-light: #E94B50;
+  --secondary-dark: #B6181D;
+  --accent: #00AEEF;
+  --accent-light: #33BEF2;
 
   /* Neutrals */
-  --background: #FDF5E6;
-  --background-alt: #FAF0E4;
+  --background: #F8FAFC;
+  --background-alt: #F1F5F9;
   --surface: #FFFFFF;
-  --surface-hover: #FEFEFE;
-  --dark: #2C2C2C;
-  --dark-light: #4A4A4A;
-  --text-primary: #1A1A1A;
-  --text-secondary: #5A5A5A;
-  --text-muted: #8A8A8A;
-  --border: #E8E0D8;
-  --border-light: #F0EAE2;
+  --surface-hover: #F8FAFC;
+  --dark: #0F172A;
+  --dark-light: #334155;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --border: #E2E8F0;
+  --border-light: #F1F5F9;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #8B2252 0%, #722F37 100%);
-  --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #E5C455 50%, #D4AF37 100%);
-  --gradient-hero: linear-gradient(135deg, rgba(139, 34, 82, 0.95) 0%, rgba(114, 47, 55, 0.9) 100%);
+  --gradient-primary: linear-gradient(135deg, #0084CC 0%, #00AEEF 100%);
+  --gradient-secondary: linear-gradient(135deg, #E31E24 0%, #F87171 50%, #E31E24 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(0, 132, 204, 0.95) 0%, rgba(227, 30, 36, 0.9) 100%);
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
   --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15);
-  --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.3);
-  --shadow-primary: 0 4px 20px rgba(139, 34, 82, 0.3);
+  --shadow-secondary: 0 4px 20px rgba(227, 30, 36, 0.3);
+  --shadow-primary: 0 4px 20px rgba(0, 132, 204, 0.3);
 
   /* Typography */
   --font-heading: 'Playfair Display', Georgia, serif;
@@ -318,9 +318,9 @@ textarea::placeholder {
 }
 
 .btn-secondary {
-  background: var(--gradient-gold);
-  color: var(--dark);
-  box-shadow: var(--shadow-gold);
+  background: var(--gradient-secondary);
+  color: white;
+  box-shadow: var(--shadow-secondary);
 }
 
 .btn-secondary:hover {
@@ -436,9 +436,9 @@ textarea::placeholder {
   margin: var(--space-6) 0;
 }
 
-.divider-gold {
+.divider-accent {
   height: 2px;
-  background: var(--gradient-gold);
+  background: var(--gradient-secondary);
   width: 60px;
 }
 

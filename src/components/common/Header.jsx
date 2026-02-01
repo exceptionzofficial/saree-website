@@ -10,6 +10,7 @@ import {
     ChevronDown
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import logo from '../../assets/logo.png';
 import './Header.css';
 
 const Header = () => {
@@ -68,8 +69,11 @@ const Header = () => {
 
                     {/* Logo */}
                     <Link to="/" className="header__logo">
-                        <span className="header__logo-text">Saree</span>
-                        <span className="header__logo-accent">Elegance</span>
+                        <img src={logo} alt="GURUBAGAVAN SAREES" className="header__logo-img" />
+                        <div className="header__logo-text-wrapper">
+                            <span className="header__logo-text">GURUBAGAVAN</span>
+                            <span className="header__logo-accent">SAREES</span>
+                        </div>
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -87,16 +91,26 @@ const Header = () => {
 
                     {/* Actions */}
                     <div className="header__actions">
+                        <Link to="/seller/register" className="header__seller-btn btn btn-outline btn-sm">
+                            Become a Seller
+                        </Link>
+
+                        <Link to="/login" className="header__login-link">
+                            Login
+                        </Link>
+
+                        <div className="header__actions-divider"></div>
+
                         <button
                             className="header__action-btn"
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
                             aria-label="Search"
                         >
-                            <Search size={22} />
+                            <Search size={20} />
                         </button>
 
                         <Link to="/cart" className="header__action-btn header__cart-btn">
-                            <ShoppingBag size={22} />
+                            <ShoppingBag size={20} />
                             {cartCount > 0 && (
                                 <span className="header__cart-count">{cartCount}</span>
                             )}
@@ -134,6 +148,13 @@ const Header = () => {
                             {link.label}
                         </Link>
                     ))}
+                    <div className="header__mobile-divider"></div>
+                    <Link to="/login" className="header__mobile-link">
+                        Login / Register
+                    </Link>
+                    <Link to="/seller/register" className="header__mobile-link">
+                        Become a Seller
+                    </Link>
                     <div className="header__mobile-divider"></div>
                     <Link to="/track-order" className="header__mobile-link">
                         Track Order

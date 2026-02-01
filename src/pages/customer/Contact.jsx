@@ -63,7 +63,7 @@ const Contact = () => {
             icon: <Mail size={24} />,
             title: 'Email Us',
             lines: [
-                settings.storeEmail || 'hello@sareeelegance.com',
+                settings.storeEmail || 'contact@gurubagavansarees.com',
                 'We reply within 24 hours'
             ]
         },
@@ -245,13 +245,13 @@ const Contact = () => {
                                 <h3>Follow Us</h3>
                                 <p>Stay updated with our latest collections</p>
                                 <div className="contact__social-links">
-                                    <a href="#" className="contact__social-link contact__social-link--instagram">
+                                    <a href="" className="contact__social-link contact__social-link--instagram">
                                         <Instagram size={24} />
-                                        <span>@sareeelegance</span>
+                                        <span>@gurubagavansarees</span>
                                     </a>
                                     <a href="#" className="contact__social-link contact__social-link--facebook">
                                         <Facebook size={24} />
-                                        <span>Saree Elegance</span>
+                                        <span>GURUBAGAVAN SAREES</span>
                                     </a>
                                 </div>
                             </div>
