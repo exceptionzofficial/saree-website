@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, TrendingUp, Users, ShieldCheck, Zap, ArrowRight, Check, Gift, Award } from 'lucide-react';
 import './BecomeMember.css';
 
 const BecomeMember = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         mobile: '',
@@ -49,7 +51,8 @@ const BecomeMember = () => {
         },
         {
             name: 'Premium Member',
-            price: '₹999/year',
+            price: '₹999',
+            priceNote: 'per referral cycle',
             features: [
                 'All Free User features',
                 '✔ Unique Referral Code',
@@ -123,7 +126,10 @@ const BecomeMember = () => {
                             <div key={index} className={`plan-card ${plan.recommended ? 'plan-card--recommended' : ''}`}>
                                 {plan.recommended && <div className="plan-badge">Highly Recommended</div>}
                                 <h3 className="plan-name">{plan.name}</h3>
-                                <div className="plan-price">{plan.price}</div>
+                                <div className="plan-price">
+                                    {plan.price}
+                                    {plan.priceNote && <span className="price-note">{plan.priceNote}</span>}
+                                </div>
                                 <ul className="plan-features">
                                     {plan.features.map((feature, i) => (
                                         <li key={i} className={feature.startsWith('✘') ? 'feature-locked' : ''}>
@@ -132,7 +138,10 @@ const BecomeMember = () => {
                                         </li>
                                     ))}
                                 </ul>
-                                <button className={`btn ${plan.recommended ? 'btn-primary' : 'btn-outline'} btn-block`}>
+                                <button
+                                    className={`btn ${plan.recommended ? 'btn-primary' : 'btn-outline'} btn-block`}
+                                    onClick={() => plan.recommended && navigate('/membership/payment')}
+                                >
                                     {plan.btnText}
                                 </button>
                             </div>

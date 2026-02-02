@@ -5,7 +5,8 @@ import {
     ShoppingBag,
     Settings,
     LogOut,
-    X
+    X,
+    Users
 } from 'lucide-react';
 import './AdminSidebar.css';
 
@@ -21,6 +22,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { to: '/admin/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
         { to: '/admin/products', icon: <Package size={20} />, label: 'Products' },
         { to: '/admin/orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
+        { to: '/admin/memberships', icon: <Users size={20} />, label: 'Memberships' },
         { to: '/admin/settings', icon: <Settings size={20} />, label: 'Settings' }
     ];
 
