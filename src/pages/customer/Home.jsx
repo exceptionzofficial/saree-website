@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Truck, Shield, Award, RefreshCw } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
@@ -55,13 +56,35 @@ const Home = () => {
         }
     ];
 
+    useEffect(() => {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+
+        return () => {
+            revealElements.forEach(el => observer.unobserve(el));
+        };
+    }, []);
+
     return (
         <main className="home">
             {/* Hero Slider */}
             <HeroSlider />
 
             {/* Features Section */}
-            <section className="home__features">
+            {/* <section className="home__features">
                 <div className="container">
                     <div className="home__features-grid">
                         {features.map((feature, index) => (
@@ -73,18 +96,18 @@ const Home = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* Categories Section */}
             <section className="home__categories section">
                 <div className="container">
-                    <div className="home__section-header">
+                    <div className="home__section-header reveal reveal-up">
                         <span className="home__section-tag">Browse By</span>
                         <h2 className="home__section-title">Shop by Category</h2>
                         <div className="divider-accent"></div>
                     </div>
 
-                    <div className="home__categories-grid">
+                    <div className="home__categories-grid reveal reveal-up reveal-stagger">
                         {categories.map(category => (
                             <Link
                                 key={category.id}
@@ -108,19 +131,19 @@ const Home = () => {
             {/* Featured Products */}
             <section className="home__products section">
                 <div className="container">
-                    <div className="home__section-header">
+                    <div className="home__section-header reveal reveal-up">
                         <span className="home__section-tag">Handpicked For You</span>
                         <h2 className="home__section-title">Featured Collection</h2>
                         <div className="divider-accent"></div>
                     </div>
 
-                    <div className="home__products-grid">
+                    <div className="home__products-grid reveal reveal-up reveal-stagger">
                         {featuredProducts.map(product => (
                             <ProductCard key={product.id} product={product} />
                         ))}
                     </div>
 
-                    <div className="home__products-action">
+                    <div className="home__products-action reveal reveal-up">
                         <Link to="/shop" className="btn btn-primary btn-lg">
                             View All Products <ArrowRight size={20} />
                         </Link>
@@ -129,7 +152,7 @@ const Home = () => {
             </section>
 
             {/* Banner Section */}
-            <section className="home__banner">
+            <section className="home__banner reveal reveal-in">
                 <div className="home__banner-content">
                     <span className="home__banner-tag">Limited Time Offer</span>
                     <h2 className="home__banner-title">
@@ -147,13 +170,13 @@ const Home = () => {
             {/* Bestsellers */}
             <section className="home__products section">
                 <div className="container">
-                    <div className="home__section-header">
+                    <div className="home__section-header reveal reveal-up">
                         <span className="home__section-tag">Most Loved</span>
                         <h2 className="home__section-title">Bestselling Sarees</h2>
                         <div className="divider-accent"></div>
                     </div>
 
-                    <div className="home__products-grid">
+                    <div className="home__products-grid reveal reveal-up reveal-stagger">
                         {bestsellers.map(product => (
                             <ProductCard key={product.id} product={product} />
                         ))}
@@ -164,13 +187,13 @@ const Home = () => {
             {/* Testimonials */}
             <section className="home__testimonials section">
                 <div className="container">
-                    <div className="home__section-header">
+                    <div className="home__section-header reveal reveal-up">
                         <span className="home__section-tag">What Our Customers Say</span>
                         <h2 className="home__section-title">Customer Stories</h2>
                         <div className="divider-accent"></div>
                     </div>
 
-                    <div className="home__testimonials-grid">
+                    <div className="home__testimonials-grid reveal reveal-up reveal-stagger">
                         {testimonials.map((testimonial, index) => (
                             <div key={index} className="home__testimonial">
                                 <div className="home__testimonial-stars">
@@ -188,7 +211,7 @@ const Home = () => {
             </section>
 
             {/* CTA Section */}
-            <section className="home__cta">
+            <section className="home__cta reveal reveal-in">
                 <div className="container">
                     <div className="home__cta-content">
                         <h2 className="home__cta-title">Ready to Find Your Perfect Saree?</h2>

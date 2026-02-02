@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import './HeroSlider.css';
 
+// Import local banners
+import banner1 from '../../assets/banner2.jpg';
+import banner2 from '../../assets/banner1.jpg';
+import banner3 from '../../assets/banner4.jpg';
+import banner4 from '../../assets/banner3.jpeg';
+import banner5 from '../../assets/banner5.jpg';
+
 const HeroSlider = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
@@ -10,53 +17,53 @@ const HeroSlider = () => {
     const slides = [
         {
             id: 1,
-            tag: 'New Collection 2026',
-            title: 'Drape Yourself in ',
-            accent: 'Timeless Elegance',
-            text: 'Discover our exquisite collection of handcrafted sarees from the finest weavers across India. Each piece tells a story of tradition and artistry.',
-            image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80&w=1920',
+            tag: 'MEGA',
+            title: 'Love Sale',
+            discount: '30',
+            text: 'ON TIMELESS SILK SAREES & MORE.',
+            image: banner1,
             btnText: 'Shop Now',
             btnLink: '/shop'
         },
         {
             id: 2,
-            tag: 'Festive Special',
-            title: 'Celebrate in Style with ',
-            accent: 'Royal Silks',
-            text: 'Experience the grandeur of authentic Kanchipuram and Banarasi sarees, perfect for your most auspicious occasions.',
-            image: 'https://images.unsplash.com/photo-1583391733981-8498408b9932?auto=format&fit=crop&q=80&w=1920',
-            btnText: 'Explore Silk',
+            tag: 'FESTIVE',
+            title: 'Grand Sale',
+            discount: '40',
+            text: 'ON PREMIUM KANCHIPURAM SILKS.',
+            image: banner2,
+            btnText: 'Explore Collection',
             btnLink: '/shop?category=silk'
         },
         {
             id: 3,
-            tag: 'Authentic Handloom',
-            title: 'The Art of ',
-            accent: 'Traditional Weaving',
-            text: 'Supporting master weavers to bring you masterpieces that carry the soul of Indian heritage in every thread.',
-            image: 'https://images.unsplash.com/photo-1582236521508-3064f7ea7bc4?auto=format&fit=crop&q=80&w=1920',
-            btnText: 'Our Heritage',
-            btnLink: '/about'
-        },
-        {
-            id: 4,
-            tag: 'Bridal Special',
-            title: 'Your Dream ',
-            accent: 'Wedding Saree',
-            text: 'Make your big day unforgettable with our handpicked bridal collection, featuring intricate zari and exquisite handwork.',
-            image: 'https://images.unsplash.com/photo-1610030482684-28b9a2240974?auto=format&fit=crop&q=80&w=1920',
-            btnText: 'Bridal Collection',
+            tag: 'EXCLUSIVE',
+            title: 'Bridal Edit',
+            discount: '25',
+            text: 'ON WEDDING COLLECTION.',
+            image: banner3,
+            btnText: 'Shop Bridal',
             btnLink: '/shop?tag=bridal'
         },
         {
+            id: 4,
+            tag: 'SPECIAL',
+            title: 'Handloom',
+            discount: '35',
+            text: 'ON AUTHENTIC HANDWOVEN SAREES.',
+            image: banner4,
+            btnText: 'View Handloom',
+            btnLink: '/shop?category=handloom'
+        },
+        {
             id: 5,
-            tag: 'Modern Trends',
-            title: 'Contemporary Designs for ',
-            accent: 'Modern Woman',
-            text: 'Elegant fusion sarees that blend traditional charm with modern aesthetic for today’s fashion-forward woman.',
-            image: 'https://images.unsplash.com/photo-1593358055562-23c2a6881c1c?auto=format&fit=crop&q=80&w=1920',
-            btnText: 'Shop Trends',
-            btnLink: '/shop'
+            tag: 'LATEST',
+            title: 'New Arrivals',
+            discount: '20',
+            text: 'ON LATEST DESIGNER COLLECTION.',
+            image: banner5,
+            btnText: 'Explore New',
+            btnLink: '/shop?sort=newest'
         }
     ];
 
@@ -88,32 +95,29 @@ const HeroSlider = () => {
                         key={slide.id}
                         className={`hero-slider__slide ${index === currentSlide ? 'hero-slider__slide--active' : ''}`}
                     >
-                        {/* Background with overlay */}
+                        {/* Background Image */}
                         <div className="hero-slider__bg">
-                            <img src={slide.image} alt={slide.accent} className="hero-slider__image" />
-                            <div className="hero-slider__overlay"></div>
-                            <div className="hero-slider__particles"></div>
+                            <img src={slide.image} alt={slide.title} className="hero-slider__image" />
                         </div>
 
-                        {/* Content */}
-                        <div className="container">
-                            <div className="hero-slider__content">
-                                <span className="hero-slider__tag">{slide.tag}</span>
-                                <h1 className="hero-slider__title">
-                                    {slide.title}
-                                    <span className="hero-slider__accent">{slide.accent}</span>
-                                </h1>
-                                <p className="hero-slider__text">{slide.text}</p>
-                                <div className="hero-slider__actions">
-                                    <Link to={slide.btnLink} className="btn btn-secondary btn-lg">
-                                        {slide.btnText} <ArrowRight size={20} />
-                                    </Link>
-                                    <Link to="/about" className="btn btn-outline btn-lg hero-slider__btn-outline">
-                                        Our Story
-                                    </Link>
+                        {/* Promotional Overlay Box - Like Pothys */}
+                        {index === currentSlide && (
+                            <div className="hero-slider__promo-box">
+                                <span className="hero-slider__promo-tag">{slide.tag}</span>
+                                <h2 className="hero-slider__promo-title">{slide.title}</h2>
+                                <div className="hero-slider__promo-divider"></div>
+                                <div className="hero-slider__promo-discount">
+                                    <span className="hero-slider__promo-upto">UPTO</span>
+                                    <span className="hero-slider__promo-percent">{slide.discount}%</span>
+                                    <span className="hero-slider__promo-off">OFF</span>
                                 </div>
+                                <p className="hero-slider__promo-text">{slide.text}</p>
+                                <Link to={slide.btnLink} className="hero-slider__promo-btn">
+                                    {slide.btnText}
+                                    <ArrowRight size={16} />
+                                </Link>
                             </div>
-                        </div>
+                        )}
                     </div>
                 ))}
             </div>

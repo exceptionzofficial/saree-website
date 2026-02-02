@@ -38,8 +38,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800',
+      'https://nilormy.com/cdn/shop/files/RD_08167.png?v=1704447564',
+      'https://nilormy.com/cdn/shop/files/RD_08167_1.png?v=1704447564',
     ],
     description: 'Exquisite pure Kanjivaram silk saree in royal magenta with intricate gold zari work. Traditional temple border with peacock motifs. Perfect for weddings and special occasions.',
     features: [
@@ -71,8 +71,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800',
-      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800',
+      'https://5.imimg.com/data5/SELLER/Default/2023/9/347208068/IG/OT/JW/64087185/banarasi-saree-admiral-blue-banarasi-saree-silk-saree-online-30268511060161-500x500.jpg',
+      'https://5.imimg.com/data5/SELLER/Default/2023/9/347208068/IG/OT/JW/64087185/banarasi-saree-admiral-blue-banarasi-saree-silk-saree-online-30268511060161-500x500.jpg',
     ],
     description: 'Stunning navy blue Banarasi silk saree with silver zari work. Features classic Mughal-inspired patterns and rich pallu design.',
     features: [
@@ -104,8 +104,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1583391733981-8498408b9932?w=800',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800',
+      'https://ilovesarees.com/cdn/shop/files/Premium-Ox-Blood-Red-Banarasi-Silk-Saree-I-Love-Sarees6.webp?v=1727956714',
+      'https://ilovesarees.com/cdn/shop/files/Premium-Ox-Blood-Red-Banarasi-Silk-Saree-I-Love-Sarees6.webp?v=1727956714',
     ],
     description: 'Classic red bridal silk saree with heavy gold zari work. Traditional elephant and paisley motifs. The perfect choice for the big day.',
     features: [
@@ -137,8 +137,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1617627143233-46913c9b9b66?w=800',
-      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800',
+      'https://mysilklove.com/cdn/shop/files/MSLe1_2429ff66-94e6-4751-a09b-90ee5c6d49db.jpg?v=1684410227&width=800',
+      'https://mysilklove.com/cdn/shop/files/MSLe1_a260907e-7977-4b72-9118-294726e6d013.jpg?v=1684410227&width=800',
     ],
     description: 'Comfortable off-white cotton handloom saree with subtle golden border. Perfect for daily wear and office occasions.',
     features: [
@@ -170,8 +170,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1583391733981-8498408b9932?w=800',
-      'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800',
+      'https://medias.utsavfashion.com/media/catalog/product/cache/1/image/500x/040ec09b1e35df139433887a97daa66f/e/m/embroidered-chiffon-saree-in-blue-v1-spf12552.jpg',
+      'https://medias.utsavfashion.com/media/catalog/product/cache/1/image/500x/040ec09b1e35df139433887a97daa66f/e/m/embroidered-chiffon-saree-in-blue-v2-spf12552.jpg',
     ],
     description: 'Elegant emerald green chiffon saree with delicate sequin work. Light and flowy, perfect for parties and evening events.',
     features: [
@@ -203,8 +203,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1617627143233-46913c9b9b66?w=800',
-      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800',
+      'https://static.wixstatic.com/media/4594f8_ff7347cb7afc43cf909da1d7669e0f1c~mv2.jpg/v1/fill/w_480,h_644,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/4594f8_ff7347cb7afc43cf909da1d7669e0f1c~mv2.jpg',
+      'https://static.wixstatic.com/media/4594f8_f7f18b1d9d95455da08d0e5d1226d182~mv2.jpg/v1/fill/w_480,h_644,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/4594f8_f7f18b1d9d95455da08d0e5d1226d182~mv2.jpg',
     ],
     description: 'Sophisticated golden beige georgette saree with intricate thread work. Modern design suitable for cocktail parties and receptions.',
     features: [
@@ -236,8 +236,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800',
+      'https://assets2.andaazfashion.com/media/catalog/product/k/a/kanjivaram-silk-saree-in-navy-blue-color-sarv08832.jpg',
+      'https://assets2.andaazfashion.com/media/catalog/product/k/a/kanjivaram-silk-saree-in-navy-blue-color-sarv08832-1.jpg',
     ],
     description: 'Rich purple Mysore silk saree with traditional gold kasuti work. Perfect blend of elegance and tradition.',
     features: [
@@ -269,8 +269,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800',
-      'https://images.unsplash.com/photo-1617627143233-46913c9b9b66?w=800',
+      'https://www.shopethnos.com/cdn/shop/products/8206.jpg?v=1742859363',
+      'https://www.shopethnos.com/cdn/shop/products/8206.jpg?v=1742859363',
     ],
     description: 'Trendy peach pink designer saree with heavy stone and pearl work. Perfect for sangeet and engagement ceremonies.',
     features: [
@@ -302,8 +302,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800',
+      'https://priyangaa.in/cdn/shop/files/jpeg-optimizer_149a-min.jpg?v=1733118665',
+      'https://priyangaa.in/cdn/shop/files/jpeg-optimizer_149a-min.jpg?v=1733118665',
     ],
     description: 'Striking black Kanjivaram silk saree with heavy gold zari border. Bold and elegant choice for evening functions.',
     features: [
@@ -335,8 +335,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1583391733981-8498408b9932?w=800',
-      'https://images.unsplash.com/photo-1617627143233-46913c9b9b66?w=800',
+      'https://www.kollybollyethnics.com/image/catalog/data/09Mar2019/Ashra-Sunshine-Yellow-Cotton-Saree-350.jpg',
+      'https://www.kollybollyethnics.com/image/catalog/data/09Mar2019/Ashra-Sunshine-Yellow-Cotton-Saree-350.jpg',
     ],
     description: 'Bright and cheerful yellow cotton saree with red border. Perfect for pujas and festive occasions.',
     features: [
@@ -368,8 +368,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800',
+      'https://mysilklove.com/cdn/shop/files/msl-f1_a9d38c6f-3aa2-4b5c-b120-3e6eeb82d041.jpg?v=1705563737&width=2048',
+      'https://mysilklove.com/cdn/shop/files/msl-f1_a9d38c6f-3aa2-4b5c-b120-3e6eeb82d041.jpg?v=1705563737&width=2048',
     ],
     description: 'Beautiful maroon Tussar silk saree with hand-painted madhubani art. A unique piece showcasing traditional folk art.',
     features: [
@@ -401,8 +401,8 @@ export const products = [
     length: '6.3 meters',
     blouse: 'Unstitched blouse piece included',
     images: [
-      'https://images.unsplash.com/photo-1617627143233-46913c9b9b66?w=800',
-      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800',
+      'https://5.imimg.com/data5/ECOM/Default/2023/8/336965913/DP/GQ/OQ/152203226/vdbaraatioranges.jpg',
+      'https://5.imimg.com/data5/ECOM/Default/2023/8/336965913/DP/GQ/OQ/152203226/vdbaraatioranges.jpg',
     ],
     description: 'Vibrant orange Bandhani saree from Gujarat. Traditional tie-dye technique creating beautiful patterns.',
     features: [
