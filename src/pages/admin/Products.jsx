@@ -1,25 +1,33 @@
-import { useState } from 'react';
-import { Plus, Search, Edit2, Trash2, X, Upload } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Plus, Search, Edit2, Trash2, X, Upload, Image } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
 import './Products.css';
 
 const AdminProducts = () => {
-    const { products, categories, addProduct, updateProduct, deleteProduct } = useProducts();
+    const { products, categories, addProduct, updateProduct, deleteProduct, useAPI } = useProducts();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [imageFiles, setImageFiles] = useState([]);
+    const [imagePreviewUrls, setImagePreviewUrls] = useState([]);
+    const fileInputRef = useRef(null);
+
     const [formData, setFormData] = useState({
         name: '',
         slug: '',
         description: '',
         price: '',
-        discount: '',
+        originalPrice: '',
         category: '',
-        fabric: '',
+        material: '',
         color: '',
-        images: [''],
-        inStock: true
+        weight: '',
+        existingImages: [],
+        inStock: true,
+        featured: false,
+        bestseller: false
     });
 
     const filteredProducts = products.filter(product => {
@@ -34,31 +42,40 @@ const AdminProducts = () => {
             slug: '',
             description: '',
             price: '',
-            discount: '',
+            originalPrice: '',
             category: '',
-            fabric: '',
+            material: '',
             color: '',
-            images: [''],
-            inStock: true
+            weight: '',
+            existingImages: [],
+            inStock: true,
+            featured: false,
+            bestseller: false
         });
         setEditingProduct(null);
+        setImageFiles([]);
+        setImagePreviewUrls([]);
     };
 
     const openModal = (product = null) => {
         if (product) {
             setEditingProduct(product);
             setFormData({
-                name: product.name,
-                slug: product.slug,
-                description: product.description,
-                price: product.price.toString(),
-                discount: product.discount.toString(),
-                category: product.category,
-                fabric: product.fabric,
-                color: product.color,
-                images: product.images,
-                inStock: product.inStock
+                name: product.name || '',
+                slug: product.slug || '',
+                description: product.description || '',
+                price: (product.price || product.discountPrice || '').toString(),
+                originalPrice: (product.originalPrice || product.price || '').toString(),
+                category: product.category || '',
+                material: product.material || product.fabric || '',
+                color: product.color || '',
+                weight: product.weight || '',
+                existingImages: product.images || [],
+                inStock: product.inStock !== false,
+                featured: product.featured || false,
+                bestseller: product.bestseller || false
             });
+            setImagePreviewUrls(product.images || []);
         } else {
             resetForm();
         }
@@ -78,46 +95,104 @@ const AdminProducts = () => {
         }));
     };
 
-    const handleImageChange = (index, value) => {
-        const newImages = [...formData.images];
-        newImages[index] = value;
-        setFormData(prev => ({ ...prev, images: newImages }));
+    const handleFileSelect = (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        // Add new files
+        setImageFiles(prev => [...prev, ...files]);
+
+        // Create preview URLs
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreviewUrls(prev => [...prev, reader.result]);
+            };
+            reader.readAsDataURL(file);
+        });
     };
 
-    const addImageField = () => {
-        setFormData(prev => ({ ...prev, images: [...prev.images, ''] }));
-    };
+    const removeImage = (index) => {
+        // Check if it's an existing image or a new file
+        const existingCount = formData.existingImages.length;
 
-    const removeImageField = (index) => {
-        const newImages = formData.images.filter((_, i) => i !== index);
-        setFormData(prev => ({ ...prev, images: newImages }));
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const productData = {
-            ...formData,
-            price: parseFloat(formData.price),
-            discount: parseFloat(formData.discount) || 0,
-            discountPrice: parseFloat(formData.price) * (1 - (parseFloat(formData.discount) || 0) / 100),
-            images: formData.images.filter(img => img.trim() !== ''),
-            slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, '-')
-        };
-
-        if (editingProduct) {
-            updateProduct(editingProduct.id, productData);
+        if (index < existingCount) {
+            // Remove from existing images
+            setFormData(prev => ({
+                ...prev,
+                existingImages: prev.existingImages.filter((_, i) => i !== index)
+            }));
         } else {
-            addProduct(productData);
+            // Remove from new files
+            const fileIndex = index - existingCount;
+            setImageFiles(prev => prev.filter((_, i) => i !== fileIndex));
         }
 
-        closeModal();
+        setImagePreviewUrls(prev => prev.filter((_, i) => i !== index));
     };
 
-    const handleDelete = (productId) => {
-        if (window.confirm('Are you sure you want to delete this product?')) {
-            deleteProduct(productId);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            const productData = {
+                name: formData.name,
+                slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+                description: formData.description,
+                price: parseFloat(formData.price),
+                originalPrice: parseFloat(formData.originalPrice) || parseFloat(formData.price),
+                category: formData.category,
+                material: formData.material,
+                color: formData.color,
+                weight: formData.weight,
+                inStock: formData.inStock,
+                featured: formData.featured,
+                bestseller: formData.bestseller,
+                images: formData.existingImages
+            };
+
+            if (editingProduct) {
+                await updateProduct(editingProduct.id, productData, imageFiles);
+            } else {
+                await addProduct(productData, imageFiles);
+            }
+
+            closeModal();
+        } catch (error) {
+            console.error('Error saving product:', error);
+            alert('Failed to save product. Please try again.');
+        } finally {
+            setIsSubmitting(false);
         }
+    };
+
+    const handleDelete = async (productId) => {
+        if (window.confirm('Are you sure you want to delete this product?')) {
+            try {
+                await deleteProduct(productId);
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                alert('Failed to delete product.');
+            }
+        }
+    };
+
+    const getDisplayPrice = (product) => {
+        return product.price || product.discountPrice || 0;
+    };
+
+    const getOriginalPrice = (product) => {
+        return product.originalPrice || product.price || 0;
+    };
+
+    const getDiscountPercent = (product) => {
+        const original = getOriginalPrice(product);
+        const current = getDisplayPrice(product);
+        if (original > current) {
+            return Math.round(((original - current) / original) * 100);
+        }
+        return product.discount || 0;
     };
 
     return (
@@ -125,7 +200,10 @@ const AdminProducts = () => {
             <div className="admin-products__header">
                 <div>
                     <h1 className="admin-products__title">Products</h1>
-                    <p className="admin-products__subtitle">Manage your product catalog</p>
+                    <p className="admin-products__subtitle">
+                        Manage your product catalog
+                        {useAPI && <span className="admin-products__api-badge">● Live</span>}
+                    </p>
                 </div>
                 <button className="btn btn-primary" onClick={() => openModal()}>
                     <Plus size={18} />
@@ -151,7 +229,7 @@ const AdminProducts = () => {
                 >
                     <option value="">All Categories</option>
                     {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        <option key={cat.id} value={cat.id || cat.slug}>{cat.name}</option>
                     ))}
                 </select>
             </div>
@@ -174,10 +252,14 @@ const AdminProducts = () => {
                             <tr key={product.id}>
                                 <td>
                                     <div className="admin-products__product-info">
-                                        <img src={product.images[0]} alt={product.name} />
+                                        <img
+                                            src={product.images?.[0] || 'https://via.placeholder.com/60'}
+                                            alt={product.name}
+                                            onError={(e) => e.target.src = 'https://via.placeholder.com/60'}
+                                        />
                                         <div>
                                             <span className="admin-products__product-name">{product.name}</span>
-                                            <span className="admin-products__product-fabric">{product.fabric}</span>
+                                            <span className="admin-products__product-fabric">{product.material || product.fabric}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -186,15 +268,17 @@ const AdminProducts = () => {
                                 </td>
                                 <td>
                                     <div className="admin-products__price">
-                                        <span>₹{product.discountPrice.toLocaleString()}</span>
-                                        {product.discount > 0 && (
-                                            <span className="admin-products__original-price">₹{product.price.toLocaleString()}</span>
+                                        <span>₹{getDisplayPrice(product).toLocaleString()}</span>
+                                        {getOriginalPrice(product) > getDisplayPrice(product) && (
+                                            <span className="admin-products__original-price">
+                                                ₹{getOriginalPrice(product).toLocaleString()}
+                                            </span>
                                         )}
                                     </div>
                                 </td>
                                 <td>
-                                    {product.discount > 0 && (
-                                        <span className="admin-products__discount">{product.discount}% OFF</span>
+                                    {getDiscountPercent(product) > 0 && (
+                                        <span className="admin-products__discount">{getDiscountPercent(product)}% OFF</span>
                                     )}
                                 </td>
                                 <td>
@@ -222,6 +306,12 @@ const AdminProducts = () => {
                         ))}
                     </tbody>
                 </table>
+
+                {filteredProducts.length === 0 && (
+                    <div className="admin-products__empty">
+                        <p>No products found</p>
+                    </div>
+                )}
             </div>
 
             {/* Modal */}
@@ -272,7 +362,7 @@ const AdminProducts = () => {
 
                             <div className="admin-products__form-row">
                                 <div className="admin-products__field">
-                                    <label>Price (₹) *</label>
+                                    <label>Selling Price (₹) *</label>
                                     <input
                                         type="number"
                                         name="price"
@@ -283,14 +373,14 @@ const AdminProducts = () => {
                                     />
                                 </div>
                                 <div className="admin-products__field">
-                                    <label>Discount (%)</label>
+                                    <label>Original Price (₹)</label>
                                     <input
                                         type="number"
-                                        name="discount"
-                                        value={formData.discount}
+                                        name="originalPrice"
+                                        value={formData.originalPrice}
                                         onChange={handleChange}
                                         min="0"
-                                        max="100"
+                                        placeholder="For showing discount"
                                     />
                                 </div>
                             </div>
@@ -306,16 +396,16 @@ const AdminProducts = () => {
                                     >
                                         <option value="">Select Category</option>
                                         {categories.map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            <option key={cat.id} value={cat.id || cat.slug}>{cat.name}</option>
                                         ))}
                                     </select>
                                 </div>
                                 <div className="admin-products__field">
-                                    <label>Fabric *</label>
+                                    <label>Material *</label>
                                     <input
                                         type="text"
-                                        name="fabric"
-                                        value={formData.fabric}
+                                        name="material"
+                                        value={formData.material}
                                         onChange={handleChange}
                                         placeholder="e.g., Pure Silk"
                                         required
@@ -323,38 +413,82 @@ const AdminProducts = () => {
                                 </div>
                             </div>
 
-                            <div className="admin-products__field">
-                                <label>Product Images (URLs)</label>
-                                {formData.images.map((img, index) => (
-                                    <div key={index} className="admin-products__image-input">
-                                        <input
-                                            type="url"
-                                            value={img}
-                                            onChange={(e) => handleImageChange(index, e.target.value)}
-                                            placeholder="Enter image URL"
-                                        />
-                                        {formData.images.length > 1 && (
-                                            <button
-                                                type="button"
-                                                className="admin-products__remove-image"
-                                                onClick={() => removeImageField(index)}
-                                            >
-                                                <X size={16} />
-                                            </button>
-                                        )}
-                                    </div>
-                                ))}
-                                <button
-                                    type="button"
-                                    className="admin-products__add-image"
-                                    onClick={addImageField}
-                                >
-                                    <Plus size={16} /> Add another image
-                                </button>
+                            <div className="admin-products__form-row">
+                                <div className="admin-products__field">
+                                    <label>Color</label>
+                                    <input
+                                        type="text"
+                                        name="color"
+                                        value={formData.color}
+                                        onChange={handleChange}
+                                        placeholder="e.g., Red, Blue"
+                                    />
+                                </div>
+                                <div className="admin-products__field">
+                                    <label>Weight</label>
+                                    <input
+                                        type="text"
+                                        name="weight"
+                                        value={formData.weight}
+                                        onChange={handleChange}
+                                        placeholder="e.g., 500g"
+                                    />
+                                </div>
                             </div>
 
-                            <div className="admin-products__field admin-products__field--checkbox">
-                                <label>
+                            {/* Image Upload Section */}
+                            <div className="admin-products__field">
+                                <label>Product Images</label>
+                                <div className="admin-products__image-upload">
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        onChange={handleFileSelect}
+                                        accept="image/*"
+                                        multiple
+                                        style={{ display: 'none' }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="admin-products__upload-btn"
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        <Upload size={20} />
+                                        Upload Images
+                                    </button>
+                                    <span className="admin-products__upload-hint">
+                                        {useAPI ? 'Images will be uploaded to cloud storage' : 'Supports JPG, PNG, WebP'}
+                                    </span>
+                                </div>
+
+                                {/* Image Previews */}
+                                {imagePreviewUrls.length > 0 && (
+                                    <div className="admin-products__image-previews">
+                                        {imagePreviewUrls.map((url, index) => (
+                                            <div key={index} className="admin-products__image-preview">
+                                                <img src={url} alt={`Preview ${index + 1}`} />
+                                                <button
+                                                    type="button"
+                                                    className="admin-products__image-remove"
+                                                    onClick={() => removeImage(index)}
+                                                >
+                                                    <X size={14} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {imagePreviewUrls.length === 0 && (
+                                    <div className="admin-products__no-images">
+                                        <Image size={32} />
+                                        <p>No images added yet</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="admin-products__checkboxes">
+                                <label className="admin-products__checkbox">
                                     <input
                                         type="checkbox"
                                         name="inStock"
@@ -363,14 +497,32 @@ const AdminProducts = () => {
                                     />
                                     <span>In Stock</span>
                                 </label>
+                                <label className="admin-products__checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="featured"
+                                        checked={formData.featured}
+                                        onChange={handleChange}
+                                    />
+                                    <span>Featured</span>
+                                </label>
+                                <label className="admin-products__checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="bestseller"
+                                        checked={formData.bestseller}
+                                        onChange={handleChange}
+                                    />
+                                    <span>Bestseller</span>
+                                </label>
                             </div>
 
                             <div className="admin-products__form-actions">
-                                <button type="button" className="btn btn-ghost" onClick={closeModal}>
+                                <button type="button" className="btn btn-ghost" onClick={closeModal} disabled={isSubmitting}>
                                     Cancel
                                 </button>
-                                <button type="submit" className="btn btn-primary">
-                                    {editingProduct ? 'Update Product' : 'Add Product'}
+                                <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                                    {isSubmitting ? 'Saving...' : (editingProduct ? 'Update Product' : 'Add Product')}
                                 </button>
                             </div>
                         </form>

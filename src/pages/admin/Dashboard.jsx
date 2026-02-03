@@ -25,19 +25,19 @@ const Dashboard = () => {
         {
             icon: <ShoppingBag size={24} />,
             label: 'Total Orders',
-            value: stats.totalOrders,
+            value: stats.total || 0,
             color: 'stat--blue'
         },
         {
             icon: <DollarSign size={24} />,
             label: 'Total Revenue',
-            value: `₹${stats.totalRevenue.toLocaleString()}`,
+            value: `₹${(stats.totalRevenue || 0).toLocaleString()}`,
             color: 'stat--green'
         },
         {
             icon: <Clock size={24} />,
             label: 'Pending Orders',
-            value: stats.pendingOrders,
+            value: stats.pending || 0,
             color: 'stat--yellow'
         },
         {
@@ -157,11 +157,11 @@ const Dashboard = () => {
                     </div>
 
                     {/* Payment Pending Alert */}
-                    {stats.pendingPaymentVerification > 0 && (
+                    {stats.paymentPending > 0 && (
                         <div className="dashboard__alert">
                             <Clock size={20} />
                             <div>
-                                <strong>{stats.pendingPaymentVerification} payments</strong> awaiting verification
+                                <strong>{stats.paymentPending} payments</strong> awaiting verification
                             </div>
                             <Link to="/admin/orders" className="btn btn-sm btn-primary">
                                 Review

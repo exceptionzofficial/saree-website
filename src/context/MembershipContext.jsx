@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useOrders } from './OrderContext';
+import { membershipsAPI } from '../services/api';
 
 const MembershipContext = createContext();
 
@@ -11,41 +12,23 @@ export const useMembership = () => {
     return context;
 };
 
-// Generate unique referral code
-const generateReferralCode = (name) => {
-    const prefix = name.substring(0, 3).toUpperCase();
-    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-    return `${prefix}${random}`;
-};
-
 export const MembershipProvider = ({ children }) => {
     const { settings } = useOrders();
 
-    // Membership requests (pending payments)
-    const [membershipRequests, setMembershipRequests] = useState(() => {
-        const saved = localStorage.getItem('membershipRequests');
-        return saved ? JSON.parse(saved) : [];
-    });
+    const [membershipRequests, setMembershipRequests] = useState([]);
+    const [memberships, setMemberships] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [useAPI, setUseAPI] = useState(true);
 
-    // Active memberships
-    const [memberships, setMemberships] = useState(() => {
-        const saved = localStorage.getItem('memberships');
-        return saved ? JSON.parse(saved) : [];
-    });
-
-    // Current user's membership (mock - in real app, would use auth)
+    // Current user's email (mock - in real app, would use auth)
     const [currentUserEmail, setCurrentUserEmail] = useState(() => {
         return localStorage.getItem('currentMemberEmail') || '';
     });
 
-    // Save to localStorage
+    // Load data on mount
     useEffect(() => {
-        localStorage.setItem('membershipRequests', JSON.stringify(membershipRequests));
-    }, [membershipRequests]);
-
-    useEffect(() => {
-        localStorage.setItem('memberships', JSON.stringify(memberships));
-    }, [memberships]);
+        loadData();
+    }, []);
 
     useEffect(() => {
         if (currentUserEmail) {
@@ -53,80 +36,165 @@ export const MembershipProvider = ({ children }) => {
         }
     }, [currentUserEmail]);
 
+    const loadData = async () => {
+        setLoading(true);
+        try {
+            const [requests, members] = await Promise.all([
+                membershipsAPI.getRequests(),
+                membershipsAPI.getAll()
+            ]);
+            setMembershipRequests(requests);
+            setMemberships(members);
+            setUseAPI(true);
+        } catch (err) {
+            console.warn('API unavailable, using localStorage:', err.message);
+            // Fallback to localStorage
+            const savedRequests = localStorage.getItem('membershipRequests');
+            const savedMemberships = localStorage.getItem('memberships');
+            if (savedRequests) setMembershipRequests(JSON.parse(savedRequests));
+            if (savedMemberships) setMemberships(JSON.parse(savedMemberships));
+            setUseAPI(false);
+        }
+        setLoading(false);
+    };
+
+    // Save to localStorage as backup
+    useEffect(() => {
+        if (!loading) {
+            localStorage.setItem('membershipRequests', JSON.stringify(membershipRequests));
+            localStorage.setItem('memberships', JSON.stringify(memberships));
+        }
+    }, [membershipRequests, memberships, loading]);
+
     // Submit payment request
-    const submitPaymentRequest = (userData, screenshotUrl) => {
-        const request = {
-            id: Date.now(),
-            ...userData,
-            screenshotUrl,
-            status: 'pending',
-            submittedAt: new Date().toISOString()
-        };
-        setMembershipRequests(prev => [...prev, request]);
-        setCurrentUserEmail(userData.email);
-        return request;
+    const submitPaymentRequest = async (userData, screenshotFile) => {
+        if (useAPI) {
+            try {
+                const formData = new FormData();
+                formData.append('name', userData.name);
+                formData.append('email', userData.email);
+                formData.append('mobile', userData.mobile);
+                if (screenshotFile) {
+                    formData.append('screenshot', screenshotFile);
+                }
+
+                const request = await membershipsAPI.submitRequest(formData);
+                setMembershipRequests(prev => [...prev, request]);
+                setCurrentUserEmail(userData.email);
+                return request;
+            } catch (err) {
+                console.error('Error submitting request:', err);
+                throw err;
+            }
+        } else {
+            // Local fallback
+            const request = {
+                id: Date.now().toString(),
+                ...userData,
+                screenshotUrl: screenshotFile,
+                status: 'pending',
+                submittedAt: new Date().toISOString()
+            };
+            setMembershipRequests(prev => [...prev, request]);
+            setCurrentUserEmail(userData.email);
+            return request;
+        }
     };
 
     // Admin: Approve request
-    const approveRequest = (requestId) => {
-        const request = membershipRequests.find(r => r.id === requestId);
-        if (!request) return;
+    const approveRequest = async (requestId) => {
+        if (useAPI) {
+            try {
+                const result = await membershipsAPI.approveRequest(requestId);
+                setMemberships(prev => [...prev, result.membership]);
+                setMembershipRequests(prev =>
+                    prev.map(r => r.id === requestId ? { ...r, status: 'approved' } : r)
+                );
+                return result.membership;
+            } catch (err) {
+                console.error('Error approving request:', err);
+                throw err;
+            }
+        } else {
+            // Local fallback
+            const request = membershipRequests.find(r => r.id === requestId);
+            if (!request) return;
 
-        // Create new membership
-        const newMembership = {
-            id: Date.now(),
-            userId: request.email,
-            name: request.name,
-            email: request.email,
-            mobile: request.mobile,
-            referralCode: generateReferralCode(request.name),
-            status: 'active',
-            referrals: [],
-            referralCount: 0,
-            moneyBackClaimed: false,
-            goldCoinClaimed: false,
-            activatedAt: new Date().toISOString(),
-            completedAt: null
-        };
+            const prefix = request.name.substring(0, 3).toUpperCase();
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
 
-        setMemberships(prev => [...prev, newMembership]);
-        setMembershipRequests(prev =>
-            prev.map(r => r.id === requestId ? { ...r, status: 'approved' } : r)
-        );
+            const newMembership = {
+                email: request.email,
+                name: request.name,
+                mobile: request.mobile,
+                referralCode: `${prefix}${random}`,
+                status: 'active',
+                referrals: [],
+                referralCount: 0,
+                moneyBackClaimed: false,
+                goldCoinClaimed: false,
+                activatedAt: new Date().toISOString()
+            };
+
+            setMemberships(prev => [...prev, newMembership]);
+            setMembershipRequests(prev =>
+                prev.map(r => r.id === requestId ? { ...r, status: 'approved' } : r)
+            );
+        }
     };
 
     // Admin: Reject request
-    const rejectRequest = (requestId) => {
-        setMembershipRequests(prev =>
-            prev.map(r => r.id === requestId ? { ...r, status: 'rejected' } : r)
-        );
+    const rejectRequest = async (requestId) => {
+        if (useAPI) {
+            try {
+                await membershipsAPI.rejectRequest(requestId);
+                setMembershipRequests(prev =>
+                    prev.map(r => r.id === requestId ? { ...r, status: 'rejected' } : r)
+                );
+            } catch (err) {
+                console.error('Error rejecting request:', err);
+                throw err;
+            }
+        } else {
+            setMembershipRequests(prev =>
+                prev.map(r => r.id === requestId ? { ...r, status: 'rejected' } : r)
+            );
+        }
     };
 
-    // Add referral (when someone uses a referral code)
-    const addReferral = (referralCode, referredUser) => {
-        setMemberships(prev => prev.map(m => {
-            if (m.referralCode === referralCode && m.status === 'active') {
-                const newReferralCount = m.referralCount + 1;
-                const newReferrals = [...m.referrals, {
-                    name: referredUser.name,
-                    date: new Date().toISOString()
-                }];
-
-                // Check if membership should complete (7 referrals)
-                const shouldComplete = newReferralCount >= 7;
-
-                return {
-                    ...m,
-                    referrals: newReferrals,
-                    referralCount: newReferralCount,
-                    goldCoinClaimed: shouldComplete,
-                    moneyBackClaimed: newReferralCount >= 5 || m.moneyBackClaimed,
-                    status: shouldComplete ? 'completed' : 'active',
-                    completedAt: shouldComplete ? new Date().toISOString() : null
-                };
+    // Add referral
+    const addReferral = async (referralCode, referredUser) => {
+        if (useAPI) {
+            try {
+                const updatedMembership = await membershipsAPI.addReferral(referralCode, referredUser.name);
+                setMemberships(prev => prev.map(m =>
+                    m.referralCode === referralCode ? updatedMembership : m
+                ));
+                return updatedMembership;
+            } catch (err) {
+                console.error('Error adding referral:', err);
+                throw err;
             }
-            return m;
-        }));
+        } else {
+            // Local fallback
+            setMemberships(prev => prev.map(m => {
+                if (m.referralCode === referralCode && m.status === 'active') {
+                    const newReferralCount = m.referralCount + 1;
+                    const shouldComplete = newReferralCount >= 7;
+
+                    return {
+                        ...m,
+                        referrals: [...m.referrals, { name: referredUser.name, date: new Date().toISOString() }],
+                        referralCount: newReferralCount,
+                        goldCoinClaimed: shouldComplete,
+                        moneyBackClaimed: newReferralCount >= 5 || m.moneyBackClaimed,
+                        status: shouldComplete ? 'completed' : 'active',
+                        completedAt: shouldComplete ? new Date().toISOString() : null
+                    };
+                }
+                return m;
+            }));
+        }
     };
 
     // Get current user's membership
@@ -141,7 +209,7 @@ export const MembershipProvider = ({ children }) => {
         return membershipRequests.find(r => r.email === currentUserEmail && r.status === 'pending') || null;
     };
 
-    // Check if user has any membership history
+    // Check user membership status
     const getUserMembershipStatus = () => {
         if (!currentUserEmail) return 'none';
 
@@ -157,12 +225,18 @@ export const MembershipProvider = ({ children }) => {
         return 'none';
     };
 
+    const refreshData = () => {
+        loadData();
+    };
+
     const value = {
         // State
         membershipRequests,
         memberships,
         currentUserEmail,
         settings,
+        loading,
+        useAPI,
 
         // Actions
         setCurrentUserEmail,
@@ -170,6 +244,7 @@ export const MembershipProvider = ({ children }) => {
         approveRequest,
         rejectRequest,
         addReferral,
+        refreshData,
 
         // Getters
         getCurrentMembership,

@@ -1,15 +1,15 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { ordersAPI } from '../services/api';
 
 const OrderContext = createContext();
 
-const ORDERS_STORAGE_KEY = 'saree_elegance_orders';
 const SETTINGS_STORAGE_KEY = 'saree_elegance_settings';
 
 const defaultSettings = {
-    upiId: 'sareeelegance@upi',
+    upiId: 'gurubagavan@upi',
     qrCodeUrl: '',
-    storeName: 'Saree Elegance',
-    storeEmail: 'contact@sareeelegance.com',
+    storeName: 'Gurubagavan Sarees',
+    storeEmail: 'contact@gurubagavan.com',
     storePhone: '+91 98765 43210',
     storeAddress: '123 Fashion Street, Silk Bazaar, Chennai - 600001',
     shippingCharge: 99,
@@ -22,20 +22,38 @@ export const OrderProvider = ({ children }) => {
     const [orders, setOrders] = useState([]);
     const [settings, setSettings] = useState(defaultSettings);
     const [loading, setLoading] = useState(true);
+    const [useAPI, setUseAPI] = useState(true);
 
     // Load data on mount
     useEffect(() => {
-        const savedOrders = localStorage.getItem(ORDERS_STORAGE_KEY);
-        const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+        loadOrders();
+        loadSettings();
+    }, []);
 
-        if (savedOrders) {
-            try {
-                setOrders(JSON.parse(savedOrders));
-            } catch (error) {
-                console.error('Error loading orders:', error);
+    const loadOrders = async () => {
+        setLoading(true);
+        try {
+            const apiOrders = await ordersAPI.getAll();
+            setOrders(apiOrders);
+            setUseAPI(true);
+        } catch (err) {
+            console.warn('API unavailable for orders, using local storage:', err.message);
+            // Fallback to localStorage
+            const savedOrders = localStorage.getItem('saree_elegance_orders');
+            if (savedOrders) {
+                try {
+                    setOrders(JSON.parse(savedOrders));
+                } catch (error) {
+                    console.error('Error loading orders:', error);
+                }
             }
+            setUseAPI(false);
         }
+        setLoading(false);
+    };
 
+    const loadSettings = () => {
+        const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
         if (savedSettings) {
             try {
                 setSettings({ ...defaultSettings, ...JSON.parse(savedSettings) });
@@ -43,14 +61,12 @@ export const OrderProvider = ({ children }) => {
                 console.error('Error loading settings:', error);
             }
         }
+    };
 
-        setLoading(false);
-    }, []);
-
-    // Save orders when they change
+    // Save orders to localStorage as backup
     useEffect(() => {
-        if (!loading) {
-            localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+        if (!loading && orders.length > 0) {
+            localStorage.setItem('saree_elegance_orders', JSON.stringify(orders));
         }
     }, [orders, loading]);
 
@@ -61,100 +77,97 @@ export const OrderProvider = ({ children }) => {
         }
     }, [settings, loading]);
 
-    const generateOrderId = () => {
-        const timestamp = Date.now().toString(36).toUpperCase();
-        const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-        return `SE${timestamp}${random}`;
-    };
-
-    const createOrder = (orderData) => {
-        const newOrder = {
-            id: generateOrderId(),
-            ...orderData,
-            status: 'pending',
-            paymentStatus: 'pending',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            timeline: [
-                {
-                    status: 'pending',
-                    message: 'Order placed successfully',
-                    timestamp: new Date().toISOString()
-                }
-            ]
-        };
-
-        setOrders(prev => [newOrder, ...prev]);
-        return newOrder;
+    const createOrder = async (orderData) => {
+        if (useAPI) {
+            try {
+                const newOrder = await ordersAPI.create(orderData);
+                setOrders(prev => [newOrder, ...prev]);
+                return newOrder;
+            } catch (err) {
+                console.error('Error creating order via API:', err);
+                throw err;
+            }
+        } else {
+            // Local fallback
+            const timestamp = Date.now().toString(36).toUpperCase();
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const newOrder = {
+                orderId: `SE${timestamp}${random}`,
+                ...orderData,
+                status: 'pending',
+                paymentStatus: 'pending',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                statusHistory: [
+                    {
+                        status: 'pending',
+                        note: 'Order placed successfully',
+                        date: new Date().toISOString()
+                    }
+                ]
+            };
+            setOrders(prev => [newOrder, ...prev]);
+            return newOrder;
+        }
     };
 
     const getOrderById = (orderId) => {
-        return orders.find(order => order.id === orderId);
+        return orders.find(order => order.orderId === orderId || order.id === orderId);
     };
 
     const getOrdersByStatus = (status) => {
         return orders.filter(order => order.status === status);
     };
 
-    const updateOrderStatus = (orderId, status, message = '') => {
-        setOrders(orders.map(order => {
-            if (order.id === orderId) {
-                const timelineEntry = {
-                    status,
-                    message: message || getStatusMessage(status),
-                    timestamp: new Date().toISOString()
-                };
-
-                return {
-                    ...order,
-                    status,
-                    updatedAt: new Date().toISOString(),
-                    timeline: [...order.timeline, timelineEntry]
-                };
+    const updateOrderStatus = async (orderId, status, message = '') => {
+        if (useAPI) {
+            try {
+                const updatedOrder = await ordersAPI.updateStatus(orderId, status, message);
+                setOrders(orders.map(order =>
+                    (order.orderId === orderId || order.id === orderId) ? updatedOrder : order
+                ));
+                return updatedOrder;
+            } catch (err) {
+                console.error('Error updating order status:', err);
+                throw err;
             }
-            return order;
-        }));
+        } else {
+            setOrders(orders.map(order => {
+                if (order.orderId === orderId || order.id === orderId) {
+                    const timelineEntry = {
+                        status,
+                        note: message || `Status changed to ${status}`,
+                        date: new Date().toISOString()
+                    };
+                    return {
+                        ...order,
+                        status,
+                        updatedAt: new Date().toISOString(),
+                        statusHistory: [...(order.statusHistory || []), timelineEntry]
+                    };
+                }
+                return order;
+            }));
+        }
     };
 
     const updatePaymentStatus = (orderId, paymentStatus, message = '') => {
         setOrders(orders.map(order => {
-            if (order.id === orderId) {
+            if (order.orderId === orderId || order.id === orderId) {
                 const timelineEntry = {
                     status: `payment_${paymentStatus}`,
-                    message: message || getPaymentStatusMessage(paymentStatus),
-                    timestamp: new Date().toISOString()
+                    note: message || `Payment ${paymentStatus}`,
+                    date: new Date().toISOString()
                 };
-
                 return {
                     ...order,
                     paymentStatus,
                     updatedAt: new Date().toISOString(),
-                    timeline: [...order.timeline, timelineEntry]
+                    statusHistory: [...(order.statusHistory || []), timelineEntry]
                 };
             }
             return order;
         }));
-    };
-
-    const getStatusMessage = (status) => {
-        const messages = {
-            pending: 'Order placed',
-            confirmed: 'Order confirmed',
-            processing: 'Order is being processed',
-            shipped: 'Order has been shipped',
-            delivered: 'Order delivered',
-            cancelled: 'Order cancelled'
-        };
-        return messages[status] || 'Status updated';
-    };
-
-    const getPaymentStatusMessage = (status) => {
-        const messages = {
-            pending: 'Payment pending',
-            verified: 'Payment verified',
-            rejected: 'Payment rejected'
-        };
-        return messages[status] || 'Payment status updated';
     };
 
     const updateSettings = (newSettings) => {
@@ -181,15 +194,32 @@ export const OrderProvider = ({ children }) => {
             paymentVerified: orders.filter(o => o.paymentStatus === 'verified').length,
             totalRevenue: orders
                 .filter(o => o.paymentStatus === 'verified')
-                .reduce((sum, o) => sum + o.total, 0),
+                .reduce((sum, o) => sum + (o.total || 0), 0),
         };
         return stats;
+    };
+
+    const trackOrder = async (orderId) => {
+        if (useAPI) {
+            try {
+                return await ordersAPI.track(orderId);
+            } catch (err) {
+                console.error('Error tracking order:', err);
+                return getOrderById(orderId);
+            }
+        }
+        return getOrderById(orderId);
+    };
+
+    const refreshOrders = () => {
+        loadOrders();
     };
 
     const value = {
         orders,
         settings,
         loading,
+        useAPI,
         createOrder,
         getOrderById,
         getOrdersByStatus,
@@ -198,6 +228,8 @@ export const OrderProvider = ({ children }) => {
         updateSettings,
         getShippingCharge,
         getOrderStats,
+        trackOrder,
+        refreshOrders,
     };
 
     return (

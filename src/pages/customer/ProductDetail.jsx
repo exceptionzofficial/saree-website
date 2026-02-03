@@ -228,15 +228,15 @@ const ProductDetail = () => {
                             {/* Price */}
                             <div className="product-detail__price">
                                 <span className="product-detail__current-price">
-                                    ₹{product.discountPrice.toLocaleString()}
+                                    ₹{(product.discountPrice || product.price || 0).toLocaleString()}
                                 </span>
-                                {product.price !== product.discountPrice && (
+                                {(product.originalPrice || product.price) !== (product.discountPrice || product.price) && (
                                     <>
                                         <span className="product-detail__original-price">
-                                            ₹{product.price.toLocaleString()}
+                                            ₹{(product.originalPrice || product.price || 0).toLocaleString()}
                                         </span>
                                         <span className="product-detail__savings">
-                                            You save ₹{(product.price - product.discountPrice).toLocaleString()}
+                                            You save ₹{((product.originalPrice || product.price || 0) - (product.discountPrice || product.price || 0)).toLocaleString()}
                                         </span>
                                     </>
                                 )}

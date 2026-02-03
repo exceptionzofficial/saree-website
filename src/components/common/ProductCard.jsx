@@ -18,7 +18,7 @@ const ProductCard = ({ product }) => {
         <Link to={`/product/${product.slug}`} className="product-card">
             <div className="product-card__image-wrapper">
                 <img
-                    src={product.images[0]}
+                    src={product.images?.[0] || 'https://via.placeholder.com/400x500?text=No+Image'}
                     alt={product.name}
                     className="product-card__image"
                     loading="lazy"
@@ -74,11 +74,11 @@ const ProductCard = ({ product }) => {
                 {/* Price */}
                 <div className="product-card__price">
                     <span className="product-card__current-price">
-                        ₹{product.discountPrice.toLocaleString()}
+                        ₹{(product.discountPrice || product.price || 0).toLocaleString()}
                     </span>
-                    {product.price !== product.discountPrice && (
+                    {(product.originalPrice || product.price) && (product.originalPrice || product.price) !== (product.discountPrice || product.price) && (
                         <span className="product-card__original-price">
-                            ₹{product.price.toLocaleString()}
+                            ₹{(product.originalPrice || product.price).toLocaleString()}
                         </span>
                     )}
                 </div>

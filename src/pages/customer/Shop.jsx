@@ -43,9 +43,10 @@ const Shop = () => {
             result = result.filter(product => {
                 if (filters.category && product.category !== filters.category) return false;
                 if (filters.color && product.color !== filters.color) return false;
-                if (filters.minPrice && product.discountPrice < parseInt(filters.minPrice)) return false;
-                if (filters.maxPrice && product.discountPrice > parseInt(filters.maxPrice)) return false;
-                if (filters.fabric && !product.fabric.toLowerCase().includes(filters.fabric.toLowerCase())) return false;
+                const currentPrice = product.discountPrice || product.price || 0;
+                if (filters.minPrice && currentPrice < parseInt(filters.minPrice)) return false;
+                if (filters.maxPrice && currentPrice > parseInt(filters.maxPrice)) return false;
+                if (filters.fabric && !((product.fabric || product.material || '').toLowerCase().includes(filters.fabric.toLowerCase()))) return false;
                 return true;
             });
         }

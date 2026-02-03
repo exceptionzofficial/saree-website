@@ -103,7 +103,7 @@ export const CartProvider = ({ children }) => {
 
     const getOriginalTotal = () => {
         return state.items.reduce(
-            (total, item) => total + item.price * item.quantity,
+            (total, item) => total + (item.originalPrice || item.price || 0) * item.quantity,
             0
         );
     };

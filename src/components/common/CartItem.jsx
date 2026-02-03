@@ -33,11 +33,11 @@ const CartItem = ({ item }) => {
                     {/* Mobile Price */}
                     <div className="cart-item__price-mobile">
                         <span className="cart-item__current-price">
-                            ₹{(item.discountPrice || item.price).toLocaleString()}
+                            ₹{(item.discountPrice || item.price || 0).toLocaleString()}
                         </span>
-                        {item.price !== item.discountPrice && (
+                        {(item.originalPrice || item.price) && (item.originalPrice || item.price) !== (item.discountPrice || item.price) && (
                             <span className="cart-item__original-price">
-                                ₹{item.price.toLocaleString()}
+                                ₹{(item.originalPrice || item.price).toLocaleString()}
                             </span>
                         )}
                     </div>
@@ -77,11 +77,11 @@ const CartItem = ({ item }) => {
             {/* Unit Price - Desktop */}
             <div className="cart-item__price">
                 <span className="cart-item__current-price">
-                    ₹{(item.discountPrice || item.price).toLocaleString()}
+                    ₹{(item.discountPrice || item.price || 0).toLocaleString()}
                 </span>
-                {item.price !== item.discountPrice && (
+                {(item.originalPrice || item.price) && (item.originalPrice || item.price) !== (item.discountPrice || item.price) && (
                     <span className="cart-item__original-price">
-                        ₹{item.price.toLocaleString()}
+                        ₹{(item.originalPrice || item.price).toLocaleString()}
                     </span>
                 )}
             </div>
