@@ -1,0 +1,202 @@
+.register-page {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--background-alt) 0%, var(--surface) 100%);
+    padding: var(--space-8) var(--space-4);
+    width: 100%;
+}
+
+.auth-register-container {
+    width: 100%;
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.register-card {
+    background: var(--surface);
+    padding: var(--space-10);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-light);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+.register-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-4);
+}
+
+.register-header h1 {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.register-header p {
+    color: var(--text-secondary);
+}
+
+.register-error {
+    background: #FEE2E2;
+    color: #DC2626;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+    text-align: center;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.form-group label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.input-with-icon input,
+.input-with-icon textarea {
+    width: 100%;
+    padding: var(--space-4) var(--space-4) var(--space-4) 48px;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    transition: all var(--transition-normal);
+    box-sizing: border-box;
+}
+
+.input-with-icon input {
+    height: 52px;
+}
+
+.input-with-icon textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.input-with-icon input:focus,
+.input-with-icon textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(0, 132, 204, 0.1);
+    outline: none;
+}
+
+.input-with-icon input::placeholder,
+.input-with-icon textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.register-btn {
+    margin-top: var(--space-4);
+    background: var(--gradient-primary);
+    color: white;
+    padding: var(--space-4) var(--space-6);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-md);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    transition: all var(--transition-fast);
+    height: 52px;
+}
+
+.register-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.register-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.register-footer {
+    margin-top: var(--space-8);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+}
+
+.register-footer a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-footer a:hover {
+    text-decoration: underline;
+}
+
+.spinner {
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 640px) {
+    .register-card {
+        padding: var(--space-6);
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

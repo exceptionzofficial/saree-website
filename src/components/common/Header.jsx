@@ -10,6 +10,7 @@ import {
     ChevronDown
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import logo from '../../assets/logo.png';
 import './Header.css';
 
@@ -21,6 +22,7 @@ const Header = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { getCartCount } = useCart();
+    const { user, isAuthenticated, isMember } = useAuth();
 
     const cartCount = getCartCount();
 
@@ -90,13 +92,21 @@ const Header = () => {
                     </nav>
 
                     <div className="header__actions">
-                        <Link to="/membership" className="header__seller-btn btn btn-outline btn-sm">
-                            Become a Member
+                        <Link to={isMember ? "/admin/dashboard" : "/membership"} className={`header__seller-btn btn ${isMember ? 'btn-secondary' : 'btn-outline'} btn-sm`}>
+                            {isMember ? 'Seller Portal' : 'Become a Member'}
                         </Link>
 
-                        <Link to="/login" className="header__login-link">
-                            Login
-                        </Link>
+                        {isAuthenticated ? (
+                            <Link to="/profile" className="header__profile-icon" title="My Profile">
+                                <div className="header__profile-avatar">
+                                    {user.name.charAt(0).toUpperCase()}
+                                </div>
+                            </Link>
+                        ) : (
+                            <Link to="/login" className="header__login-link">
+                                Login
+                            </Link>
+                        )}
 
                         <div className="header__actions-divider"></div>
 
@@ -148,12 +158,29 @@ const Header = () => {
                         </Link>
                     ))}
                     <div className="header__mobile-divider"></div>
-                    <Link to="/login" className="header__mobile-link">
-                        Login / Register
-                    </Link>
-                    <Link to="/membership" className="header__mobile-link">
-                        Become a Member
-                    </Link>
+                    {isAuthenticated ? (
+                        <>
+                            <Link to="/profile" className="header__mobile-link">
+                                My Profile ({user.name})
+                            </Link>
+                            {isMember && (
+                                <Link to="/admin/dashboard" className="header__mobile-link header__mobile-link--highlight">
+                                    Seller Portal
+                                </Link>
+                            )}
+                        </>
+                    ) : (
+                        <Link to="/login" className="header__mobile-link">
+                            Login / Register
+                        </Link>
+                    )}
+
+                    {!isMember && (
+                        <Link to="/membership" className="header__mobile-link">
+                            Become a Member
+                        </Link>
+                    )}
+
                     <div className="header__mobile-divider"></div>
                     <Link to="/track-order" className="header__mobile-link">
                         Track Order

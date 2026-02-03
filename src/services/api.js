@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:5000/api';
 
 // Fetch wrapper with error handling
 async function fetchAPI(endpoint, options = {}) {
@@ -86,8 +86,25 @@ export const categoriesAPI = {
     delete: (id) => fetchAPI(`/categories/${id}`, { method: 'DELETE' })
 };
 
+// Auth API
+export const authAPI = {
+    register: (userData) => fetchAPI('/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    }),
+    login: (credentials) => fetchAPI('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials)
+    }),
+    getProfile: (token) => fetchAPI('/auth/profile', {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+};
+
 // Health check
 export const checkAPIHealth = () => fetchAPI('/health');
 
-export default { productsAPI, ordersAPI, membershipsAPI, categoriesAPI, checkAPIHealth };
+export default { productsAPI, ordersAPI, membershipsAPI, categoriesAPI, authAPI, checkAPIHealth };
 

@@ -3,6 +3,7 @@ import { CartProvider } from './context/CartContext';
 import { ProductProvider } from './context/ProductContext';
 import { OrderProvider } from './context/OrderContext';
 import { MembershipProvider } from './context/MembershipContext';
+import { AuthProvider } from './context/AuthContext';
 
 // Customer Components
 import Header from './components/common/Header';
@@ -23,7 +24,9 @@ import Contact from './pages/customer/Contact';
 import BecomeMember from './pages/customer/BecomeMember';
 import MembershipPayment from './pages/customer/MembershipPayment';
 import SellerDashboard from './pages/customer/SellerDashboard';
+import Profile from './pages/customer/Profile';
 import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -57,93 +60,105 @@ const CustomerLayout = ({ children }) => {
 function App() {
   return (
     <BrowserRouter>
-      <ProductProvider>
-        <CartProvider>
-          <OrderProvider>
-            <MembershipProvider>
-              <Routes>
-                {/* Customer Routes */}
-                <Route path="/" element={
-                  <CustomerLayout>
-                    <Home />
-                  </CustomerLayout>
-                } />
-                <Route path="/shop" element={
-                  <CustomerLayout>
-                    <Shop />
-                  </CustomerLayout>
-                } />
-                <Route path="/product/:slug" element={
-                  <CustomerLayout>
-                    <ProductDetail />
-                  </CustomerLayout>
-                } />
-                <Route path="/cart" element={
-                  <CustomerLayout>
-                    <Cart />
-                  </CustomerLayout>
-                } />
-                <Route path="/checkout" element={
-                  <CustomerLayout>
-                    <Checkout />
-                  </CustomerLayout>
-                } />
-                <Route path="/order-confirmation/:orderId" element={
-                  <CustomerLayout>
-                    <OrderConfirmation />
-                  </CustomerLayout>
-                } />
-                <Route path="/track-order" element={
-                  <CustomerLayout>
-                    <TrackOrder />
-                  </CustomerLayout>
-                } />
-                <Route path="/about" element={
-                  <CustomerLayout>
-                    <About />
-                  </CustomerLayout>
-                } />
-                <Route path="/contact" element={
-                  <CustomerLayout>
-                    <Contact />
-                  </CustomerLayout>
-                } />
-                <Route path="/membership" element={
-                  <CustomerLayout>
-                    <BecomeMember />
-                  </CustomerLayout>
-                } />
-                <Route path="/login" element={
-                  <CustomerLayout>
-                    <Login />
-                  </CustomerLayout>
-                } />
-                <Route path="/membership/payment" element={
-                  <CustomerLayout>
-                    <MembershipPayment />
-                  </CustomerLayout>
-                } />
-                <Route path="/seller/dashboard" element={
-                  <CustomerLayout>
-                    <SellerDashboard />
-                  </CustomerLayout>
-                } />
+      <AuthProvider>
+        <ProductProvider>
+          <CartProvider>
+            <OrderProvider>
+              <MembershipProvider>
+                <Routes>
+                  {/* Customer Routes */}
+                  <Route path="/" element={
+                    <CustomerLayout>
+                      <Home />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/shop" element={
+                    <CustomerLayout>
+                      <Shop />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/product/:slug" element={
+                    <CustomerLayout>
+                      <ProductDetail />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/cart" element={
+                    <CustomerLayout>
+                      <Cart />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/checkout" element={
+                    <CustomerLayout>
+                      <Checkout />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/order-confirmation/:orderId" element={
+                    <CustomerLayout>
+                      <OrderConfirmation />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/track-order" element={
+                    <CustomerLayout>
+                      <TrackOrder />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/about" element={
+                    <CustomerLayout>
+                      <About />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/contact" element={
+                    <CustomerLayout>
+                      <Contact />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/membership" element={
+                    <CustomerLayout>
+                      <BecomeMember />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/login" element={
+                    <CustomerLayout>
+                      <Login />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/register" element={
+                    <CustomerLayout>
+                      <Register />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/profile" element={
+                    <CustomerLayout>
+                      <Profile />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/membership/payment" element={
+                    <CustomerLayout>
+                      <MembershipPayment />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/seller/dashboard" element={
+                    <CustomerLayout>
+                      <SellerDashboard />
+                    </CustomerLayout>
+                  } />
 
-                {/* Admin Routes */}
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin" element={<AdminLayout />}>
-                  <Route index element={<Dashboard />} />
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="products" element={<AdminProducts />} />
-                  <Route path="orders" element={<AdminOrders />} />
-                  <Route path="memberships" element={<AdminMemberships />} />
-                  <Route path="settings" element={<AdminSettings />} />
-                </Route>
-              </Routes>
-            </MembershipProvider>
-          </OrderProvider>
-        </CartProvider>
-      </ProductProvider>
+                  {/* Admin Routes */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<Dashboard />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="products" element={<AdminProducts />} />
+                    <Route path="orders" element={<AdminOrders />} />
+                    <Route path="memberships" element={<AdminMemberships />} />
+                    <Route path="settings" element={<AdminSettings />} />
+                  </Route>
+                </Routes>
+              </MembershipProvider>
+            </OrderProvider>
+          </CartProvider>
+        </ProductProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

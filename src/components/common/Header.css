@@ -158,6 +158,32 @@
     }
 }
 
+.header__profile-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform var(--transition-fast);
+}
+
+.header__profile-icon:hover {
+    transform: scale(1.05);
+}
+
+.header__profile-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
+}
+
 .header__action-btn {
     width: 44px;
     height: 44px;
@@ -336,6 +362,11 @@
 .header__mobile-link--active {
     background: var(--background);
     color: var(--primary);
+}
+
+.header__mobile-link--highlight {
+    background: #DCFCE7;
+    color: #16A34A;
 }
 
 .header__mobile-divider {

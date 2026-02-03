@@ -1,19 +1,34 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Phone, UserPlus, ArrowRight, CheckCircle2, Gift, Award } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Phone, Lock, ArrowRight, Loader, Gift, Award, CheckCircle2 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
-    const [mobileNumber, setMobileNumber] = useState('');
-    const [referralCode, setReferralCode] = useState('');
-    const [isNewUser, setIsNewUser] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const { login } = useAuth();
 
-    const handleSubmit = (e) => {
+    const [mobile, setMobile] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const from = location.state?.from?.pathname || '/profile';
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log('Login attempt:', { mobileNumber, referralCode });
-        navigate('/');
+        setError('');
+        setLoading(true);
+
+        try {
+            await login(mobile, password);
+            navigate(from, { replace: true });
+        } catch (err) {
+            setError(err.message || 'Login failed. Please check your credentials.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -22,8 +37,10 @@ const Login = () => {
                 <div className="auth-card">
                     <div className="auth-header">
                         <h1 className="auth-title">Welcome Back</h1>
-                        <p className="auth-subtitle">Login to your GURUBAGAVAN account</p>
+                        <p className="auth-subtitle">Login to your Saree Elegance account</p>
                     </div>
+
+                    {error && <div className="auth-error">{error}</div>}
 
                     <form className="auth-form" onSubmit={handleSubmit}>
                         <div className="form-group">
@@ -34,8 +51,8 @@ const Login = () => {
                                     type="tel"
                                     id="mobile"
                                     placeholder="Enter your 10-digit mobile number"
-                                    value={mobileNumber}
-                                    onChange={(e) => setMobileNumber(e.target.value)}
+                                    value={mobile}
+                                    onChange={(e) => setMobile(e.target.value)}
                                     required
                                     pattern="[0-9]{10}"
                                 />
@@ -43,27 +60,36 @@ const Login = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="referral">Unique Reference Code (Optional)</label>
+                            <label htmlFor="password">Password</label>
                             <div className="input-with-icon">
-                                <UserPlus size={20} className="input-icon" />
+                                <Lock size={20} className="input-icon" />
                                 <input
-                                    type="text"
-                                    id="referral"
-                                    placeholder="Enter your friend's reference code"
-                                    value={referralCode}
-                                    onChange={(e) => setReferralCode(e.target.value)}
+                                    type="password"
+                                    id="password"
+                                    placeholder="Enter your password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
                                 />
                             </div>
-                            <p className="form-help">Enter the unique code of the member who referred you to unlock benefits.</p>
                         </div>
 
-                        <button type="submit" className="btn btn-primary btn-block btn-lg">
-                            Login / Register <ArrowRight size={20} />
+                        <button type="submit" className="login-btn" disabled={loading}>
+                            {loading ? (
+                                <>
+                                    <Loader className="spinner" size={20} />
+                                    Logging in...
+                                </>
+                            ) : (
+                                <>
+                                    Login <ArrowRight size={20} />
+                                </>
+                            )}
                         </button>
                     </form>
 
                     <div className="auth-footer">
-                        <p>By continuing, you agree to our <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.</p>
+                        Don't have an account? <Link to="/register">Create Account</Link>
                     </div>
                 </div>
 
@@ -97,9 +123,6 @@ const Login = () => {
                                 <p>Get an extra gold coin for every 7 additional successful referrals!</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="benefits-note">
-                        * Rewards are credited after purchasing your membership.
                     </div>
                 </div>
             </div>
