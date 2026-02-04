@@ -6,10 +6,12 @@ import {
     ChevronRight
 } from 'lucide-react';
 import { useMembership } from '../../context/MembershipContext';
+import { useAuth } from '../../context/AuthContext';
 import './SellerDashboard.css';
 
 const SellerDashboard = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const {
         getCurrentMembership,
         getCurrentRequest,
@@ -155,8 +157,8 @@ const SellerDashboard = () => {
                 <div className="container">
                     <div className="dashboard-header">
                         <div>
-                            <h1>Seller Dashboard</h1>
-                            <p>Welcome back, {membership.name}!</p>
+                            <h1>Member Portal</h1>
+                            <p>Welcome back, {user?.name || 'Member'}!</p>
                         </div>
                         <div className="membership-status active">
                             <span className="status-dot"></span>

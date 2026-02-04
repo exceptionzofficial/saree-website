@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useMembership } from '../../context/MembershipContext';
 import logo from '../../assets/logo.png';
 import './Header.css';
 
@@ -22,7 +23,12 @@ const Header = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { getCartCount } = useCart();
-    const { user, isAuthenticated, isMember } = useAuth();
+    const { user, isAuthenticated } = useAuth();
+    const { getUserMembershipStatus } = useMembership();
+
+    const membershipStatus = getUserMembershipStatus();
+    // Show "Member Portal" only when membership is active (not completed or none)
+    const hasActiveMembership = membershipStatus === 'active';
 
     const cartCount = getCartCount();
 
@@ -92,8 +98,8 @@ const Header = () => {
                     </nav>
 
                     <div className="header__actions">
-                        <Link to={isMember ? "/admin/dashboard" : "/membership"} className={`header__seller-btn btn ${isMember ? 'btn-secondary' : 'btn-outline'} btn-sm`}>
-                            {isMember ? 'Seller Portal' : 'Become a Member'}
+                        <Link to={hasActiveMembership ? "/seller/dashboard" : "/membership"} className={`header__seller-btn btn ${hasActiveMembership ? 'btn-secondary' : 'btn-outline'} btn-sm`}>
+                            {hasActiveMembership ? 'Member Portal' : 'Become a Member'}
                         </Link>
 
                         {isAuthenticated ? (
@@ -163,9 +169,9 @@ const Header = () => {
                             <Link to="/profile" className="header__mobile-link">
                                 My Profile ({user.name})
                             </Link>
-                            {isMember && (
-                                <Link to="/admin/dashboard" className="header__mobile-link header__mobile-link--highlight">
-                                    Seller Portal
+                            {hasActiveMembership && (
+                                <Link to="/seller/dashboard" className="header__mobile-link header__mobile-link--highlight">
+                                    Member Portal
                                 </Link>
                             )}
                         </>
@@ -175,7 +181,7 @@ const Header = () => {
                         </Link>
                     )}
 
-                    {!isMember && (
+                    {!hasActiveMembership && (
                         <Link to="/membership" className="header__mobile-link">
                             Become a Member
                         </Link>

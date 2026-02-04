@@ -14,10 +14,15 @@ import {
     LayoutDashboard
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useMembership } from '../../context/MembershipContext';
 import './Profile.css';
 
 const Profile = () => {
     const { user, logout, isAuthenticated } = useAuth();
+    const { getUserMembershipStatus } = useMembership();
+
+    const membershipStatus = getUserMembershipStatus();
+    const hasActiveMembership = membershipStatus === 'active';
 
     if (!isAuthenticated) {
         return <Navigate to="/login" />;
@@ -50,10 +55,10 @@ const Profile = () => {
                                 <span>My Orders</span>
                                 <ChevronRight size={16} />
                             </Link>
-                            {user.isMember ? (
-                                <Link to="/admin/dashboard" className="profile-nav-item highlight">
+                            {hasActiveMembership ? (
+                                <Link to="/seller/dashboard" className="profile-nav-item highlight">
                                     <LayoutDashboard size={20} />
-                                    <span>Seller Portal</span>
+                                    <span>Member Portal</span>
                                     <ChevronRight size={16} />
                                 </Link>
                             ) : (
@@ -131,7 +136,7 @@ const Profile = () => {
                             </div>
                         </section>
 
-                        {user.isMember && (
+                        {hasActiveMembership && (
                             <section className="profile-section membership-status">
                                 <div className="membership-card">
                                     <div className="membership-icon">
@@ -139,9 +144,9 @@ const Profile = () => {
                                     </div>
                                     <div className="membership-content">
                                         <h3>Member Account</h3>
-                                        <p>You have full access to the Seller Portal and referral benefits.</p>
-                                        <Link to="/admin/dashboard" className="btn btn-primary btn-sm">
-                                            Go to Dashboard
+                                        <p>You have full access to the Member Portal and referral benefits.</p>
+                                        <Link to="/seller/dashboard" className="btn btn-primary btn-sm">
+                                            Go to Member Portal
                                         </Link>
                                     </div>
                                 </div>

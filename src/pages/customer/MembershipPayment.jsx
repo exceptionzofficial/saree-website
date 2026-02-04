@@ -3,18 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { Upload, Copy, Check, CreditCard, Smartphone, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useMembership } from '../../context/MembershipContext';
 import { useOrders, generateUPIQRUrl } from '../../context/OrderContext';
+import { useAuth } from '../../context/AuthContext';
 import './MembershipPayment.css';
 
 const MembershipPayment = () => {
     const navigate = useNavigate();
-    const { submitPaymentRequest, currentUserEmail } = useMembership();
+    const { submitPaymentRequest } = useMembership();
     const { settings } = useOrders();
+    const { user, isAuthenticated } = useAuth();
     const membershipPrice = settings.membershipPrice || 999;
 
+    // Auto-fill from logged-in user
     const [formData, setFormData] = useState({
-        name: '',
-        email: currentUserEmail || '',
-        mobile: ''
+        name: user?.name || '',
+        email: user?.email || '',
+        mobile: user?.mobile || ''
     });
     const [screenshot, setScreenshot] = useState(null);
     const [screenshotPreview, setScreenshotPreview] = useState('');

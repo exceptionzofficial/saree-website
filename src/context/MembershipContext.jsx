@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useOrders } from './OrderContext';
 import { membershipsAPI } from '../services/api';
+import { useAuth } from './AuthContext';
 
 const MembershipContext = createContext();
 
@@ -14,27 +15,20 @@ export const useMembership = () => {
 
 export const MembershipProvider = ({ children }) => {
     const { settings } = useOrders();
+    const { user, isAuthenticated } = useAuth();
 
     const [membershipRequests, setMembershipRequests] = useState([]);
     const [memberships, setMemberships] = useState([]);
     const [loading, setLoading] = useState(true);
     const [useAPI, setUseAPI] = useState(true);
 
-    // Current user's email (mock - in real app, would use auth)
-    const [currentUserEmail, setCurrentUserEmail] = useState(() => {
-        return localStorage.getItem('currentMemberEmail') || '';
-    });
+    // Current user's email - synced from AuthContext
+    const currentUserEmail = isAuthenticated && user?.email ? user.email : '';
 
     // Load data on mount
     useEffect(() => {
         loadData();
     }, []);
-
-    useEffect(() => {
-        if (currentUserEmail) {
-            localStorage.setItem('currentMemberEmail', currentUserEmail);
-        }
-    }, [currentUserEmail]);
 
     const loadData = async () => {
         setLoading(true);
@@ -74,13 +68,18 @@ export const MembershipProvider = ({ children }) => {
                 formData.append('name', userData.name);
                 formData.append('email', userData.email);
                 formData.append('mobile', userData.mobile);
+
+                // Automatically include referral code from user profile (registration)
+                if (user?.referralId) {
+                    formData.append('referralCode', user.referralId);
+                }
+
                 if (screenshotFile) {
                     formData.append('screenshot', screenshotFile);
                 }
 
                 const request = await membershipsAPI.submitRequest(formData);
                 setMembershipRequests(prev => [...prev, request]);
-                setCurrentUserEmail(userData.email);
                 return request;
             } catch (err) {
                 console.error('Error submitting request:', err);
@@ -96,7 +95,6 @@ export const MembershipProvider = ({ children }) => {
                 submittedAt: new Date().toISOString()
             };
             setMembershipRequests(prev => [...prev, request]);
-            setCurrentUserEmail(userData.email);
             return request;
         }
     };
@@ -239,7 +237,6 @@ export const MembershipProvider = ({ children }) => {
         useAPI,
 
         // Actions
-        setCurrentUserEmail,
         submitPaymentRequest,
         approveRequest,
         rejectRequest,
