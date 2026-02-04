@@ -10,6 +10,7 @@ import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import AnnouncementBar from './components/common/AnnouncementBar';
 import CategoryNav from './components/common/CategoryNav';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Customer Pages
 import Home from './pages/customer/Home';
@@ -60,6 +61,7 @@ const CustomerLayout = ({ children }) => {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AuthProvider>
         <ProductProvider>
           <CartProvider>

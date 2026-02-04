@@ -1,16 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, TrendingUp, Users, ShieldCheck, Zap, ArrowRight, Check, Gift, Award } from 'lucide-react';
+import { ShieldCheck, Zap, ArrowRight, Check, Gift, Award } from 'lucide-react';
 import './BecomeMember.css';
 
 const BecomeMember = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        name: '',
-        mobile: '',
-        email: '',
-        city: '',
-    });
 
     const benefits = [
         {
@@ -65,16 +59,6 @@ const BecomeMember = () => {
             btnText: 'Get Premium Access'
         }
     ];
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Member registration:', formData);
-        alert('Thank you for your interest! Please proceed to payment to unlock your Unique Referral Code.');
-    };
 
     return (
         <main className="seller-page">
@@ -146,87 +130,6 @@ const BecomeMember = () => {
                                 </button>
                             </div>
                         ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Registration Form Section */}
-            <section id="register-form" className="seller-register">
-                <div className="container">
-                    <div className="register-container">
-                        <div className="register-info">
-                            <h2>Join the Club</h2>
-                            <p>Become a member today and start generating your unique referral code to share with your friends and family.</p>
-                            <div className="info-list">
-                                <div className="info-item">
-                                    <div className="info-icon"><Users size={20} /></div>
-                                    <div>
-                                        <h4>Community Power</h4>
-                                        <p>Join thousands of members already earning gold coins.</p>
-                                    </div>
-                                </div>
-                                <div className="info-item">
-                                    <div className="info-icon"><TrendingUp size={20} /></div>
-                                    <div>
-                                        <h4>Track Earnings</h4>
-                                        <p>Real-time dashboard to see your referral progress.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="register-form-card">
-                            <form onSubmit={handleSubmit}>
-                                <div className="form-group">
-                                    <label>Full Name</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        placeholder="Enter your name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Mobile Number</label>
-                                    <input
-                                        type="tel"
-                                        name="mobile"
-                                        placeholder="10-digit number"
-                                        value={formData.mobile}
-                                        onChange={handleChange}
-                                        required
-                                        pattern="[0-9]{10}"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Email Address</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        placeholder="your@email.com"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>City</label>
-                                    <input
-                                        type="text"
-                                        name="city"
-                                        placeholder="Your City"
-                                        value={formData.city}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-secondary btn-block btn-lg">
-                                    Register & Proceed to Payment
-                                </button>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </section>
