@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Upload, Copy, Check, CreditCard, Smartphone, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useMembership } from '../../context/MembershipContext';
+import { useOrders, generateUPIQRUrl } from '../../context/OrderContext';
 import './MembershipPayment.css';
 
 const MembershipPayment = () => {
     const navigate = useNavigate();
-    const { settings, submitPaymentRequest, currentUserEmail } = useMembership();
+    const { submitPaymentRequest, currentUserEmail } = useMembership();
+    const { settings } = useOrders();
+    const membershipPrice = settings.membershipPrice || 999;
 
     const [formData, setFormData] = useState({
         name: '',
@@ -99,7 +102,7 @@ const MembershipPayment = () => {
                         <div className="summary-card">
                             <div className="summary-item">
                                 <span className="item-name">Premium Membership</span>
-                                <span className="item-price">₹999</span>
+                                <span className="item-price">₹{membershipPrice.toLocaleString()}</span>
                             </div>
                             <div className="summary-divider"></div>
                             <div className="summary-benefits">
@@ -114,7 +117,7 @@ const MembershipPayment = () => {
                             <div className="summary-divider"></div>
                             <div className="summary-total">
                                 <span>Total</span>
-                                <span className="total-amount">₹999</span>
+                                <span className="total-amount">₹{membershipPrice.toLocaleString()}</span>
                             </div>
                         </div>
 
@@ -148,11 +151,11 @@ const MembershipPayment = () => {
                                             {copied ? 'Copied!' : 'Copy'}
                                         </button>
                                     </div>
-                                    <p className="upi-hint">Pay ₹999 to this UPI ID using GPay, PhonePe, or any UPI app</p>
+                                    <p className="upi-hint">Pay ₹{membershipPrice.toLocaleString()} to this UPI ID using GPay, PhonePe, or any UPI app</p>
 
                                     <div className="qr-code-wrapper" style={{ marginTop: '24px' }}>
                                         <img
-                                            src={settings.qrCodeUrl || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=gurubagavan@upi&pn=Gurubagavan%20Sarees&am=999&cu=INR'}
+                                            src={generateUPIQRUrl(settings.upiId || 'gurubagavan@upi', settings.storeName || 'Gurubagavan Sarees', membershipPrice)}
                                             alt="Payment QR Code"
                                         />
                                         <span>Scan to Pay</span>

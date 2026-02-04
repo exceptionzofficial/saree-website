@@ -12,7 +12,7 @@ import {
     Smartphone
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useOrders } from '../../context/OrderContext';
+import { useOrders, generateUPIQRUrl } from '../../context/OrderContext';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -303,18 +303,11 @@ const Checkout = () => {
 
                                     <div className="checkout__qr-section">
                                         <div className="checkout__qr-wrapper">
-                                            {settings.qrCodeUrl ? (
-                                                <img
-                                                    src={settings.qrCodeUrl}
-                                                    alt="Payment QR Code"
-                                                    className="checkout__qr-image"
-                                                />
-                                            ) : (
-                                                <div className="checkout__qr-placeholder">
-                                                    <Smartphone size={48} />
-                                                    <p>QR Code</p>
-                                                </div>
-                                            )}
+                                            <img
+                                                src={generateUPIQRUrl(settings.upiId || 'gurubagavan@upi', settings.storeName || 'Gurubagavan Sarees', total)}
+                                                alt="Payment QR Code"
+                                                className="checkout__qr-image"
+                                            />
                                         </div>
 
                                         <div className="checkout__upi-info">

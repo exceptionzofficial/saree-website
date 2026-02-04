@@ -103,8 +103,18 @@ export const authAPI = {
     })
 };
 
+// Settings API
+export const settingsAPI = {
+    get: () => fetchAPI('/settings'),
+    update: (settings) => fetchAPI('/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+    })
+};
+
 // Health check
 export const checkAPIHealth = () => fetchAPI('/health');
 
-export default { productsAPI, ordersAPI, membershipsAPI, categoriesAPI, authAPI, checkAPIHealth };
+export default { productsAPI, ordersAPI, membershipsAPI, categoriesAPI, authAPI, settingsAPI, checkAPIHealth };
 

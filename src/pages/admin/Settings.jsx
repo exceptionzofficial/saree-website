@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Save, Upload, Check, Plus, X, Megaphone } from 'lucide-react';
+import { Save, Check, Plus, X, Megaphone } from 'lucide-react';
 import { useOrders } from '../../context/OrderContext';
 import './Settings.css';
 
@@ -7,7 +7,7 @@ const AdminSettings = () => {
     const { settings, updateSettings } = useOrders();
     const [formData, setFormData] = useState({
         upiId: settings.upiId || '',
-        qrCodeUrl: settings.qrCodeUrl || '',
+        membershipPrice: settings.membershipPrice || 999,
         storeName: settings.storeName || 'Saree Elegance',
         storeEmail: settings.storeEmail || '',
         storePhone: settings.storePhone || '',
@@ -140,33 +140,21 @@ const AdminSettings = () => {
                                 required
                             />
                             <span className="admin-settings__hint">
-                                This will be shown to customers for payment
+                                QR code will be auto-generated for customers based on this UPI ID
                             </span>
                         </div>
 
                         <div className="admin-settings__field">
-                            <label>QR Code Image</label>
-                            <div className="admin-settings__qr-upload">
-                                {formData.qrCodeUrl && (
-                                    <img
-                                        src={formData.qrCodeUrl}
-                                        alt="QR Code"
-                                        className="admin-settings__qr-preview"
-                                    />
-                                )}
-                                <label className="admin-settings__upload-btn">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleQrUpload}
-                                        hidden
-                                    />
-                                    <Upload size={18} />
-                                    {formData.qrCodeUrl ? 'Change QR Code' : 'Upload QR Code'}
-                                </label>
-                            </div>
+                            <label>Membership Price (₹)</label>
+                            <input
+                                type="number"
+                                name="membershipPrice"
+                                value={formData.membershipPrice}
+                                onChange={handleChange}
+                                min="0"
+                            />
                             <span className="admin-settings__hint">
-                                Upload your GPay/UPI QR code image
+                                Price for premium membership subscription
                             </span>
                         </div>
                     </div>

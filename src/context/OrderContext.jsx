@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { ordersAPI } from '../services/api';
+import { ordersAPI, settingsAPI } from '../services/api';
 
 const OrderContext = createContext();
 
@@ -7,15 +7,22 @@ const SETTINGS_STORAGE_KEY = 'saree_elegance_settings';
 
 const defaultSettings = {
     upiId: 'gurubagavan@upi',
-    qrCodeUrl: '',
     storeName: 'Gurubagavan Sarees',
     storeEmail: 'contact@gurubagavan.com',
     storePhone: '+91 98765 43210',
     storeAddress: '123 Fashion Street, Silk Bazaar, Chennai - 600001',
     shippingCharge: 99,
+    freeShippingThreshold: 2000,
     freeShippingAbove: 2000,
+    membershipPrice: 999,
     gstNumber: 'GSTIN1234567890',
     announcements: [],
+};
+
+// Helper function to generate UPI QR code URL
+export const generateUPIQRUrl = (upiId, name, amount) => {
+    const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
 };
 
 export const OrderProvider = ({ children }) => {
@@ -52,13 +59,22 @@ export const OrderProvider = ({ children }) => {
         setLoading(false);
     };
 
-    const loadSettings = () => {
-        const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
-        if (savedSettings) {
-            try {
-                setSettings({ ...defaultSettings, ...JSON.parse(savedSettings) });
-            } catch (error) {
-                console.error('Error loading settings:', error);
+    const loadSettings = async () => {
+        try {
+            const apiSettings = await settingsAPI.get();
+            setSettings({ ...defaultSettings, ...apiSettings });
+            // Also save to localStorage as backup
+            localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(apiSettings));
+        } catch (err) {
+            console.warn('API unavailable for settings, using local storage:', err.message);
+            // Fallback to localStorage
+            const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+            if (savedSettings) {
+                try {
+                    setSettings({ ...defaultSettings, ...JSON.parse(savedSettings) });
+                } catch (error) {
+                    console.error('Error loading settings:', error);
+                }
             }
         }
     };
@@ -170,8 +186,19 @@ export const OrderProvider = ({ children }) => {
         }));
     };
 
-    const updateSettings = (newSettings) => {
-        setSettings(prev => ({ ...prev, ...newSettings }));
+    const updateSettings = async (newSettings) => {
+        const updatedSettings = { ...settings, ...newSettings };
+        setSettings(updatedSettings);
+
+        // Save to localStorage immediately
+        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(updatedSettings));
+
+        // Try to save to API
+        try {
+            await settingsAPI.update(updatedSettings);
+        } catch (err) {
+            console.warn('Failed to save settings to API:', err.message);
+        }
     };
 
     const getShippingCharge = (total) => {

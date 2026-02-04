@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, Zap, ArrowRight, Check, Gift, Award } from 'lucide-react';
+import { useOrders } from '../../context/OrderContext';
 import './BecomeMember.css';
 
 const BecomeMember = () => {
     const navigate = useNavigate();
+    const { settings } = useOrders();
+    const membershipPrice = settings.membershipPrice || 999;
 
     const benefits = [
         {
@@ -45,7 +48,7 @@ const BecomeMember = () => {
         },
         {
             name: 'Premium Member',
-            price: '₹999',
+            price: `₹${membershipPrice.toLocaleString()}`,
             priceNote: 'per referral cycle',
             features: [
                 'All Free User features',
