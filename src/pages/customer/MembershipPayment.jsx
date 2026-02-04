@@ -53,12 +53,15 @@ const MembershipPayment = () => {
 
         setSubmitting(true);
 
-        // Simulate upload delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        submitPaymentRequest(formData, screenshotPreview);
-        setSubmitting(false);
-        setSubmitted(true);
+        try {
+            await submitPaymentRequest(formData, screenshot);
+            setSubmitted(true);
+        } catch (error) {
+            console.error('Error submitting payment:', error);
+            alert('Failed to submit payment. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     if (submitted) {

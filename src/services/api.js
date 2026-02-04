@@ -45,6 +45,17 @@ export const ordersAPI = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)
     }),
+    createWithFile: (orderData, screenshotFile) => {
+        const formData = new FormData();
+        formData.append('orderData', JSON.stringify(orderData));
+        if (screenshotFile) {
+            formData.append('paymentScreenshot', screenshotFile);
+        }
+        return fetch(`${API_BASE_URL}/orders`, {
+            method: 'POST',
+            body: formData
+        }).then(res => res.json());
+    },
     updateStatus: (orderId, status, note) => fetchAPI(`/orders/${orderId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

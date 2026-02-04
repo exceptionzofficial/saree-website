@@ -93,10 +93,17 @@ export const OrderProvider = ({ children }) => {
         }
     }, [settings, loading]);
 
-    const createOrder = async (orderData) => {
+    const createOrder = async (orderData, screenshotFile = null) => {
         if (useAPI) {
             try {
-                const newOrder = await ordersAPI.create(orderData);
+                let newOrder;
+                if (screenshotFile) {
+                    // Use FormData with file upload
+                    newOrder = await ordersAPI.createWithFile(orderData, screenshotFile);
+                } else {
+                    // Regular JSON request
+                    newOrder = await ordersAPI.create(orderData);
+                }
                 setOrders(prev => [newOrder, ...prev]);
                 return newOrder;
             } catch (err) {

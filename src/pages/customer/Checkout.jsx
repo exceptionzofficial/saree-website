@@ -101,13 +101,12 @@ const Checkout = () => {
                 subtotal: subtotal,
                 shipping: shipping,
                 total: total,
-                paymentScreenshot: screenshotPreview,
                 paymentMethod: 'UPI'
             };
 
-            const order = createOrder(orderData);
+            const order = await createOrder(orderData, paymentScreenshot);
             clearCart();
-            navigate(`/order-confirmation/${order.id}`);
+            navigate(`/order-confirmation/${order.orderId}`);
         } catch (error) {
             console.error('Error placing order:', error);
             alert('Something went wrong. Please try again.');
