@@ -25,6 +25,7 @@ import Contact from './pages/customer/Contact';
 import BecomeMember from './pages/customer/BecomeMember';
 import MembershipPayment from './pages/customer/MembershipPayment';
 import SellerDashboard from './pages/customer/SellerDashboard';
+import ClaimReward from './pages/customer/ClaimReward';
 import Profile from './pages/customer/Profile';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -36,6 +37,7 @@ import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/Products';
 import AdminOrders from './pages/admin/Orders';
 import AdminMemberships from './pages/admin/MembershipRequests';
+import RewardClaims from './pages/admin/RewardClaims';
 import AdminSettings from './pages/admin/Settings';
 
 import './App.css';
@@ -144,6 +146,11 @@ function App() {
                       <SellerDashboard />
                     </CustomerLayout>
                   } />
+                  <Route path="/membership/claim/:type" element={
+                    <CustomerLayout>
+                      <ClaimReward />
+                    </CustomerLayout>
+                  } />
 
                   {/* Admin Routes */}
                   <Route path="/admin/login" element={<AdminLogin />} />
@@ -153,6 +160,7 @@ function App() {
                     <Route path="products" element={<AdminProducts />} />
                     <Route path="orders" element={<AdminOrders />} />
                     <Route path="memberships" element={<AdminMemberships />} />
+                    <Route path="reward-claims" element={<RewardClaims />} />
                     <Route path="settings" element={<AdminSettings />} />
                   </Route>
                 </Routes>

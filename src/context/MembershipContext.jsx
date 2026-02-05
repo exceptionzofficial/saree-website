@@ -195,6 +195,45 @@ export const MembershipProvider = ({ children }) => {
         }
     };
 
+    // Submit reward claim (cashback or gold)
+    const submitRewardClaim = async (claimData) => {
+        if (useAPI) {
+            try {
+                const result = await membershipsAPI.submitRewardClaim(claimData);
+                // Update local status with 'pending_admin' to match backend
+                if (claimData.type === 'cashback') {
+                    setMemberships(prev => prev.map(m =>
+                        m.email === claimData.email ? { ...m, moneyBackClaimed: 'pending_admin' } : m
+                    ));
+                } else if (claimData.type === 'gold') {
+                    setMemberships(prev => prev.map(m =>
+                        m.email === claimData.email ? { ...m, goldCoinClaimed: 'pending_admin' } : m
+                    ));
+                }
+                return result;
+            } catch (err) {
+                console.error('Error submitting reward claim:', err);
+                throw err;
+            }
+        } else {
+            // Local fallback
+            setMemberships(prev => prev.map(m => {
+                if (m.email === claimData.email) {
+                    return {
+                        ...m,
+                        moneyBackClaimed: claimData.type === 'cashback' ? 'pending_admin' : m.moneyBackClaimed,
+                        goldCoinClaimed: claimData.type === 'gold' ? 'pending_admin' : m.goldCoinClaimed
+                    };
+                }
+                return m;
+            }));
+
+            const claims = JSON.parse(localStorage.getItem('rewardClaims') || '[]');
+            claims.push({ ...claimData, id: Date.now(), status: 'pending', date: new Date().toISOString() });
+            localStorage.setItem('rewardClaims', JSON.stringify(claims));
+        }
+    };
+
     // Get current user's membership
     const getCurrentMembership = () => {
         if (!currentUserEmail) return null;
@@ -241,6 +280,7 @@ export const MembershipProvider = ({ children }) => {
         approveRequest,
         rejectRequest,
         addReferral,
+        submitRewardClaim,
         refreshData,
 
         // Getters

@@ -1,0 +1,332 @@
+.admin-reward-claims {
+    padding: 24px;
+}
+
+.claims-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.claims-header h1 {
+    font-size: 1.75rem;
+    margin-bottom: 4px;
+}
+
+.claims-header p {
+    color: #64748b;
+}
+
+.header-stats {
+    display: flex;
+    gap: 12px;
+}
+
+.stat-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.stat-badge.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.stat-badge.in-progress {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.stat-badge.completed {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.filter-tabs .tab {
+    padding: 10px 20px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: capitalize;
+}
+
+.filter-tabs .tab:hover {
+    background: #e2e8f0;
+}
+
+.filter-tabs .tab.active {
+    background: var(--primary);
+    color: white;
+}
+
+.claims-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.claim-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    border-left: 4px solid #6366f1;
+}
+
+.claim-card.gold {
+    border-left-color: #eab308;
+}
+
+.claim-card.cashback {
+    border-left-color: #22c55e;
+}
+
+.claim-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.claim-header:hover {
+    background: #f8fafc;
+}
+
+.claim-type {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gold-icon {
+    color: #eab308;
+}
+
+.cashback-icon {
+    color: #22c55e;
+}
+
+.claim-type h3 {
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.claim-type p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.claim-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge.in-progress {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.status-badge.completed {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-badge.rejected {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.date {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+.claim-details {
+    padding: 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #475569;
+    font-size: 0.875rem;
+}
+
+.detail-item.full-width {
+    grid-column: span 2;
+}
+
+.detail-item svg {
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.action-buttons .label {
+    font-weight: 600;
+    color: #334155;
+}
+
+.action-buttons .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.action-buttons .btn-warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.action-buttons .btn-warning:hover {
+    background: #fde68a;
+}
+
+.action-buttons .btn-success {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.action-buttons .btn-success:hover {
+    background: #bbf7d0;
+}
+
+.action-buttons .btn-danger {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.action-buttons .btn-danger:hover {
+    background: #fecaca;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+}
+
+.empty-state svg {
+    color: #cbd5e1;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #64748b;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.loading-state .spin {
+    animation: spin 1s linear infinite;
+    color: var(--primary);
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .claims-header {
+        flex-direction: column;
+    }
+
+    .header-stats {
+        flex-wrap: wrap;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-item.full-width {
+        grid-column: span 1;
+    }
+
+    .claim-meta {
+        flex-wrap: wrap;
+    }
+}

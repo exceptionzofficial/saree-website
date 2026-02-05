@@ -187,17 +187,69 @@
 .progress-info {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    color: #64748b;
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.claim-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 16px;
+    padding: 10px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.claim-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.claim-btn.gold {
+    background: #eab308;
+}
+
+.claim-btn.gold:hover {
+    background: #ca8a04;
 }
 
 .completed-badge {
-    color: #10B981;
-    font-weight: 600;
+    color: #059669;
+    font-weight: 700;
 }
 
 .completed-badge.gold {
     color: #D97706;
+}
+
+.completed-badge.pending {
+    color: #d97706;
+}
+
+.status-info-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    background: #fff7ed;
+    color: #c2410c;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+.status-info-box.success {
+    background: #ecfdf5;
+    color: #059669;
 }
 
 /* Stats Grid */

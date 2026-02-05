@@ -134,9 +134,26 @@ const SellerDashboard = () => {
                         </div>
 
                         <div className="renew-section">
+                            <h3>Claim Your Gold Coin</h3>
+                            {membership.goldCoinClaimed === 'pending_admin' ? (
+                                <div className="status-info-box">
+                                    <Clock size={20} />
+                                    <span>Gold Application Pending</span>
+                                </div>
+                            ) : !membership.goldCoinClaimed ? (
+                                <Link to="/membership/claim/gold" className="btn btn-primary btn-lg" style={{ marginBottom: '16px' }}>
+                                    Apply for Gold Coin
+                                    <Award size={20} style={{ marginLeft: '8px' }} />
+                                </Link>
+                            ) : (
+                                <div className="status-info-box success">
+                                    <Check size={20} />
+                                    <span>Gold Coin Awarded!</span>
+                                </div>
+                            )}
                             <h3>Want to continue earning?</h3>
                             <p>Purchase a new membership to get a fresh referral code and start earning again!</p>
-                            <Link to="/membership/payment" className="btn btn-primary btn-lg">
+                            <Link to="/membership/payment" className="btn btn-outline btn-lg">
                                 Buy Membership Again
                                 <ChevronRight size={20} />
                             </Link>
@@ -203,12 +220,19 @@ const SellerDashboard = () => {
                             </div>
                             <div className="progress-info">
                                 <span>{membership.referralCount} / 5 Referrals</span>
-                                {membership.moneyBackClaimed ? (
+                                {membership.moneyBackClaimed === 'pending_admin' ? (
+                                    <span className="completed-badge pending">✓ Application Pending</span>
+                                ) : membership.moneyBackClaimed ? (
                                     <span className="completed-badge">✓ Claimed</span>
                                 ) : (
                                     <span>{5 - membership.referralCount} more to go</span>
                                 )}
                             </div>
+                            {membership.referralCount >= 5 && membership.moneyBackClaimed === false && (
+                                <Link to="/membership/claim/cashback" className="claim-btn">
+                                    Get Cashback
+                                </Link>
+                            )}
                         </div>
 
                         {/* Gold Coin Progress */}
@@ -225,12 +249,19 @@ const SellerDashboard = () => {
                             </div>
                             <div className="progress-info">
                                 <span>{membership.referralCount} / 7 Referrals</span>
-                                {membership.goldCoinClaimed ? (
+                                {membership.goldCoinClaimed === 'pending_admin' ? (
+                                    <span className="completed-badge gold pending">✓ Application Pending</span>
+                                ) : membership.goldCoinClaimed ? (
                                     <span className="completed-badge gold">🪙 Earned!</span>
                                 ) : (
                                     <span>{7 - membership.referralCount} more to go</span>
                                 )}
                             </div>
+                            {membership.referralCount >= 7 && membership.goldCoinClaimed === false && (
+                                <Link to="/membership/claim/gold" className="claim-btn gold">
+                                    Apply for Gold
+                                </Link>
+                            )}
                         </div>
                     </div>
 

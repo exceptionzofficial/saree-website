@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://saree-backend-five.vercel.app/api';
 
 // Fetch wrapper with error handling
 async function fetchAPI(endpoint, options = {}) {
@@ -79,6 +79,17 @@ export const membershipsAPI = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ referralCode, referredUserName })
+    }),
+    submitRewardClaim: (claimData) => fetchAPI('/memberships/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(claimData)
+    }),
+    getRewardClaims: () => fetchAPI('/memberships/claims'),
+    updateClaimStatus: (id, status) => fetchAPI(`/memberships/claim/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
     })
 };
 
