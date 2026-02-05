@@ -295,6 +295,7 @@ const SellerDashboard = () => {
                                         </div>
                                         <div className="referral-details">
                                             <span className="referral-name">{ref.name}</span>
+                                            {ref.mobile && <span className="referral-mobile">{ref.mobile}</span>}
                                             <span className="referral-date">
                                                 {new Date(ref.date).toLocaleDateString('en-IN', {
                                                     day: 'numeric',

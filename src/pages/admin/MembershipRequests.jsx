@@ -221,7 +221,8 @@ const MembershipRequests = () => {
                                                 <div className="referral-chips">
                                                     {member.referrals.map((ref, index) => (
                                                         <span key={index} className="referral-chip">
-                                                            {ref.name}
+                                                            <span className="ref-name">{ref.name}</span>
+                                                            {ref.mobile && <span className="ref-mobile">{ref.mobile}</span>}
                                                         </span>
                                                     ))}
                                                 </div>
