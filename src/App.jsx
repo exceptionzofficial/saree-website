@@ -36,6 +36,7 @@ import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/Products';
 import AdminOrders from './pages/admin/Orders';
+import AdminUsers from './pages/admin/Users';
 import AdminMemberships from './pages/admin/MembershipRequests';
 import RewardClaims from './pages/admin/RewardClaims';
 import AdminSettings from './pages/admin/Settings';
@@ -159,6 +160,7 @@ function App() {
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="products" element={<AdminProducts />} />
                     <Route path="orders" element={<AdminOrders />} />
+                    <Route path="users" element={<AdminUsers />} />
                     <Route path="memberships" element={<AdminMemberships />} />
                     <Route path="reward-claims" element={<RewardClaims />} />
                     <Route path="settings" element={<AdminSettings />} />

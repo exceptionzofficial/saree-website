@@ -23,6 +23,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { to: '/admin/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
         { to: '/admin/products', icon: <Package size={20} />, label: 'Products' },
         { to: '/admin/orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
+        { to: '/admin/users', icon: <Users size={20} />, label: 'Users' },
         { to: '/admin/memberships', icon: <Users size={20} />, label: 'Memberships' },
         { to: '/admin/reward-claims', icon: <Gift size={20} />, label: 'Reward Claims' },
         { to: '/admin/settings', icon: <Settings size={20} />, label: 'Settings' }
