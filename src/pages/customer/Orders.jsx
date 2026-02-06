@@ -110,9 +110,9 @@ const Orders = () => {
                     <span className="total-value">₹{order.total.toLocaleString()}</span>
                 </div>
                 <div className="order-actions">
-                    <Link to={`/track-order?id=${order.orderId || order.id}`} className="btn btn-outline btn-sm">
+                    {/* <Link to={`/track-order?id=${order.orderId || order.id}`} className="btn btn-outline btn-sm">
                         Track Order
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
         </div>

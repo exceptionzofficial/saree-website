@@ -516,6 +516,17 @@
     accent-color: var(--primary);
 }
 
+/* New Category Input */
+.admin-products__new-category {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.admin-products__new-category input {
+    flex: 1;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .admin-products {

@@ -4,7 +4,7 @@ import { useProducts } from '../../context/ProductContext';
 import './Products.css';
 
 const AdminProducts = () => {
-    const { products, categories, addProduct, updateProduct, deleteProduct, useAPI } = useProducts();
+    const { products, categories, addProduct, updateProduct, deleteProduct, addCategory, useAPI } = useProducts();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +33,9 @@ const AdminProducts = () => {
         featured: false,
         bestseller: false
     });
+
+    const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState('');
 
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -63,6 +66,8 @@ const AdminProducts = () => {
         setEditingProduct(null);
         setImageFiles([]);
         setImagePreviewUrls([]);
+        setShowNewCategoryInput(false);
+        setNewCategoryName('');
     };
 
     const openModal = (product = null) => {
@@ -101,6 +106,13 @@ const AdminProducts = () => {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+
+        if (name === 'category' && value === 'new') {
+            setShowNewCategoryInput(true);
+            setFormData(prev => ({ ...prev, category: '' }));
+            return;
+        }
+
         setFormData(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
@@ -148,13 +160,25 @@ const AdminProducts = () => {
         setIsSubmitting(true);
 
         try {
+            let categoryToUse = formData.category;
+
+            // Handle new category creation
+            if (showNewCategoryInput && newCategoryName.trim()) {
+                const newCat = await addCategory({
+                    name: newCategoryName.trim(),
+                    description: `Category for ${newCategoryName.trim()}`,
+                    order: categories.length + 1
+                });
+                categoryToUse = newCat.id || newCat.slug;
+            }
+
             const productData = {
                 name: formData.name,
                 slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
                 description: formData.description,
                 price: parseFloat(formData.price),
                 originalPrice: parseFloat(formData.originalPrice) || parseFloat(formData.price),
-                category: formData.category,
+                category: categoryToUse,
                 material: formData.material,
                 fabric: formData.material, // Alias for compatibility with ProductDetail
                 color: formData.color,
@@ -415,7 +439,29 @@ const AdminProducts = () => {
                                         {categories.map(cat => (
                                             <option key={cat.id} value={cat.id || cat.slug}>{cat.name}</option>
                                         ))}
+                                        <option value="new">+ Add New Category...</option>
                                     </select>
+                                    {showNewCategoryInput && (
+                                        <div className="admin-products__new-category">
+                                            <input
+                                                type="text"
+                                                placeholder="Enter new category name"
+                                                value={newCategoryName}
+                                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                                autoFocus
+                                            />
+                                            <button
+                                                type="button"
+                                                className="btn btn-outline btn-sm"
+                                                onClick={() => {
+                                                    setShowNewCategoryInput(false);
+                                                    setNewCategoryName('');
+                                                }}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="admin-products__field">
                                     <label>Material *</label>

@@ -215,6 +215,24 @@ export const ProductProvider = ({ children }) => {
         loadData();
     };
 
+    const addCategory = async (categoryData) => {
+        try {
+            const formData = new FormData();
+            Object.keys(categoryData).forEach(key => {
+                if (categoryData[key] !== undefined && categoryData[key] !== null) {
+                    formData.append(key, categoryData[key]);
+                }
+            });
+
+            const newCategory = await categoriesAPI.create(formData);
+            setCategories(prev => [...prev, newCategory]);
+            return newCategory;
+        } catch (err) {
+            console.error('Error adding category:', err);
+            throw err;
+        }
+    };
+
     const value = {
         products,
         categories,
@@ -234,6 +252,7 @@ export const ProductProvider = ({ children }) => {
         updateProduct,
         deleteProduct,
         refreshProducts,
+        addCategory,
     };
 
     return (

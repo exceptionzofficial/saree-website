@@ -188,9 +188,6 @@ const Header = () => {
                     )}
 
                     <div className="header__mobile-divider"></div>
-                    <Link to="/track-order" className="header__mobile-link">
-                        Track Order
-                    </Link>
                     <Link to="/admin" className="header__mobile-link">
                         Admin Login
                     </Link>
