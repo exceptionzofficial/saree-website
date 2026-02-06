@@ -41,7 +41,13 @@ const Shop = () => {
         // Apply filters
         if (filters.category || filters.color || filters.minPrice || filters.maxPrice || filters.fabric) {
             result = result.filter(product => {
-                if (filters.category && product.category !== filters.category) return false;
+                // Category filter: match by ID or find category by slug
+                if (filters.category) {
+                    const categoryObj = categories.find(c => c.id === filters.category || c.slug === filters.category);
+                    const categoryId = categoryObj ? categoryObj.id : filters.category;
+                    if (product.category !== categoryId && product.category !== filters.category) return false;
+                }
+
                 if (filters.color && product.color !== filters.color) return false;
                 const currentPrice = product.discountPrice || product.price || 0;
                 if (filters.minPrice && currentPrice < parseInt(filters.minPrice)) return false;
@@ -55,7 +61,7 @@ const Shop = () => {
         result = sort(result, sortBy);
 
         setFilteredProducts(result);
-    }, [products, filters, sortBy, searchQuery, filter, sort, search]);
+    }, [products, categories, filters, sortBy, searchQuery, filter, sort, search]);
 
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
@@ -162,7 +168,7 @@ const Shop = () => {
                     </div>
                 </div>
 
-                <div className="shop__main">
+                <div className={`shop__main ${!isFilterOpen ? 'shop__main--filters-closed' : ''}`}>
                     {/* Sidebar Filters */}
                     <aside className={`shop__sidebar ${isFilterOpen ? 'shop__sidebar--open' : ''}`}>
                         <div className="shop__sidebar-header">
@@ -199,7 +205,7 @@ const Shop = () => {
                                         <input
                                             type="radio"
                                             name="category"
-                                            checked={filters.category === cat.id}
+                                            checked={filters.category === cat.id || filters.category === cat.slug}
                                             onChange={() => handleFilterChange('category', cat.id)}
                                         />
                                         <span>{cat.name}</span>

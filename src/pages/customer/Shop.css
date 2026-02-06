@@ -153,10 +153,18 @@
     color: white;
 }
 
-/* Main Layout */
 .shop__main {
     display: flex;
     gap: var(--space-6);
+    transition: all var(--transition-normal);
+}
+
+.shop__main--filters-closed .shop__sidebar {
+    display: none;
+}
+
+.shop__main--filters-closed .shop__products {
+    width: 100%;
 }
 
 /* Sidebar */

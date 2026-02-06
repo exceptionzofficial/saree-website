@@ -27,8 +27,8 @@ const AnnouncementBar = () => {
         <div className="announcement-bar">
             <div className="announcement-bar__track">
                 <div className="announcement-bar__content">
-                    {/* Double the content for seamless loop */}
-                    {[...announcements, ...announcements].map((text, index) => (
+                    {/* Repeat content multiple times for a truly seamless loop on all screen sizes */}
+                    {[...announcements, ...announcements, ...announcements, ...announcements].map((text, index) => (
                         <span key={index} className="announcement-bar__item">
                             {text}
                             <span className="announcement-bar__separator">•</span>

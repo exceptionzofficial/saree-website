@@ -13,9 +13,9 @@ const AdminLogin = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Demo credentials
-    const ADMIN_USERNAME = 'admin';
-    const ADMIN_PASSWORD = 'admin123';
+    // Admin credentials
+    const ADMIN_USERNAME = 'gurubagavansarees';
+    const ADMIN_PASSWORD = 'gurubagavan@123';
 
     const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -37,10 +37,10 @@ const AdminLogin = () => {
                 }));
                 navigate('/admin/dashboard');
             } else {
-                setError('Invalid username or password');
+                setError('Invalid username or password. Please contact the administrator if you forgot your credentials.');
             }
             setLoading(false);
-        }, 1000);
+        }, 800);
     };
 
     return (
@@ -109,12 +109,6 @@ const AdminLogin = () => {
                             {loading ? 'Signing in...' : 'Sign In'}
                         </button>
                     </form>
-
-                    <div className="admin-login__demo">
-                        <h4>Demo Credentials</h4>
-                        <p>Username: <strong>admin</strong></p>
-                        <p>Password: <strong>admin123</strong></p>
-                    </div>
                 </div>
             </div>
         </main>

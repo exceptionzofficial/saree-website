@@ -187,10 +187,6 @@ const Header = () => {
                         </Link>
                     )}
 
-                    <div className="header__mobile-divider"></div>
-                    <Link to="/admin" className="header__mobile-link">
-                        Admin Login
-                    </Link>
                 </nav>
             </div>
 

@@ -29,6 +29,7 @@
 .announcement-bar__content {
     display: flex;
     white-space: nowrap;
+    width: max-content;
     animation: marquee 30s linear infinite;
 }
 

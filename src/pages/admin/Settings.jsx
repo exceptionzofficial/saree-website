@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, Check, Plus, X, Megaphone } from 'lucide-react';
 import { useOrders } from '../../context/OrderContext';
 import './Settings.css';
@@ -18,6 +18,23 @@ const AdminSettings = () => {
     });
     const [newAnnouncement, setNewAnnouncement] = useState('');
     const [saved, setSaved] = useState(false);
+
+    // Sync form data with settings when they load
+    useEffect(() => {
+        if (settings) {
+            setFormData({
+                upiId: settings.upiId || '',
+                membershipPrice: settings.membershipPrice || 999,
+                storeName: settings.storeName || 'Saree Elegance',
+                storeEmail: settings.storeEmail || '',
+                storePhone: settings.storePhone || '',
+                storeAddress: settings.storeAddress || '',
+                freeShippingThreshold: settings.freeShippingThreshold || settings.freeShippingAbove || 2000,
+                shippingCharge: settings.shippingCharge || 99,
+                announcements: settings.announcements || []
+            });
+        }
+    }, [settings]);
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
