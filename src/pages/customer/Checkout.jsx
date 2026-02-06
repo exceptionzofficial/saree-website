@@ -13,19 +13,21 @@ import {
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useOrders, generateUPIQRUrl } from '../../context/OrderContext';
+import { useAuth } from '../../context/AuthContext';
 import './Checkout.css';
 
 const Checkout = () => {
     const navigate = useNavigate();
     const { items, getCartTotal, clearCart } = useCart();
     const { settings, getShippingCharge, createOrder } = useOrders();
+    const { user, isAuthenticated } = useAuth();
 
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
-        fullName: '',
-        phone: '',
-        email: '',
-        address: '',
+        fullName: user?.name || '',
+        phone: user?.mobile || '',
+        email: user?.email || '',
+        address: user?.address || '',
         city: '',
         state: '',
         pincode: '',
@@ -95,13 +97,20 @@ const Checkout = () => {
         setIsSubmitting(true);
 
         try {
+            // Ensure email is present if logged in, to link order to account
+            const finalCustomerData = {
+                ...formData,
+                email: formData.email || user?.email || ''
+            };
+
             const orderData = {
-                customer: formData,
+                customer: finalCustomerData,
                 items: items,
                 subtotal: subtotal,
                 shipping: shipping,
                 total: total,
-                paymentMethod: 'UPI'
+                paymentMethod: 'UPI',
+                userId: user?.id || user?.email // Track which user placed the order
             };
 
             const order = await createOrder(orderData, paymentScreenshot);

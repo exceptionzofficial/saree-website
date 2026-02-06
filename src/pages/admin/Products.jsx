@@ -24,6 +24,10 @@ const AdminProducts = () => {
         material: '',
         color: '',
         weight: '',
+        length: '',
+        blouse: '',
+        features: '',
+        care: '',
         existingImages: [],
         inStock: true,
         featured: false,
@@ -47,6 +51,10 @@ const AdminProducts = () => {
             material: '',
             color: '',
             weight: '',
+            length: '',
+            blouse: '',
+            features: '',
+            care: '',
             existingImages: [],
             inStock: true,
             featured: false,
@@ -70,6 +78,10 @@ const AdminProducts = () => {
                 material: product.material || product.fabric || '',
                 color: product.color || '',
                 weight: product.weight || '',
+                length: product.length || '',
+                blouse: product.blouse || '',
+                features: Array.isArray(product.features) ? product.features.join(', ') : (product.features || ''),
+                care: product.care || '',
                 existingImages: product.images || [],
                 inStock: product.inStock !== false,
                 featured: product.featured || false,
@@ -144,8 +156,13 @@ const AdminProducts = () => {
                 originalPrice: parseFloat(formData.originalPrice) || parseFloat(formData.price),
                 category: formData.category,
                 material: formData.material,
+                fabric: formData.material, // Alias for compatibility with ProductDetail
                 color: formData.color,
                 weight: formData.weight,
+                length: formData.length,
+                blouse: formData.blouse,
+                features: formData.features ? formData.features.split(',').map(f => f.trim()).filter(f => f) : [],
+                care: formData.care,
                 inStock: formData.inStock,
                 featured: formData.featured,
                 bestseller: formData.bestseller,
@@ -434,6 +451,55 @@ const AdminProducts = () => {
                                         placeholder="e.g., 500g"
                                     />
                                 </div>
+                            </div>
+
+                            <div className="admin-products__section-divider">
+                                <span>Additional Details</span>
+                            </div>
+
+                            <div className="admin-products__form-row">
+                                <div className="admin-products__field">
+                                    <label>Saree Length</label>
+                                    <input
+                                        type="text"
+                                        name="length"
+                                        value={formData.length}
+                                        onChange={handleChange}
+                                        placeholder="e.g., 6.3 meters"
+                                    />
+                                </div>
+                                <div className="admin-products__field">
+                                    <label>Blouse Piece</label>
+                                    <input
+                                        type="text"
+                                        name="blouse"
+                                        value={formData.blouse}
+                                        onChange={handleChange}
+                                        placeholder="e.g., 0.8 meters"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="admin-products__field">
+                                <label>Features (Comma separated)</label>
+                                <textarea
+                                    name="features"
+                                    value={formData.features}
+                                    onChange={handleChange}
+                                    rows={2}
+                                    placeholder="e.g., Pure silk, Handwoven, Zari border"
+                                />
+                            </div>
+
+                            <div className="admin-products__field">
+                                <label>Care Instructions</label>
+                                <textarea
+                                    name="care"
+                                    value={formData.care}
+                                    onChange={handleChange}
+                                    rows={2}
+                                    placeholder="e.g., Dry clean only, Do not bleach"
+                                />
                             </div>
 
                             {/* Image Upload Section */}

@@ -1,0 +1,307 @@
+.reward-history-page {
+    padding: 40px 0 80px;
+    min-height: 80vh;
+    background: var(--background);
+}
+
+.reward-history-page .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-bottom: 24px;
+    transition: color 0.2s;
+}
+
+.reward-history-page .back-link:hover {
+    color: var(--primary);
+}
+
+.reward-history-page h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.reward-history-page .page-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+}
+
+/* Section Styles */
+.history-section {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+.history-section .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.history-section .section-header h2 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+/* Referral List */
+.referral-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.referral-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--background);
+    border-radius: var(--radius-md);
+}
+
+.referral-avatar {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.referral-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.referral-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.referral-email {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.referral-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.type-badge {
+    padding: 4px 12px;
+    background: #EEF2FF;
+    color: #4F46E5;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Claims List */
+.claims-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.claim-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--background);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary);
+}
+
+.claim-item.gold {
+    border-left-color: #D97706;
+}
+
+.claim-icon {
+    width: 48px;
+    height: 48px;
+    background: #EEF2FF;
+    color: var(--primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.claim-item.gold .claim-icon {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.claim-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.claim-type {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.claim-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.pending {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.status-badge.processing {
+    background: #EFF6FF;
+    color: #1D4ED8;
+}
+
+.status-badge.completed {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.status-badge.rejected {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+.empty-state svg {
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    margin-bottom: 16px;
+}
+
+/* Loading State */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+.loading-state svg {
+    margin-bottom: 12px;
+}
+
+/* Summary Section */
+.summary-section {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-section h2 {
+    font-size: 1.125rem;
+    margin-bottom: 20px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.summary-card {
+    text-align: center;
+    padding: 20px;
+    background: var(--background);
+    border-radius: var(--radius-md);
+}
+
+.summary-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.summary-card.gold .summary-value {
+    color: #D97706;
+}
+
+.summary-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Spin Animation */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .reward-history-page {
+        padding: 24px 0 60px;
+    }
+
+    .reward-history-page h1 {
+        font-size: 1.5rem;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .referral-item,
+    .claim-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .referral-info,
+    .claim-info {
+        align-items: center;
+    }
+}

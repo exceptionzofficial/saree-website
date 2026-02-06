@@ -17,9 +17,11 @@ const AdminOrders = () => {
     const [selectedOrder, setSelectedOrder] = useState(null);
 
     const filteredOrders = orders.filter(order => {
+        const orderIdVal = order.orderId || order.id || '';
+        const customerName = order.customer.fullName || order.customer.name || '';
         const matchesSearch =
-            order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.customer.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            orderIdVal.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             order.customer.phone.includes(searchTerm);
         const matchesStatus = !statusFilter || order.status === statusFilter;
         const matchesPayment = !paymentFilter || order.paymentStatus === paymentFilter;
@@ -38,21 +40,21 @@ const AdminOrders = () => {
 
     const handleStatusChange = (orderId, newStatus) => {
         updateOrderStatus(orderId, newStatus);
-        if (selectedOrder && selectedOrder.id === orderId) {
+        if (selectedOrder && (selectedOrder.orderId === orderId || selectedOrder.id === orderId)) {
             setSelectedOrder({ ...selectedOrder, status: newStatus });
         }
     };
 
     const handleVerifyPayment = (orderId) => {
         verifyPayment(orderId);
-        if (selectedOrder && selectedOrder.id === orderId) {
+        if (selectedOrder && (selectedOrder.orderId === orderId || selectedOrder.id === orderId)) {
             setSelectedOrder({ ...selectedOrder, paymentStatus: 'verified' });
         }
     };
 
     const handleRejectPayment = (orderId) => {
         rejectPayment(orderId);
-        if (selectedOrder && selectedOrder.id === orderId) {
+        if (selectedOrder && (selectedOrder.orderId === orderId || selectedOrder.id === orderId)) {
             setSelectedOrder({ ...selectedOrder, paymentStatus: 'rejected' });
         }
     };
@@ -109,13 +111,13 @@ const AdminOrders = () => {
                     {filteredOrders.length > 0 ? (
                         filteredOrders.map(order => (
                             <div
-                                key={order.id}
-                                className={`admin-orders__card ${selectedOrder?.id === order.id ? 'admin-orders__card--active' : ''}`}
+                                key={order.orderId || order.id}
+                                className={`admin-orders__card ${(selectedOrder?.orderId === order.orderId || selectedOrder?.id === order.id) ? 'admin-orders__card--active' : ''}`}
                                 onClick={() => setSelectedOrder(order)}
                             >
                                 <div className="admin-orders__card-header">
                                     <div>
-                                        <span className="admin-orders__card-id">{order.id}</span>
+                                        <span className="admin-orders__card-id">{order.orderId || order.id}</span>
                                         <span className="admin-orders__card-date">{formatDate(order.createdAt)}</span>
                                     </div>
                                     <div className="admin-orders__card-badges">
@@ -128,7 +130,7 @@ const AdminOrders = () => {
                                     </div>
                                 </div>
                                 <div className="admin-orders__card-body">
-                                    <span className="admin-orders__card-customer">{order.customer.fullName}</span>
+                                    <span className="admin-orders__card-customer">{order.customer.fullName || order.customer.name}</span>
                                     <span className="admin-orders__card-total">₹{order.total.toLocaleString()}</span>
                                 </div>
                                 <div className="admin-orders__card-items">
@@ -168,7 +170,7 @@ const AdminOrders = () => {
                                 <div className="admin-orders__detail-grid">
                                     <div className="admin-orders__detail-item">
                                         <span>Order ID</span>
-                                        <strong>{selectedOrder.id}</strong>
+                                        <strong>{selectedOrder.orderId || selectedOrder.id}</strong>
                                     </div>
                                     <div className="admin-orders__detail-item">
                                         <span>Date</span>
@@ -178,7 +180,7 @@ const AdminOrders = () => {
                                         <span>Status</span>
                                         <select
                                             value={selectedOrder.status}
-                                            onChange={(e) => handleStatusChange(selectedOrder.id, e.target.value)}
+                                            onChange={(e) => handleStatusChange(selectedOrder.orderId || selectedOrder.id, e.target.value)}
                                             className={`admin-orders__status-select status--${selectedOrder.status}`}
                                         >
                                             {statusOptions.map(status => (
@@ -200,7 +202,7 @@ const AdminOrders = () => {
                             {/* Customer Info */}
                             <div className="admin-orders__detail-section">
                                 <h3>Customer</h3>
-                                <p className="admin-orders__customer-name">{selectedOrder.customer.fullName}</p>
+                                <p className="admin-orders__customer-name">{selectedOrder.customer.fullName || selectedOrder.customer.name}</p>
                                 <p className="admin-orders__customer-contact">
                                     {selectedOrder.customer.phone}<br />
                                     {selectedOrder.customer.email}
@@ -242,14 +244,14 @@ const AdminOrders = () => {
                                         <div className="admin-orders__payment-actions">
                                             <button
                                                 className="btn btn-success"
-                                                onClick={() => handleVerifyPayment(selectedOrder.id)}
+                                                onClick={() => handleVerifyPayment(selectedOrder.orderId || selectedOrder.id)}
                                             >
                                                 <Check size={16} />
                                                 Verify Payment
                                             </button>
                                             <button
                                                 className="btn btn-danger"
-                                                onClick={() => handleRejectPayment(selectedOrder.id)}
+                                                onClick={() => handleRejectPayment(selectedOrder.orderId || selectedOrder.id)}
                                             >
                                                 <X size={16} />
                                                 Reject Payment

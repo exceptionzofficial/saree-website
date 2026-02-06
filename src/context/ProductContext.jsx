@@ -138,7 +138,9 @@ export const ProductProvider = ({ children }) => {
             try {
                 const formData = new FormData();
                 Object.keys(productData).forEach(key => {
-                    if (productData[key] !== undefined && productData[key] !== null) {
+                    if (key === 'features' && Array.isArray(productData[key])) {
+                        formData.append(key, JSON.stringify(productData[key]));
+                    } else if (productData[key] !== undefined && productData[key] !== null) {
                         formData.append(key, productData[key]);
                     }
                 });
@@ -173,6 +175,8 @@ export const ProductProvider = ({ children }) => {
                 Object.keys(updates).forEach(key => {
                     if (key === 'images' && Array.isArray(updates[key])) {
                         formData.append('existingImages', JSON.stringify(updates[key]));
+                    } else if (key === 'features' && Array.isArray(updates[key])) {
+                        formData.append(key, JSON.stringify(updates[key]));
                     } else if (updates[key] !== undefined && updates[key] !== null) {
                         formData.append(key, updates[key]);
                     }

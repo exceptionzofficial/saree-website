@@ -11,18 +11,38 @@ import {
     LogOut,
     ChevronRight,
     ShieldCheck,
-    LayoutDashboard
+    LayoutDashboard,
+    History,
+    Award,
+    AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useMembership } from '../../context/MembershipContext';
 import './Profile.css';
 
 const Profile = () => {
-    const { user, logout, isAuthenticated } = useAuth();
-    const { getUserMembershipStatus } = useMembership();
+    const { user, logout, isAuthenticated, loading: authLoading } = useAuth();
+    const { getUserMembershipStatus, getCurrentMembership, loading: membershipLoading } = useMembership();
 
     const membershipStatus = getUserMembershipStatus();
-    const hasActiveMembership = membershipStatus === 'active';
+    const membership = getCurrentMembership();
+
+    // Check if membership cycle is complete (both rewards claimed)
+    const isCycleComplete = membership?.moneyBackClaimed === true && membership?.goldCoinClaimed === true;
+
+    // Show Member Portal only if active AND cycle not complete
+    const hasActiveMembership = membershipStatus === 'active' && !isCycleComplete;
+    const hasCompletedMembership = membershipStatus === 'completed';
+    const hasMembershipHistory = (membershipStatus === 'active' || hasCompletedMembership) && membership;
+
+    if (authLoading || (membershipLoading && !membership)) {
+        return (
+            <div className="profile-loading">
+                <div className="spinner"></div>
+                <p>Loading your profile...</p>
+            </div>
+        );
+    }
 
     if (!isAuthenticated) {
         return <Navigate to="/login" />;
@@ -55,19 +75,34 @@ const Profile = () => {
                                 <span>My Orders</span>
                                 <ChevronRight size={16} />
                             </Link>
-                            {hasActiveMembership ? (
+
+                            {/* Member Portal - only for active members with incomplete cycle */}
+                            {hasActiveMembership && (
                                 <Link to="/seller/dashboard" className="profile-nav-item highlight">
                                     <LayoutDashboard size={20} />
                                     <span>Member Portal</span>
                                     <ChevronRight size={16} />
                                 </Link>
-                            ) : (
-                                <Link to="/membership" className="profile-nav-item">
-                                    <UserPlus size={20} />
-                                    <span>Become a Member</span>
+                            )}
+
+                            {/* Reward History - for anyone with membership history */}
+                            {hasMembershipHistory && (
+                                <Link to="/reward-history" className="profile-nav-item">
+                                    <History size={20} />
+                                    <span>Reward History</span>
                                     <ChevronRight size={16} />
                                 </Link>
                             )}
+
+                            {/* Become a Member - for users without membership OR with complete cycle */}
+                            {(!hasActiveMembership && !hasCompletedMembership) || isCycleComplete ? (
+                                <Link to="/membership" className="profile-nav-item highlight">
+                                    <UserPlus size={20} />
+                                    <span>{isCycleComplete ? 'Become a Member Again' : 'Become a Member'}</span>
+                                    <ChevronRight size={16} />
+                                </Link>
+                            ) : null}
+
                             <button onClick={logout} className="profile-nav-item logout">
                                 <LogOut size={20} />
                                 <span>Logout</span>
@@ -77,6 +112,16 @@ const Profile = () => {
 
                     {/* Main Content */}
                     <div className="profile-content">
+                        {membershipStatus === 'pending' && (
+                            <div className="review-notice">
+                                <AlertCircle size={24} />
+                                <div className="notice-content">
+                                    <h4>Membership Request Under Review</h4>
+                                    <p>Your approval or renewal for membership is in review. It may take 5 to 6 business days to get reviewed by admin.</p>
+                                </div>
+                            </div>
+                        )}
+
                         <section className="profile-section">
                             <div className="section-header">
                                 <h2>Account Details</h2>

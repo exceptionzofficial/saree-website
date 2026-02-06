@@ -185,7 +185,7 @@ const Home = () => {
             </section>
 
             {/* Testimonials */}
-            <section className="home__testimonials section">
+            {/* <section className="home__testimonials section">
                 <div className="container">
                     <div className="home__section-header reveal reveal-up">
                         <span className="home__section-tag">What Our Customers Say</span>
@@ -208,7 +208,7 @@ const Home = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* CTA Section */}
             <section className="home__cta reveal reveal-in">

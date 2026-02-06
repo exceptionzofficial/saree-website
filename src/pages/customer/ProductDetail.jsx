@@ -209,8 +209,8 @@ const ProductDetail = () => {
                             <span className="product-detail__category">{product.fabric}</span>
                             <h1 className="product-detail__title">{product.name}</h1>
 
-                            {/* Rating */}
-                            <div className="product-detail__rating">
+                            {/* Rating - Hidden for now */}
+                            {/* <div className="product-detail__rating">
                                 <div className="product-detail__stars">
                                     {[...Array(5)].map((_, i) => (
                                         <Star
@@ -223,7 +223,7 @@ const ProductDetail = () => {
                                 <span className="product-detail__rating-text">
                                     {product.rating} ({product.reviews} reviews)
                                 </span>
-                            </div>
+                            </div> */}
 
                             {/* Price */}
                             <div className="product-detail__price">

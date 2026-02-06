@@ -91,6 +91,11 @@ export const membershipsAPI = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
+    }),
+    renewMembership: (email) => fetchAPI('/memberships/renew', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
     })
 };
 

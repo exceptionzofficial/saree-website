@@ -10,6 +10,35 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 32px;
+    gap: 20px;
+}
+
+.refresh-btn-simple {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--surface);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.refresh-btn-simple:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.refresh-btn-simple svg {
+    transition: transform 0.3s ease;
+}
+
+.refresh-btn-simple:hover svg {
+    transform: rotate(180deg);
 }
 
 .dashboard-header h1 {
@@ -234,6 +263,10 @@
     color: #d97706;
 }
 
+.completed-badge.in-progress {
+    color: #3b82f6;
+}
+
 .status-info-box {
     display: flex;
     align-items: center;
@@ -250,6 +283,79 @@
 .status-info-box.success {
     background: #ecfdf5;
     color: #059669;
+}
+
+.status-info-box.info {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.status-info-box.danger {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Renew Membership Card */
+.renew-membership-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    margin-bottom: 24px;
+}
+
+.renew-icon {
+    font-size: 3rem;
+}
+
+.renew-content h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.renew-content p {
+    opacity: 0.9;
+    margin-bottom: 16px;
+}
+
+.renew-content .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: #059669;
+}
+
+.renew-content .btn:hover {
+    background: #f0fdf4;
+}
+
+.blocked-warning {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    margin-bottom: 16px;
+    font-size: 0.875rem;
 }
 
 /* Stats Grid */

@@ -191,32 +191,30 @@ const RewardClaims = () => {
                                     {/* Status Update Actions */}
                                     <div className="action-buttons">
                                         <span className="label">Update Status:</span>
-                                        {claim.status !== 'in_progress' && (
-                                            <button
-                                                className="btn btn-warning"
-                                                onClick={() => updateStatus(claim.id, 'in_progress')}
-                                            >
-                                                Mark In Progress
-                                            </button>
-                                        )}
+                                        <button
+                                            className={`btn btn-warning ${claim.status === 'in_progress' ? 'active' : ''}`}
+                                            onClick={() => updateStatus(claim.id, 'in_progress')}
+                                        >
+                                            {claim.status === 'in_progress' ? 'Re-sync Processing' : 'Mark In Progress'}
+                                        </button>
+
+                                        <button
+                                            className={`btn btn-success ${claim.status === 'completed' ? 'active' : ''}`}
+                                            onClick={() => updateStatus(claim.id, 'completed')}
+                                        >
+                                            {claim.status === 'completed' ? 'Re-sync Completion' : 'Mark Completed'}
+                                        </button>
+
                                         {claim.status !== 'completed' && (
                                             <button
-                                                className="btn btn-success"
-                                                onClick={() => updateStatus(claim.id, 'completed')}
-                                            >
-                                                Mark Completed
-                                            </button>
-                                        )}
-                                        {claim.status !== 'rejected' && claim.status !== 'completed' && (
-                                            <button
-                                                className="btn btn-danger"
+                                                className={`btn btn-danger ${claim.status === 'rejected' ? 'active' : ''}`}
                                                 onClick={() => {
                                                     if (window.confirm('Are you sure you want to reject this claim?')) {
                                                         updateStatus(claim.id, 'rejected');
                                                     }
                                                 }}
                                             >
-                                                Reject
+                                                {claim.status === 'rejected' ? 'Re-sync Rejection' : 'Reject'}
                                             </button>
                                         )}
                                     </div>

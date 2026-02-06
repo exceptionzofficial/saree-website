@@ -64,12 +64,12 @@ const ProductCard = ({ product }) => {
                 {/* Name */}
                 <h3 className="product-card__name">{product.name}</h3>
 
-                {/* Rating */}
-                <div className="product-card__rating">
+                {/* Rating - Hidden for now */}
+                {/* <div className="product-card__rating">
                     <Star size={14} className="product-card__star" />
                     <span>{product.rating}</span>
                     <span className="product-card__reviews">({product.reviews})</span>
-                </div>
+                </div> */}
 
                 {/* Price */}
                 <div className="product-card__price">

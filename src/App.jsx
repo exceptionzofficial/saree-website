@@ -27,8 +27,10 @@ import MembershipPayment from './pages/customer/MembershipPayment';
 import SellerDashboard from './pages/customer/SellerDashboard';
 import ClaimReward from './pages/customer/ClaimReward';
 import Profile from './pages/customer/Profile';
+import RewardHistory from './pages/customer/RewardHistory';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import Orders from './pages/customer/Orders';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -137,6 +139,11 @@ function App() {
                       <Profile />
                     </CustomerLayout>
                   } />
+                  <Route path="/orders" element={
+                    <CustomerLayout>
+                      <Orders />
+                    </CustomerLayout>
+                  } />
                   <Route path="/membership/payment" element={
                     <CustomerLayout>
                       <MembershipPayment />
@@ -150,6 +157,11 @@ function App() {
                   <Route path="/membership/claim/:type" element={
                     <CustomerLayout>
                       <ClaimReward />
+                    </CustomerLayout>
+                  } />
+                  <Route path="/reward-history" element={
+                    <CustomerLayout>
+                      <RewardHistory />
                     </CustomerLayout>
                   } />
 

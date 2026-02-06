@@ -3,10 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
     Copy, Check, Users, Gift, Award, Clock,
     TrendingUp, Share2, RefreshCw, AlertCircle,
-    ChevronRight
+    ChevronRight, XCircle, Lock
 } from 'lucide-react';
 import { useMembership } from '../../context/MembershipContext';
 import { useAuth } from '../../context/AuthContext';
+import { membershipsAPI } from '../../services/api';
 import './SellerDashboard.css';
 
 const SellerDashboard = () => {
@@ -19,6 +20,7 @@ const SellerDashboard = () => {
     } = useMembership();
 
     const [copied, setCopied] = useState(false);
+    const [renewingMembership, setRenewingMembership] = useState(false);
 
     const membership = getCurrentMembership();
     const pendingRequest = getCurrentRequest();
@@ -140,15 +142,26 @@ const SellerDashboard = () => {
                                     <Clock size={20} />
                                     <span>Gold Application Pending</span>
                                 </div>
+                            ) : membership.goldCoinClaimed === 'in_progress' ? (
+                                <div className="status-info-box info">
+                                    <RefreshCw size={20} className="spin" />
+                                    <span>Gold Application Processing</span>
+                                </div>
                             ) : !membership.goldCoinClaimed ? (
                                 <Link to="/membership/claim/gold" className="btn btn-primary btn-lg" style={{ marginBottom: '16px' }}>
                                     Apply for Gold Coin
                                     <Award size={20} style={{ marginLeft: '8px' }} />
                                 </Link>
-                            ) : (
+                            ) : membership.goldCoinClaimed === true ? (
                                 <div className="status-info-box success">
                                     <Check size={20} />
                                     <span>Gold Coin Awarded!</span>
+                                </div>
+                            ) : (
+                                <div className="status-info-box danger">
+                                    <XCircle size={20} />
+                                    <span>Gold Application Rejected</span>
+                                    <Link to="/membership/claim/gold" className="btn btn-primary btn-sm" style={{ marginLeft: '12px' }}>Apply Again</Link>
                                 </div>
                             )}
                             <h3>Want to continue earning?</h3>
@@ -166,8 +179,8 @@ const SellerDashboard = () => {
 
     // Active Membership State
     if (membership) {
-        const progressToMoneyBack = Math.min((membership.referralCount / 5) * 100, 100);
-        const progressToGoldCoin = Math.min((membership.referralCount / 7) * 100, 100);
+        const progressToMoneyBack = membership.moneyBackClaimed ? 100 : Math.min((membership.referralCount / 5) * 100, 100);
+        const progressToGoldCoin = membership.goldCoinClaimed ? 100 : Math.min((membership.referralCount / 7) * 100, 100);
 
         return (
             <main className="seller-dashboard">
@@ -177,10 +190,10 @@ const SellerDashboard = () => {
                             <h1>Member Portal</h1>
                             <p>Welcome back, {user?.name || 'Member'}!</p>
                         </div>
-                        <div className="membership-status active">
-                            <span className="status-dot"></span>
-                            Active Member
-                        </div>
+                        <button className="refresh-btn-simple" onClick={() => window.location.reload()}>
+                            <RefreshCw size={18} />
+                            Refresh Status
+                        </button>
                     </div>
 
                     {/* Referral Code Card */}
@@ -222,13 +235,15 @@ const SellerDashboard = () => {
                                 <span>{membership.referralCount} / 5 Referrals</span>
                                 {membership.moneyBackClaimed === 'pending_admin' ? (
                                     <span className="completed-badge pending">✓ Application Pending</span>
-                                ) : membership.moneyBackClaimed ? (
+                                ) : membership.moneyBackClaimed === 'in_progress' ? (
+                                    <span className="completed-badge in-progress">✓ Processing</span>
+                                ) : membership.moneyBackClaimed === true ? (
                                     <span className="completed-badge">✓ Claimed</span>
                                 ) : (
                                     <span>{5 - membership.referralCount} more to go</span>
                                 )}
                             </div>
-                            {membership.referralCount >= 5 && membership.moneyBackClaimed === false && (
+                            {membership.referralCount >= 5 && (membership.moneyBackClaimed === false || !membership.moneyBackClaimed) && (
                                 <Link to="/membership/claim/cashback" className="claim-btn">
                                     Get Cashback
                                 </Link>
@@ -251,19 +266,40 @@ const SellerDashboard = () => {
                                 <span>{membership.referralCount} / 7 Referrals</span>
                                 {membership.goldCoinClaimed === 'pending_admin' ? (
                                     <span className="completed-badge gold pending">✓ Application Pending</span>
-                                ) : membership.goldCoinClaimed ? (
+                                ) : membership.goldCoinClaimed === 'in_progress' ? (
+                                    <span className="completed-badge gold in-progress">✓ Processing</span>
+                                ) : membership.goldCoinClaimed === true ? (
                                     <span className="completed-badge gold">🪙 Earned!</span>
                                 ) : (
                                     <span>{7 - membership.referralCount} more to go</span>
                                 )}
                             </div>
-                            {membership.referralCount >= 7 && membership.goldCoinClaimed === false && (
+                            {membership.referralCount >= 7 && (membership.goldCoinClaimed === false || !membership.goldCoinClaimed) && (
                                 <Link to="/membership/claim/gold" className="claim-btn gold">
                                     Apply for Gold
                                 </Link>
                             )}
                         </div>
                     </div>
+
+                    {/* Membership Complete - Redirect to become member again */}
+                    {membership.moneyBackClaimed === true && membership.goldCoinClaimed === true && (
+                        <div className="renew-membership-card">
+                            <div className="renew-icon">🎉</div>
+                            <div className="renew-content">
+                                <h3>Congratulations! You've completed your membership!</h3>
+                                <p>You've earned all rewards. Your referral code is now <strong>inactive</strong>.</p>
+                                <div className="blocked-warning">
+                                    <Lock size={16} />
+                                    <span>Referral code inactive - Start a new membership to earn again</span>
+                                </div>
+                                <Link to="/membership" className="btn btn-primary">
+                                    Become a Member Again
+                                    <ChevronRight size={20} />
+                                </Link>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Stats Summary */}
                     <div className="stats-grid">
