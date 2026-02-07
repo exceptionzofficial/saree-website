@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Upload, Copy, Check, CreditCard, Smartphone, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useMembership } from '../../context/MembershipContext';
 import { useOrders, generateUPIQRUrl } from '../../context/OrderContext';
@@ -8,10 +7,22 @@ import './MembershipPayment.css';
 
 const MembershipPayment = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { submitPaymentRequest } = useMembership();
     const { settings } = useOrders();
     const { user, isAuthenticated } = useAuth();
-    const membershipPrice = settings.membershipPrice || 999;
+
+    // Get plan details
+    const selectedPlanId = location.state?.planId || 'premium';
+    const plan = settings.membershipPlans?.find(p => p.id === selectedPlanId) || {
+        id: 'premium',
+        name: 'Premium Member',
+        price: 999,
+        cashbackGoal: 5,
+        goldGoal: 7
+    };
+
+    const membershipPrice = plan.price;
 
     // Auto-fill from logged-in user
     const [formData, setFormData] = useState({
@@ -57,7 +68,7 @@ const MembershipPayment = () => {
         setSubmitting(true);
 
         try {
-            await submitPaymentRequest(formData, screenshot);
+            await submitPaymentRequest(formData, screenshot, selectedPlanId);
             setSubmitted(true);
         } catch (error) {
             console.error('Error submitting payment:', error);
@@ -107,7 +118,7 @@ const MembershipPayment = () => {
                         <h2>Order Summary</h2>
                         <div className="summary-card">
                             <div className="summary-item">
-                                <span className="item-name">Premium Membership</span>
+                                <span className="item-name">{plan.name}</span>
                                 <span className="item-price">₹{membershipPrice.toLocaleString()}</span>
                             </div>
                             <div className="summary-divider"></div>
@@ -116,8 +127,8 @@ const MembershipPayment = () => {
                                 <ul>
                                     <li>✓ Unique Referral Code</li>
                                     <li>✓ Refer & Earn Program</li>
-                                    <li>✓ 100% Money Back on 5 Referrals</li>
-                                    <li>✓ Pure Gold Coin on 7 Referrals</li>
+                                    <li>✓ 100% Money Back on {plan.cashbackGoal} Referrals</li>
+                                    <li>✓ Pure Gold Coin on {plan.goldGoal} Referrals</li>
                                 </ul>
                             </div>
                             <div className="summary-divider"></div>
@@ -130,7 +141,7 @@ const MembershipPayment = () => {
                         <div className="membership-note">
                             <AlertCircle size={18} />
                             <p>
-                                <strong>Goal-Based Membership:</strong> Your membership is active until you earn your Gold Coin (7 referrals).
+                                <strong>Goal-Based Membership:</strong> Your {plan.name} is active until you earn your Gold Coin ({plan.goldGoal} referrals).
                                 To continue referring after that, simply purchase again!
                             </p>
                         </div>

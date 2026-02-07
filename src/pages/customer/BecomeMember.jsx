@@ -7,7 +7,7 @@ import './BecomeMember.css';
 const BecomeMember = () => {
     const navigate = useNavigate();
     const { settings } = useOrders();
-    const membershipPrice = settings.membershipPrice || 999;
+    const membershipPlans = settings.membershipPlans || [];
 
     const benefits = [
         {
@@ -18,12 +18,12 @@ const BecomeMember = () => {
         {
             icon: <Gift size={24} />,
             title: '100% Money Back',
-            description: 'Refer 5 members and get your full purchase amount back!'
+            description: 'Refer members according to your plan and get your full purchase amount back!'
         },
         {
             icon: <Award size={24} />,
             title: 'Gold Coin Rewards',
-            description: 'Earn a pure Gold Coin for every 7 successful referrals.'
+            description: 'Earn a pure Gold Coin for reaching your plan milestones.'
         },
         {
             icon: <ShieldCheck size={24} />,
@@ -44,23 +44,25 @@ const BecomeMember = () => {
                 '✘ No Gold Coin Rewards'
             ],
             recommended: false,
-            btnText: 'Current Plan'
+            btnText: 'Current Plan',
+            disabled: true
         },
-        {
-            name: 'Premium Member',
-            price: `₹${membershipPrice.toLocaleString()}`,
+        ...membershipPlans.map(plan => ({
+            id: plan.id,
+            name: plan.name,
+            price: `₹${plan.price.toLocaleString()}`,
             priceNote: 'per referral cycle',
-            features: [
-                'All Free User features',
+            features: plan.features || [
                 '✔ Unique Referral Code',
                 '✔ Refer & Earn Program',
-                '✔ Money Back for 5 Referrals',
-                '✔ Gold Coin for 7 Referrals',
+                `✔ Money Back for ${plan.cashbackGoal} Referrals`,
+                `✔ Gold Coin for ${plan.goldGoal} Referrals`,
                 'Priority Doorstep Delivery'
             ],
-            recommended: true,
-            btnText: 'Get Premium Access'
-        }
+            recommended: plan.id === 'premium' || plan.id === 'elite',
+            btnText: `Get ${plan.name} Access`,
+            planId: plan.id
+        }))
     ];
 
     return (
@@ -127,7 +129,8 @@ const BecomeMember = () => {
                                 </ul>
                                 <button
                                     className={`btn ${plan.recommended ? 'btn-primary' : 'btn-outline'} btn-block`}
-                                    onClick={() => plan.recommended && navigate('/membership/payment')}
+                                    onClick={() => !plan.disabled && navigate('/membership/payment', { state: { planId: plan.planId } })}
+                                    disabled={plan.disabled}
                                 >
                                     {plan.btnText}
                                 </button>

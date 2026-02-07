@@ -95,6 +95,9 @@ const MembershipRequests = () => {
                                     <div className="user-details">
                                         <h3>{request.name}</h3>
                                         <p>{request.email}</p>
+                                        <div className="request-plan-badge">
+                                            {request.planName || (request.planId === 'elite' ? 'Elite Member' : 'Premium Member')}
+                                        </div>
                                         <span className="mobile">{request.mobile}</span>
                                     </div>
                                 </div>
@@ -190,6 +193,10 @@ const MembershipRequests = () => {
                                             <div className="detail-item">
                                                 <span className="label">Referral Code</span>
                                                 <span className="value code">{member.referralCode}</span>
+                                            </div>
+                                            <div className="detail-item">
+                                                <span className="label">Membership Plan</span>
+                                                <span className="value plan-name">{member.planName || 'Premium Member'}</span>
                                             </div>
                                             <div className="detail-item">
                                                 <span className="label">Mobile</span>

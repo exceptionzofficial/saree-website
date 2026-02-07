@@ -60,14 +60,14 @@ export const MembershipProvider = ({ children }) => {
         }
     }, [membershipRequests, memberships, loading]);
 
-    // Submit payment request
-    const submitPaymentRequest = async (userData, screenshotFile) => {
+    const submitPaymentRequest = async (userData, screenshotFile, planId = 'premium') => {
         if (useAPI) {
             try {
                 const formData = new FormData();
                 formData.append('name', userData.name);
                 formData.append('email', userData.email);
                 formData.append('mobile', userData.mobile);
+                formData.append('planId', planId);
 
                 // Automatically include referral code from user profile (registration)
                 if (user?.referralId) {

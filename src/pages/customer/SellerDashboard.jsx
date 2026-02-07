@@ -179,8 +179,12 @@ const SellerDashboard = () => {
 
     // Active Membership State
     if (membership) {
-        const progressToMoneyBack = membership.moneyBackClaimed ? 100 : Math.min((membership.referralCount / 5) * 100, 100);
-        const progressToGoldCoin = membership.goldCoinClaimed ? 100 : Math.min((membership.referralCount / 7) * 100, 100);
+        const cashbackGoal = membership.cashbackGoal || 5;
+        const goldGoal = membership.goldGoal || 7;
+        const planPrice = membership.planPrice || 999; // Fallback to 999 if not in record
+
+        const progressToMoneyBack = membership.moneyBackClaimed === true ? 100 : Math.min((membership.referralCount / cashbackGoal) * 100, 100);
+        const progressToGoldCoin = membership.goldCoinClaimed === true ? 100 : Math.min((membership.referralCount / goldGoal) * 100, 100);
 
         return (
             <main className="seller-dashboard">
@@ -189,6 +193,7 @@ const SellerDashboard = () => {
                         <div>
                             <h1>Member Portal</h1>
                             <p>Welcome back, {user?.name || 'Member'}!</p>
+                            <span className="plan-badge-main">{membership.planName || 'Premium Member'}</span>
                         </div>
                         <button className="refresh-btn-simple" onClick={() => window.location.reload()}>
                             <RefreshCw size={18} />
@@ -196,7 +201,7 @@ const SellerDashboard = () => {
                         </button>
                     </div>
 
-                    {/* Referral Code Card */}
+                    {/* Referral Code Card ... (remains same) */}
                     <div className="referral-code-card">
                         <div className="referral-code-header">
                             <h2>Your Referral Code</h2>
@@ -220,7 +225,7 @@ const SellerDashboard = () => {
                     {/* Progress Cards */}
                     <div className="progress-grid">
                         {/* Money Back Progress */}
-                        <div className={`progress-card ${membership.moneyBackClaimed ? 'completed' : ''}`}>
+                        <div className={`progress-card ${membership.moneyBackClaimed === true ? 'completed' : ''}`}>
                             <div className="progress-card-header">
                                 <Gift size={24} />
                                 <h3>100% Money Back</h3>
@@ -232,7 +237,7 @@ const SellerDashboard = () => {
                                 ></div>
                             </div>
                             <div className="progress-info">
-                                <span>{membership.referralCount} / 5 Referrals</span>
+                                <span>{membership.referralCount} / {cashbackGoal} Referrals</span>
                                 {membership.moneyBackClaimed === 'pending_admin' ? (
                                     <span className="completed-badge pending">✓ Application Pending</span>
                                 ) : membership.moneyBackClaimed === 'in_progress' ? (
@@ -240,10 +245,10 @@ const SellerDashboard = () => {
                                 ) : membership.moneyBackClaimed === true ? (
                                     <span className="completed-badge">✓ Claimed</span>
                                 ) : (
-                                    <span>{5 - membership.referralCount} more to go</span>
+                                    <span>{Math.max(0, cashbackGoal - membership.referralCount)} more to go</span>
                                 )}
                             </div>
-                            {membership.referralCount >= 5 && (membership.moneyBackClaimed === false || !membership.moneyBackClaimed) && (
+                            {membership.referralCount >= cashbackGoal && (membership.moneyBackClaimed === false || !membership.moneyBackClaimed) && (
                                 <Link to="/membership/claim/cashback" className="claim-btn">
                                     Get Cashback
                                 </Link>
@@ -251,7 +256,7 @@ const SellerDashboard = () => {
                         </div>
 
                         {/* Gold Coin Progress */}
-                        <div className={`progress-card gold ${membership.goldCoinClaimed ? 'completed' : ''}`}>
+                        <div className={`progress-card gold ${membership.goldCoinClaimed === true ? 'completed' : ''}`}>
                             <div className="progress-card-header">
                                 <Award size={24} />
                                 <h3>Pure Gold Coin</h3>
@@ -263,7 +268,7 @@ const SellerDashboard = () => {
                                 ></div>
                             </div>
                             <div className="progress-info">
-                                <span>{membership.referralCount} / 7 Referrals</span>
+                                <span>{membership.referralCount} / {goldGoal} Referrals</span>
                                 {membership.goldCoinClaimed === 'pending_admin' ? (
                                     <span className="completed-badge gold pending">✓ Application Pending</span>
                                 ) : membership.goldCoinClaimed === 'in_progress' ? (
@@ -271,10 +276,10 @@ const SellerDashboard = () => {
                                 ) : membership.goldCoinClaimed === true ? (
                                     <span className="completed-badge gold">🪙 Earned!</span>
                                 ) : (
-                                    <span>{7 - membership.referralCount} more to go</span>
+                                    <span>{Math.max(0, goldGoal - membership.referralCount)} more to go</span>
                                 )}
                             </div>
-                            {membership.referralCount >= 7 && (membership.goldCoinClaimed === false || !membership.goldCoinClaimed) && (
+                            {membership.referralCount >= goldGoal && (membership.goldCoinClaimed === false || !membership.goldCoinClaimed) && (
                                 <Link to="/membership/claim/gold" className="claim-btn gold">
                                     Apply for Gold
                                 </Link>
@@ -313,7 +318,7 @@ const SellerDashboard = () => {
                         <div className="stat-card">
                             <Users size={24} />
                             <div className="stat-content">
-                                <span className="stat-value">{7 - membership.referralCount}</span>
+                                <span className="stat-value">{Math.max(0, goldGoal - membership.referralCount)}</span>
                                 <span className="stat-label">Referrals to Gold</span>
                             </div>
                         </div>

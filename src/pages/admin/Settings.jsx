@@ -14,7 +14,8 @@ const AdminSettings = () => {
         storeAddress: settings.storeAddress || '',
         freeShippingThreshold: settings.freeShippingThreshold || settings.freeShippingAbove || 2000,
         shippingCharge: settings.shippingCharge || 99,
-        announcements: settings.announcements || []
+        announcements: settings.announcements || [],
+        membershipPlans: settings.membershipPlans || []
     });
     const [newAnnouncement, setNewAnnouncement] = useState('');
     const [saved, setSaved] = useState(false);
@@ -31,7 +32,8 @@ const AdminSettings = () => {
                 storeAddress: settings.storeAddress || '',
                 freeShippingThreshold: settings.freeShippingThreshold || settings.freeShippingAbove || 2000,
                 shippingCharge: settings.shippingCharge || 99,
-                announcements: settings.announcements || []
+                announcements: settings.announcements || [],
+                membershipPlans: settings.membershipPlans || []
             });
         }
     }, [settings]);
@@ -89,6 +91,100 @@ const AdminSettings = () => {
             </div>
 
             <form className="admin-settings__form" onSubmit={handleSubmit}>
+                {/* Membership Plans Settings */}
+                <div className="admin-settings__section">
+                    <div className="admin-settings__section-header">
+                        <h2>Membership Plans</h2>
+                        <p>Manage different membership levels and their rewards</p>
+                    </div>
+
+                    <div className="plans-editor">
+                        {formData.membershipPlans?.map((plan, planIndex) => (
+                            <div key={planIndex} className="plan-editor-card">
+                                <div className="plan-editor-row">
+                                    <div className="admin-settings__field">
+                                        <label>Plan Name</label>
+                                        <input
+                                            type="text"
+                                            value={plan.name}
+                                            onChange={(e) => {
+                                                const newPlans = [...formData.membershipPlans];
+                                                newPlans[planIndex].name = e.target.value;
+                                                setFormData({ ...formData, membershipPlans: newPlans });
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="admin-settings__field">
+                                        <label>Price (₹)</label>
+                                        <input
+                                            type="number"
+                                            value={plan.price}
+                                            onChange={(e) => {
+                                                const newPlans = [...formData.membershipPlans];
+                                                newPlans[planIndex].price = parseInt(e.target.value);
+                                                setFormData({ ...formData, membershipPlans: newPlans });
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="plan-editor-row">
+                                    <div className="admin-settings__field">
+                                        <label>Cashback Goal (Referrals)</label>
+                                        <input
+                                            type="number"
+                                            value={plan.cashbackGoal}
+                                            onChange={(e) => {
+                                                const newPlans = [...formData.membershipPlans];
+                                                newPlans[planIndex].cashbackGoal = parseInt(e.target.value);
+                                                setFormData({ ...formData, membershipPlans: newPlans });
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="admin-settings__field">
+                                        <label>Gold Coin Goal (Referrals)</label>
+                                        <input
+                                            type="number"
+                                            value={plan.goldGoal}
+                                            onChange={(e) => {
+                                                const newPlans = [...formData.membershipPlans];
+                                                newPlans[planIndex].goldGoal = parseInt(e.target.value);
+                                                setFormData({ ...formData, membershipPlans: newPlans });
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => {
+                                        const newPlans = formData.membershipPlans.filter((_, i) => i !== planIndex);
+                                        setFormData({ ...formData, membershipPlans: newPlans });
+                                    }}
+                                >
+                                    Remove Plan
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            className="btn btn-outline"
+                            onClick={() => {
+                                const newPlans = [...(formData.membershipPlans || []), {
+                                    id: `plan_${Date.now()}`,
+                                    name: 'New Plan',
+                                    price: 999,
+                                    cashbackGoal: 5,
+                                    goldGoal: 7,
+                                    features: []
+                                }];
+                                setFormData({ ...formData, membershipPlans: newPlans });
+                            }}
+                        >
+                            <Plus size={18} /> Add New Plan
+                        </button>
+                    </div>
+                </div>
+
                 {/* Announcement Settings */}
                 <div className="admin-settings__section">
                     <div className="admin-settings__section-header">
