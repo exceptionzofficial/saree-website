@@ -50,6 +50,18 @@
     color: var(--text-secondary);
 }
 
+.plan-badge-main {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 12px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark, #6b1a40));
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+}
+
 .membership-status {
     display: flex;
     align-items: center;

@@ -9,10 +9,12 @@ import {
     Heart
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useOrders } from '../../context/OrderContext';
 import logo from '../../assets/logo.png';
 import './Footer.css';
 
 const Footer = () => {
+    const { settings } = useOrders();
     const currentYear = new Date().getFullYear();
 
     const quickLinks = [
@@ -60,10 +62,10 @@ const Footer = () => {
                     {/* Brand Section */}
                     <div className="footer__brand">
                         <Link to="/" className="footer__logo">
-                            <img src={logo} alt="GURUBAGAVAN SAREES" className="footer__logo-img" />
+                            <img src={logo} alt={settings.storeName || "GURUBAGAVAN SAREES"} className="footer__logo-img" />
                             <div className="footer__logo-text-wrapper">
-                                <span className="footer__logo-text">GURUBAGAVAN</span>
-                                <span className="footer__logo-accent">SAREES</span>
+                                <span className="footer__logo-text">{settings.storeName?.split(' ')[0] || 'GURUBAGAVAN'}</span>
+                                <span className="footer__logo-accent">{settings.storeName?.split(' ').slice(1).join(' ') || 'SAREES'}</span>
                             </div>
                         </Link>
                         <p className="footer__tagline">
@@ -112,17 +114,17 @@ const Footer = () => {
                     <div className="footer__contact">
                         <h4 className="footer__links-title">Contact Us</h4>
                         <div className="footer__contact-list">
-                            <a href="tel:+919876543210" className="footer__contact-item">
+                            <a href={`tel:${settings.storePhone?.replace(/\s/g, '') || '+919876543210'}`} className="footer__contact-item">
                                 <Phone size={18} />
-                                <span>+91 98765 43210</span>
+                                <span>{settings.storePhone || '+91 98765 43210'}</span>
                             </a>
-                            <a href="mailto:contact@gurubagavansarees.com" className="footer__contact-item">
+                            <a href={`mailto:${settings.storeEmail || 'contact@gurubagavansarees.com'}`} className="footer__contact-item">
                                 <Mail size={18} />
-                                <span>contact@gurubagavansarees.com</span>
+                                <span>{settings.storeEmail || 'contact@gurubagavansarees.com'}</span>
                             </a>
                             <div className="footer__contact-item">
                                 <MapPin size={18} />
-                                <span>123 Fashion Street, Silk Bazaar, Chennai - 600001</span>
+                                <span>{settings.storeAddress || '123 Fashion Street, Silk Bazaar, Chennai - 600001'}</span>
                             </div>
                         </div>
                     </div>
@@ -133,10 +135,10 @@ const Footer = () => {
             <div className="footer__bottom">
                 <div className="footer__container footer__bottom-content">
                     <p className="footer__copyright">
-                        © {currentYear} GURUBAGAVAN SAREES. All rights reserved.
+                        © {currentYear} {settings.storeName?.toUpperCase() || 'GURUBAGAVAN SAREES'}. All rights reserved.
                     </p>
                     <p className="footer__made-with">
-                        Made with <Heart size={14} className="footer__heart" /> in India
+                        P<Heart size={14} className="footer__heart" />wered by Exceptionz
                     </p>
                 </div>
             </div>

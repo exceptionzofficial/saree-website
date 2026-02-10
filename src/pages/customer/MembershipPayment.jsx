@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Upload, Copy, Check, CreditCard, Smartphone, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useMembership } from '../../context/MembershipContext';
@@ -127,8 +128,12 @@ const MembershipPayment = () => {
                                 <ul>
                                     <li>✓ Unique Referral Code</li>
                                     <li>✓ Refer & Earn Program</li>
-                                    <li>✓ 100% Money Back on {plan.cashbackGoal} Referrals</li>
-                                    <li>✓ Pure Gold Coin on {plan.goldGoal} Referrals</li>
+                                    {plan.cashbackEnabled !== false && (
+                                        <li>✓ 100% Money Back on {plan.cashbackGoal} Referrals</li>
+                                    )}
+                                    {plan.goldEnabled !== false && (
+                                        <li>✓ Pure Gold Coin on {plan.goldGoal} Referrals</li>
+                                    )}
                                 </ul>
                             </div>
                             <div className="summary-divider"></div>
@@ -141,8 +146,10 @@ const MembershipPayment = () => {
                         <div className="membership-note">
                             <AlertCircle size={18} />
                             <p>
-                                <strong>Goal-Based Membership:</strong> Your {plan.name} is active until you earn your Gold Coin ({plan.goldGoal} referrals).
-                                To continue referring after that, simply purchase again!
+                                <strong>Goal-Based Membership:</strong> Your {plan.name} is active until you complete all enabled goals.
+                                {plan.cashbackEnabled !== false && ` Cashback at ${plan.cashbackGoal} referrals.`}
+                                {plan.goldEnabled !== false && ` Gold Coin at ${plan.goldGoal} referrals.`}
+                                {' '}To continue referring after that, simply purchase again!
                             </p>
                         </div>
                     </div>

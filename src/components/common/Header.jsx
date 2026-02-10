@@ -12,10 +12,12 @@ import {
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useMembership } from '../../context/MembershipContext';
+import { useOrders } from '../../context/OrderContext';
 import logo from '../../assets/logo.png';
 import './Header.css';
 
 const Header = () => {
+    const { settings } = useOrders();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -77,10 +79,10 @@ const Header = () => {
 
                     {/* Logo */}
                     <Link to="/" className="header__logo">
-                        <img src={logo} alt="GURUBAGAVAN SAREES" className="header__logo-img" />
+                        <img src={logo} alt={settings.storeName || "GURUBAGAVAN SAREES"} className="header__logo-img" />
                         <div className="header__logo-text-wrapper">
-                            <span className="header__logo-text">GURUBAGAVAN</span>
-                            <span className="header__logo-accent">SAREES</span>
+                            <span className="header__logo-text">{settings.storeName?.split(' ')[0] || 'GURUBAGAVAN'}</span>
+                            <span className="header__logo-accent">{settings.storeName?.split(' ').slice(1).join(' ') || 'SAREES'}</span>
                         </div>
                     </Link>
 

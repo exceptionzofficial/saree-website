@@ -159,6 +159,23 @@
     margin-bottom: 2px;
 }
 
+.request-plan-badge {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 10px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark, #6b1a40));
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+}
+
+.plan-name {
+    color: var(--primary);
+    font-weight: 600;
+}
+
 .mobile {
     font-size: 0.75rem;
     color: var(--text-secondary);

@@ -47,22 +47,31 @@ const BecomeMember = () => {
             btnText: 'Current Plan',
             disabled: true
         },
-        ...membershipPlans.map(plan => ({
-            id: plan.id,
-            name: plan.name,
-            price: `₹${plan.price.toLocaleString()}`,
-            priceNote: 'per referral cycle',
-            features: plan.features || [
+        ...membershipPlans.map(plan => {
+            const features = plan.features || [];
+            // If no custom features, generate them dynamically
+            const dynamicFeatures = features.length > 0 ? features : [
                 '✔ Unique Referral Code',
                 '✔ Refer & Earn Program',
-                `✔ Money Back for ${plan.cashbackGoal} Referrals`,
-                `✔ Gold Coin for ${plan.goldGoal} Referrals`,
+                plan.cashbackEnabled !== false
+                    ? `✔ Money Back for ${plan.cashbackGoal} Referrals`
+                    : '✘ No Cashback Reward',
+                plan.goldEnabled !== false
+                    ? `✔ Gold Coin for ${plan.goldGoal} Referrals`
+                    : '✘ No Gold Coin Reward',
                 'Priority Doorstep Delivery'
-            ],
-            recommended: plan.id === 'premium' || plan.id === 'elite',
-            btnText: `Get ${plan.name} Access`,
-            planId: plan.id
-        }))
+            ];
+            return {
+                id: plan.id,
+                name: plan.name,
+                price: `₹${plan.price.toLocaleString()}`,
+                priceNote: 'per referral cycle',
+                features: dynamicFeatures,
+                recommended: plan.id === 'premium' || plan.id === 'elite',
+                btnText: `Get ${plan.name} Access`,
+                planId: plan.id
+            };
+        })
     ];
 
     return (

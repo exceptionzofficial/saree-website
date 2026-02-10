@@ -129,10 +129,25 @@ const AdminSettings = () => {
                                 </div>
                                 <div className="plan-editor-row">
                                     <div className="admin-settings__field">
-                                        <label>Cashback Goal (Referrals)</label>
+                                        <div className="goal-toggle-row">
+                                            <label>Cashback Goal (Referrals)</label>
+                                            <label className="toggle-switch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={plan.cashbackEnabled !== false}
+                                                    onChange={(e) => {
+                                                        const newPlans = [...formData.membershipPlans];
+                                                        newPlans[planIndex].cashbackEnabled = e.target.checked;
+                                                        setFormData({ ...formData, membershipPlans: newPlans });
+                                                    }}
+                                                />
+                                                <span className="toggle-slider"></span>
+                                            </label>
+                                        </div>
                                         <input
                                             type="number"
                                             value={plan.cashbackGoal}
+                                            disabled={plan.cashbackEnabled === false}
                                             onChange={(e) => {
                                                 const newPlans = [...formData.membershipPlans];
                                                 newPlans[planIndex].cashbackGoal = parseInt(e.target.value);
@@ -141,10 +156,25 @@ const AdminSettings = () => {
                                         />
                                     </div>
                                     <div className="admin-settings__field">
-                                        <label>Gold Coin Goal (Referrals)</label>
+                                        <div className="goal-toggle-row">
+                                            <label>Gold Coin Goal (Referrals)</label>
+                                            <label className="toggle-switch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={plan.goldEnabled !== false}
+                                                    onChange={(e) => {
+                                                        const newPlans = [...formData.membershipPlans];
+                                                        newPlans[planIndex].goldEnabled = e.target.checked;
+                                                        setFormData({ ...formData, membershipPlans: newPlans });
+                                                    }}
+                                                />
+                                                <span className="toggle-slider"></span>
+                                            </label>
+                                        </div>
                                         <input
                                             type="number"
                                             value={plan.goldGoal}
+                                            disabled={plan.goldEnabled === false}
                                             onChange={(e) => {
                                                 const newPlans = [...formData.membershipPlans];
                                                 newPlans[planIndex].goldGoal = parseInt(e.target.value);
@@ -173,7 +203,9 @@ const AdminSettings = () => {
                                     id: `plan_${Date.now()}`,
                                     name: 'New Plan',
                                     price: 999,
+                                    cashbackEnabled: true,
                                     cashbackGoal: 5,
+                                    goldEnabled: true,
                                     goldGoal: 7,
                                     features: []
                                 }];
@@ -257,7 +289,7 @@ const AdminSettings = () => {
                             </span>
                         </div>
 
-                        <div className="admin-settings__field">
+                        {/* <div className="admin-settings__field">
                             <label>Membership Price (₹)</label>
                             <input
                                 type="number"
@@ -269,7 +301,7 @@ const AdminSettings = () => {
                             <span className="admin-settings__hint">
                                 Price for premium membership subscription
                             </span>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -326,8 +358,7 @@ const AdminSettings = () => {
                     </div>
                 </div>
 
-                {/* Shipping Settings */}
-                <div className="admin-settings__section">
+                {/* <div className="admin-settings__section">
                     <div className="admin-settings__section-header">
                         <h2>Shipping Settings</h2>
                         <p>Configure shipping charges and free shipping threshold</p>
@@ -362,7 +393,7 @@ const AdminSettings = () => {
                             </span>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Save Button */}
                 <div className="admin-settings__actions">

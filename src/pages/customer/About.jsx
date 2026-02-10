@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Heart, Award, Truck, Users, ArrowRight } from 'lucide-react';
+import { useOrders } from '../../context/OrderContext';
 import './About.css';
 
 const About = () => {
+    const { settings } = useOrders();
     const values = [
         {
             icon: <Heart size={32} />,
@@ -45,7 +47,7 @@ const About = () => {
                             <span className="about__hero-accent"> Reality</span>
                         </h1>
                         <p className="about__hero-text">
-                            At GURUBAGAVAN SAREES, we believe every saree is more than just fabric –
+                            At {settings.storeName?.toUpperCase() || 'GURUBAGAVAN SAREES'}, we believe every saree is more than just fabric –
                             it's a piece of art, a story waiting to be told, a tradition passed down through generations.
                         </p>
                     </div>
@@ -60,7 +62,7 @@ const About = () => {
                             <h2>Our Journey</h2>
                             <p>
                                 Founded with a vision to bring the finest handcrafted sarees from across India
-                                to your doorstep, GURUBAGAVAN SAREES started as a small family venture driven by
+                                to your doorstep, {settings.storeName?.toUpperCase() || 'GURUBAGAVAN SAREES'} started as a small family venture driven by
                                 passion for Indian textiles.
                             </p>
                             <p>
