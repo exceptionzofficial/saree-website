@@ -7,7 +7,8 @@ import {
     LogOut,
     X,
     Users,
-    Gift
+    Gift,
+    BarChart3
 } from 'lucide-react';
 import './AdminSidebar.css';
 
@@ -21,6 +22,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
 
     const navItems = [
         { to: '/admin/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+        { to: '/admin/analytics', icon: <BarChart3 size={20} />, label: 'Analytics' },
         { to: '/admin/products', icon: <Package size={20} />, label: 'Products' },
         { to: '/admin/orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
         { to: '/admin/users', icon: <Users size={20} />, label: 'Users' },

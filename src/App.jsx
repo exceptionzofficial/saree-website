@@ -42,6 +42,7 @@ import AdminUsers from './pages/admin/Users';
 import AdminMemberships from './pages/admin/MembershipRequests';
 import RewardClaims from './pages/admin/RewardClaims';
 import AdminSettings from './pages/admin/Settings';
+import Analytics from './pages/admin/Analytics';
 
 import './App.css';
 
@@ -175,6 +176,7 @@ function App() {
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="memberships" element={<AdminMemberships />} />
                     <Route path="reward-claims" element={<RewardClaims />} />
+                    <Route path="analytics" element={<Analytics />} />
                     <Route path="settings" element={<AdminSettings />} />
                   </Route>
                 </Routes>
