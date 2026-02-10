@@ -230,7 +230,7 @@ const Contact = () => {
                                     <h3>Chat with Us</h3>
                                     <p>Get instant replies on WhatsApp</p>
                                     <a
-                                        href={`https://wa.me/91${settings.storePhone?.replace(/[^0-9]/g, '') || '9876543210'}`}
+                                        href={`https://wa.me/${settings.storePhone?.replace(/[^0-9]/g, '') || '9876543210'}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="btn btn-success"
