@@ -28,8 +28,8 @@ const Footer = () => {
     const helpLinks = [
         { path: '/about', label: 'About Us' },
         { path: '/contact', label: 'Contact Us' },
-        { path: '/shipping', label: 'Shipping Info' },
-        { path: '/returns', label: 'Returns & Exchange' },
+        // { path: '/shipping', label: 'Shipping Info' },
+        // { path: '/returns', label: 'Returns & Exchange' },
     ];
 
     return (

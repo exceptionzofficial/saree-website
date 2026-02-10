@@ -1,6 +1,6 @@
 // API Configuration
-const API_BASE_URL = 'https://saree-backend-five.vercel.app/api';
-// const API_BASE_URL = 'http://localhost:5000/api';
+// const API_BASE_URL = 'https://saree-backend-five.vercel.app/api';
+const API_BASE_URL = 'http://localhost:5000/api';
 
 // Fetch wrapper with error handling
 async function fetchAPI(endpoint, options = {}) {
@@ -142,8 +142,17 @@ export const settingsAPI = {
     })
 };
 
+// Contact API
+export const contactAPI = {
+    submit: (contactData) => fetchAPI('/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactData)
+    })
+};
+
 // Health check
 export const checkAPIHealth = () => fetchAPI('/health');
 
-export default { productsAPI, ordersAPI, membershipsAPI, categoriesAPI, authAPI, settingsAPI, checkAPIHealth };
+export default { productsAPI, ordersAPI, membershipsAPI, categoriesAPI, authAPI, settingsAPI, contactAPI, checkAPIHealth };
 

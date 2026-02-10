@@ -137,6 +137,18 @@
     font-weight: 500;
 }
 
+.contact__error {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: #FEE2E2;
+    color: #DC2626;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: 500;
+}
+
 .contact__form {
     display: flex;
     flex-direction: column;

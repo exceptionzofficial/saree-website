@@ -164,8 +164,8 @@ const OrderConfirmation = () => {
 
                     {/* Actions */}
                     <div className="order-confirmation__actions">
-                        <Link to="/track-order" className="btn btn-outline">
-                            Track Your Order
+                        <Link to="/orders" className="btn btn-outline">
+                            View My Orders
                         </Link>
                         <Link to="/shop" className="btn btn-primary">
                             Continue Shopping <ArrowRight size={18} />

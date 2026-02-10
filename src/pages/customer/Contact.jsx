@@ -10,6 +10,7 @@ import {
     Facebook
 } from 'lucide-react';
 import { useOrders } from '../../context/OrderContext';
+import { contactAPI } from '../../services/api';
 import './Contact.css';
 
 const Contact = () => {
@@ -22,24 +23,35 @@ const Contact = () => {
         message: ''
     });
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setError('');
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulate form submission
-        console.log('Form submitted:', formData);
-        setSubmitted(true);
-        setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            subject: '',
-            message: ''
-        });
-        setTimeout(() => setSubmitted(false), 5000);
+        setLoading(true);
+        setError('');
+
+        try {
+            await contactAPI.submit(formData);
+            setSubmitted(true);
+            setFormData({
+                name: '',
+                email: '',
+                phone: '',
+                subject: '',
+                message: ''
+            });
+            setTimeout(() => setSubmitted(false), 5000);
+        } catch (err) {
+            setError(err.message || 'Failed to send message. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const contactInfo = [
@@ -214,9 +226,15 @@ const Contact = () => {
                                     ></textarea>
                                 </div>
 
-                                <button type="submit" className="btn btn-primary btn-lg">
+                                {error && (
+                                    <div className="contact__error">
+                                        <span>{error}</span>
+                                    </div>
+                                )}
+
+                                <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
                                     <Send size={18} />
-                                    Send Message
+                                    {loading ? 'Sending...' : 'Send Message'}
                                 </button>
                             </form>
                         </div>
