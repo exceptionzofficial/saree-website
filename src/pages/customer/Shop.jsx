@@ -38,6 +38,9 @@ const Shop = () => {
             result = search(searchQuery);
         }
 
+        // Filter out membership benefit products or explicitly hidden products
+        result = result.filter(p => !p.hideFromShop);
+
         // Apply filters
         if (filters.category || filters.color || filters.minPrice || filters.maxPrice || filters.fabric) {
             result = result.filter(product => {

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Upload, Copy, Check, CreditCard, Smartphone, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Upload, Copy, Check, CreditCard, Smartphone, AlertCircle, ArrowLeft, Heart, ShoppingBag } from 'lucide-react';
 import { useMembership } from '../../context/MembershipContext';
 import { useOrders, generateUPIQRUrl } from '../../context/OrderContext';
 import { useAuth } from '../../context/AuthContext';
+import { useProducts } from '../../context/ProductContext';
 import './MembershipPayment.css';
 
 const MembershipPayment = () => {
@@ -12,6 +13,7 @@ const MembershipPayment = () => {
     const { submitPaymentRequest } = useMembership();
     const { settings } = useOrders();
     const { user, isAuthenticated } = useAuth();
+    const { products } = useProducts();
 
     // Get plan details
     const selectedPlanId = location.state?.planId || 'premium';
@@ -36,6 +38,26 @@ const MembershipPayment = () => {
     const [copied, setCopied] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [selectedSarees, setSelectedSarees] = useState([]);
+
+    // Filter products applicable for this plan
+    const availableSarees = products.filter(p =>
+        p.applicablePlans?.includes(selectedPlanId) && p.inStock
+    );
+
+    const sareeLimit = plan.sareeLimit || 0;
+
+    const toggleSaree = (sareeId) => {
+        if (selectedSarees.includes(sareeId)) {
+            setSelectedSarees(prev => prev.filter(id => id !== sareeId));
+        } else {
+            if (selectedSarees.length >= sareeLimit) {
+                alert(`You can only select up to ${sareeLimit} sarees with this plan.`);
+                return;
+            }
+            setSelectedSarees(prev => [...prev, sareeId]);
+        }
+    };
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -69,7 +91,7 @@ const MembershipPayment = () => {
         setSubmitting(true);
 
         try {
-            await submitPaymentRequest(formData, screenshot, selectedPlanId);
+            await submitPaymentRequest(formData, screenshot, selectedPlanId, selectedSarees);
             setSubmitted(true);
         } catch (error) {
             console.error('Error submitting payment:', error);
@@ -114,7 +136,7 @@ const MembershipPayment = () => {
                 </button>
 
                 <div className="payment-container">
-                    {/* Order Summary */}
+                    {/* Order Summary Column */}
                     <div className="payment-summary">
                         <h2>Order Summary</h2>
                         <div className="summary-card">
@@ -134,14 +156,74 @@ const MembershipPayment = () => {
                                     {plan.goldEnabled !== false && (
                                         <li>✓ Pure Gold Coin on {plan.goldGoal} Referrals</li>
                                     )}
+                                    {sareeLimit > 0 && (
+                                        <li>✓ {sareeLimit} {sareeLimit === 1 ? 'Free Saree' : 'Free Sarees'} Included</li>
+                                    )}
                                 </ul>
                             </div>
                             <div className="summary-divider"></div>
+                            {selectedSarees.length > 0 && (
+                                <div className="summary-selected-sarees">
+                                    <h4>Included Benefits:</h4>
+                                    {selectedSarees.map(id => {
+                                        const saree = products.find(p => p.id === id);
+                                        return saree ? (
+                                            <div key={id} className="selected-saree-item">
+                                                <img src={saree.images?.[0] || saree.image} alt={saree.name} />
+                                                <div className="selected-saree-details">
+                                                    <span className="saree-name">{saree.name}</span>
+                                                    <span className="saree-price">Benefit Item</span>
+                                                </div>
+                                            </div>
+                                        ) : null;
+                                    })}
+                                    <div className="summary-divider"></div>
+                                </div>
+                            )}
                             <div className="summary-total">
                                 <span>Total</span>
                                 <span className="total-amount">₹{membershipPrice.toLocaleString()}</span>
                             </div>
                         </div>
+
+                        {/* Product Selection */}
+                        {availableSarees.length > 0 && (
+                            <div className="saree-selection">
+                                <div className="saree-selection__header">
+                                    <h3>Select Your Benefit Sarees</h3>
+                                    <span className={selectedSarees.length >= sareeLimit ? 'limit-reached' : ''}>
+                                        {selectedSarees.length} / {sareeLimit} Selected
+                                    </span>
+                                </div>
+                                <div className="saree-selection__grid">
+                                    {availableSarees.map(saree => (
+                                        <div
+                                            key={saree.id}
+                                            className={`saree-benefit-card ${selectedSarees.includes(saree.id) ? 'selected' : ''}`}
+                                            onClick={() => toggleSaree(saree.id)}
+                                        >
+                                            <div className="saree-benefit-image">
+                                                <img src={saree.images?.[0] || saree.image} alt={saree.name} />
+                                                {selectedSarees.includes(saree.id) && (
+                                                    <div className="selected-overlay">
+                                                        <Check size={20} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="saree-benefit-info">
+                                                <span className="saree-name">{saree.name}</span>
+                                                <span className="saree-material">{saree.material}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                {sareeLimit > 0 && (
+                                    <p className="saree-selection__hint">
+                                        Choose {sareeLimit} items as part of your membership benefits.
+                                    </p>
+                                )}
+                            </div>
+                        )}
 
                         <div className="membership-note">
                             <AlertCircle size={18} />
@@ -154,7 +236,7 @@ const MembershipPayment = () => {
                         </div>
                     </div>
 
-                    {/* Payment Section */}
+                    {/* Payment Section Column */}
                     <div className="payment-form-section">
                         <h2>Complete Payment</h2>
 

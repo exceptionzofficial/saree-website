@@ -60,7 +60,7 @@ export const MembershipProvider = ({ children }) => {
         }
     }, [membershipRequests, memberships, loading]);
 
-    const submitPaymentRequest = async (userData, screenshotFile, planId = 'premium') => {
+    const submitPaymentRequest = async (userData, screenshotFile, planId = 'premium', selectedSarees = []) => {
         if (useAPI) {
             try {
                 const formData = new FormData();
@@ -68,6 +68,7 @@ export const MembershipProvider = ({ children }) => {
                 formData.append('email', userData.email);
                 formData.append('mobile', userData.mobile);
                 formData.append('planId', planId);
+                formData.append('selectedSarees', JSON.stringify(selectedSarees));
 
                 // Automatically include referral code from user profile (registration)
                 if (user?.referralId) {

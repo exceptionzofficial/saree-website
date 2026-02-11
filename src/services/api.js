@@ -1,6 +1,6 @@
 // API Configuration
-// const API_BASE_URL = 'https://saree-backend-five.vercel.app/api';
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://saree-backend-five.vercel.app/api';
+// const API_BASE_URL = 'http://localhost:5000/api';
 
 // Fetch wrapper with error handling
 async function fetchAPI(endpoint, options = {}) {
@@ -139,7 +139,7 @@ export const adminAuthAPI = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
     }),
-    changePassword: (data, token) => fetchAPI('/admin/auth/change-password', {
+    updateCredentials: (data, token) => fetchAPI('/admin/auth/update-credentials', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

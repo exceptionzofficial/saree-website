@@ -38,7 +38,10 @@ export const ProductProvider = ({ children }) => {
                 material: p.material || p.fabric || '',
                 images: Array.isArray(p.images) ? p.images : (p.image ? [p.image] : []),
                 features: Array.isArray(p.features) ? p.features : [],
-                tags: Array.isArray(p.tags) ? p.tags : []
+                tags: Array.isArray(p.tags) ? p.tags : [],
+                applicablePlans: Array.isArray(p.applicablePlans) ? p.applicablePlans :
+                    (typeof p.applicablePlans === 'string' ? JSON.parse(p.applicablePlans) : []),
+                hideFromShop: p.hideFromShop === true || p.hideFromShop === 'true' || (Array.isArray(p.applicablePlans) && p.applicablePlans.length > 0)
             });
 
             // Set products
@@ -83,20 +86,22 @@ export const ProductProvider = ({ children }) => {
     };
 
     const getFeaturedProducts = () => {
-        return products.filter(p => p.featured);
+        return products.filter(p => p.featured && !p.hideFromShop);
     };
 
     const getBestsellers = () => {
-        return products.filter(p => p.bestseller);
+        return products.filter(p => p.bestseller && !p.hideFromShop);
     };
 
     const search = (query) => {
         const lowercaseQuery = query.toLowerCase();
         return products.filter(p =>
-            p.name.toLowerCase().includes(lowercaseQuery) ||
-            (p.description && p.description.toLowerCase().includes(lowercaseQuery)) ||
-            (p.category && p.category.toLowerCase().includes(lowercaseQuery)) ||
-            (p.material && p.material.toLowerCase().includes(lowercaseQuery))
+            !p.hideFromShop && (
+                p.name.toLowerCase().includes(lowercaseQuery) ||
+                (p.description && p.description.toLowerCase().includes(lowercaseQuery)) ||
+                (p.category && p.category.toLowerCase().includes(lowercaseQuery)) ||
+                (p.material && p.material.toLowerCase().includes(lowercaseQuery))
+            )
         );
     };
 

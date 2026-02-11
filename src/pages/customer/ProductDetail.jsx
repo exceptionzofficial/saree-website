@@ -78,7 +78,7 @@ const ProductDetail = () => {
 
     // Get related products (same category, excluding current)
     const relatedProducts = products
-        .filter(p => p.category === product.category && p.id !== product.id)
+        .filter(p => p.category === product.category && p.id !== product.id && !p.hideFromShop)
         .slice(0, 4);
 
     const inCart = isInCart(product.id);

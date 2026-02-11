@@ -382,10 +382,45 @@
     text-align: center;
 }
 
+.screenshot-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
 .admin-orders__screenshot img {
     max-width: 100%;
     max-height: 300px;
     border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.screenshot-wrapper:hover img {
+    opacity: 0.8;
+}
+
+.view-full-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: var(--space-2) var(--space-4);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    cursor: pointer;
+}
+
+.screenshot-wrapper:hover .view-full-btn {
+    opacity: 1;
 }
 
 .admin-orders__payment-actions {
@@ -470,5 +505,65 @@
 
     .admin-orders__details {
         max-width: 100%;
+    }
+}
+
+/* Screenshot Modal Styles */
+.screenshot-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: var(--space-4);
+    cursor: zoom-out;
+}
+
+.screenshot-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.screenshot-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-2xl);
+    cursor: default;
+}
+
+.screenshot-content .close-btn {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    background: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-fast);
+}
+
+.screenshot-content .close-btn:hover {
+    transform: scale(1.1);
+    color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .screenshot-content .close-btn {
+        top: -45px;
+        right: 0;
     }
 }

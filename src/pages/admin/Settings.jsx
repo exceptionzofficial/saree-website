@@ -21,6 +21,7 @@ const AdminSettings = () => {
     const [newAnnouncement, setNewAnnouncement] = useState('');
     const [securityData, setSecurityData] = useState({
         currentPassword: '',
+        newUsername: '',
         newPassword: '',
         confirmPassword: ''
     });
@@ -95,10 +96,25 @@ const AdminSettings = () => {
         setSecurityError('');
     };
 
-    const handlePasswordChange = async (e) => {
+    const handleCredentialUpdate = async (e) => {
         e.preventDefault();
-        if (securityData.newPassword !== securityData.confirmPassword) {
-            setSecurityError('New passwords do not match');
+
+        let updateData = { currentPassword: securityData.currentPassword };
+
+        if (securityData.newUsername) {
+            updateData.newUsername = securityData.newUsername;
+        }
+
+        if (securityData.newPassword) {
+            if (securityData.newPassword !== securityData.confirmPassword) {
+                setSecurityError('New passwords do not match');
+                return;
+            }
+            updateData.newPassword = securityData.newPassword;
+        }
+
+        if (!securityData.newUsername && !securityData.newPassword) {
+            setSecurityError('Please enter a new username or password to update');
             return;
         }
 
@@ -107,16 +123,26 @@ const AdminSettings = () => {
 
         try {
             const auth = JSON.parse(localStorage.getItem('adminAuth'));
-            await adminAuthAPI.changePassword({
-                currentPassword: securityData.currentPassword,
-                newPassword: securityData.newPassword
-            }, auth.token);
+            const response = await adminAuthAPI.updateCredentials(updateData, auth.token);
 
             setSecuritySaved(true);
-            setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+
+            // Update stored username if it changed
+            if (securityData.newUsername) {
+                const updatedAuth = { ...auth, username: response.user.username };
+                localStorage.setItem('adminAuth', JSON.stringify(updatedAuth));
+                // Optionally notify parent components if username is displayed elsewhere
+            }
+
+            setSecurityData({
+                currentPassword: '',
+                newUsername: '',
+                newPassword: '',
+                confirmPassword: ''
+            });
             setTimeout(() => setSecuritySaved(false), 3000);
         } catch (err) {
-            setSecurityError(err.message || 'Failed to update password');
+            setSecurityError(err.message || 'Failed to update credentials');
         } finally {
             setSecurityLoading(false);
         }
@@ -223,6 +249,19 @@ const AdminSettings = () => {
                                             }}
                                         />
                                     </div>
+                                    <div className="admin-settings__field">
+                                        <label>Saree Selection Limit</label>
+                                        <input
+                                            type="number"
+                                            value={plan.sareeLimit || 0}
+                                            onChange={(e) => {
+                                                const newPlans = [...formData.membershipPlans];
+                                                newPlans[planIndex].sareeLimit = parseInt(e.target.value);
+                                                setFormData({ ...formData, membershipPlans: newPlans });
+                                            }}
+                                            placeholder="Max sarees to select"
+                                        />
+                                    </div>
                                 </div>
                                 <button
                                     type="button"
@@ -248,6 +287,7 @@ const AdminSettings = () => {
                                     cashbackGoal: 5,
                                     goldEnabled: true,
                                     goldGoal: 7,
+                                    sareeLimit: 0,
                                     features: []
                                 }];
                                 setFormData({ ...formData, membershipPlans: newPlans });
@@ -408,13 +448,25 @@ const AdminSettings = () => {
 
                     <div className="admin-settings__grid">
                         <div className="admin-settings__field">
-                            <label>Current Password</label>
+                            <label>Current Password *</label>
                             <input
                                 type="password"
                                 name="currentPassword"
                                 value={securityData.currentPassword}
                                 onChange={handleSecurityChange}
-                                placeholder="Enter current password"
+                                placeholder="Required to save changes"
+                                required
+                            />
+                        </div>
+
+                        <div className="admin-settings__field">
+                            <label>New Username</label>
+                            <input
+                                type="text"
+                                name="newUsername"
+                                value={securityData.newUsername}
+                                onChange={handleSecurityChange}
+                                placeholder="Enter new username"
                             />
                         </div>
 
@@ -447,15 +499,15 @@ const AdminSettings = () => {
                         <button
                             type="button"
                             className={`btn ${securitySaved ? 'btn-success' : 'btn-outline'}`}
-                            onClick={handlePasswordChange}
-                            disabled={securityLoading || !securityData.currentPassword || !securityData.newPassword}
+                            onClick={handleCredentialUpdate}
+                            disabled={securityLoading || !securityData.currentPassword || (!securityData.newUsername && !securityData.newPassword)}
                         >
                             {securityLoading ? 'Updating...' : securitySaved ? (
                                 <>
                                     <ShieldCheck size={18} />
-                                    Password Updated!
+                                    Credentials Updated!
                                 </>
-                            ) : 'Update Password'}
+                            ) : 'Update Credentials'}
                         </button>
                     </div>
                 </div>

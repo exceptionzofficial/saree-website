@@ -15,6 +15,7 @@ const AdminOrders = () => {
     const [statusFilter, setStatusFilter] = useState('');
     const [paymentFilter, setPaymentFilter] = useState('');
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [viewingScreenshot, setViewingScreenshot] = useState(null);
 
     const filteredOrders = orders.filter(order => {
         const orderIdVal = order.orderId || order.id || '';
@@ -233,11 +234,19 @@ const AdminOrders = () => {
                             </div>
 
                             {/* Payment Screenshot */}
-                            {selectedOrder.paymentScreenshot && (
+                            {(selectedOrder.paymentScreenshotUrl || selectedOrder.paymentScreenshot) && (
                                 <div className="admin-orders__detail-section">
                                     <h3>Payment Screenshot</h3>
                                     <div className="admin-orders__screenshot">
-                                        <img src={selectedOrder.paymentScreenshot} alt="Payment Screenshot" />
+                                        <div className="screenshot-wrapper">
+                                            <img src={selectedOrder.paymentScreenshotUrl || selectedOrder.paymentScreenshot} alt="Payment Screenshot" />
+                                            <button
+                                                className="view-full-btn"
+                                                onClick={() => setViewingScreenshot(selectedOrder.paymentScreenshotUrl || selectedOrder.paymentScreenshot)}
+                                            >
+                                                <Eye size={16} /> View Full
+                                            </button>
+                                        </div>
                                     </div>
 
                                     {selectedOrder.paymentStatus === 'pending' && (
@@ -283,6 +292,20 @@ const AdminOrders = () => {
                     </div>
                 )}
             </div>
+            {/* Screenshot Modal */}
+            {viewingScreenshot && (
+                <div className="screenshot-modal" onClick={() => setViewingScreenshot(null)}>
+                    <div className="screenshot-content" onClick={e => e.stopPropagation()}>
+                        <button
+                            className="close-btn"
+                            onClick={() => setViewingScreenshot(null)}
+                        >
+                            <X size={24} />
+                        </button>
+                        <img src={viewingScreenshot} alt="Payment Screenshot" />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

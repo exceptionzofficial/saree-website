@@ -1,10 +1,13 @@
 import { useState, useRef } from 'react';
 import { Plus, Search, Edit2, Trash2, X, Upload, Image } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
+import { useOrders } from '../../context/OrderContext';
 import './Products.css';
 
 const AdminProducts = () => {
     const { products, categories, addProduct, updateProduct, deleteProduct, addCategory, useAPI } = useProducts();
+    const { settings } = useOrders();
+    const membershipPlans = settings?.membershipPlans || [];
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,14 +34,16 @@ const AdminProducts = () => {
         existingImages: [],
         inStock: true,
         featured: false,
-        bestseller: false
+        bestseller: false,
+        applicablePlans: [],
+        hideFromShop: false
     });
 
     const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
 
     const filteredProducts = products.filter(product => {
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = !searchTerm || (product.name || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = !selectedCategory || product.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
@@ -61,7 +66,9 @@ const AdminProducts = () => {
             existingImages: [],
             inStock: true,
             featured: false,
-            bestseller: false
+            bestseller: false,
+            applicablePlans: [],
+            hideFromShop: false
         });
         setEditingProduct(null);
         setImageFiles([]);
@@ -90,7 +97,9 @@ const AdminProducts = () => {
                 existingImages: product.images || [],
                 inStock: product.inStock !== false,
                 featured: product.featured || false,
-                bestseller: product.bestseller || false
+                bestseller: product.bestseller || false,
+                applicablePlans: product.applicablePlans || [],
+                hideFromShop: product.hideFromShop || false
             });
             setImagePreviewUrls(product.images || []);
         } else {
@@ -190,6 +199,8 @@ const AdminProducts = () => {
                 inStock: formData.inStock,
                 featured: formData.featured,
                 bestseller: formData.bestseller,
+                applicablePlans: formData.applicablePlans,
+                hideFromShop: formData.hideFromShop || (formData.applicablePlans?.length > 0),
                 images: formData.existingImages
             };
 
@@ -497,6 +508,7 @@ const AdminProducts = () => {
                                         placeholder="e.g., 500g"
                                     />
                                 </div>
+
                             </div>
 
                             <div className="admin-products__section-divider">
@@ -535,6 +547,30 @@ const AdminProducts = () => {
                                     rows={2}
                                     placeholder="e.g., Pure silk, Handwoven, Zari border"
                                 />
+                            </div>
+
+                            <div className="admin-products__field">
+                                <label>Available for Membership Plans</label>
+                                <div className="admin-products__plans-selection">
+                                    {membershipPlans.map(plan => (
+                                        <label key={plan.id} className="admin-products__plan-checkbox">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.applicablePlans?.includes(plan.id)}
+                                                onChange={(e) => {
+                                                    const newPlans = e.target.checked
+                                                        ? [...(formData.applicablePlans || []), plan.id]
+                                                        : (formData.applicablePlans || []).filter(id => id !== plan.id);
+                                                    setFormData({ ...formData, applicablePlans: newPlans });
+                                                }}
+                                            />
+                                            <span>{plan.name}</span>
+                                        </label>
+                                    ))}
+                                    {membershipPlans.length === 0 && (
+                                        <p className="admin-products__hint">No membership plans configured in Settings</p>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="admin-products__field">
@@ -626,6 +662,15 @@ const AdminProducts = () => {
                                         onChange={handleChange}
                                     />
                                     <span>Bestseller</span>
+                                </label>
+                                <label className="admin-products__checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="hideFromShop"
+                                        checked={formData.hideFromShop}
+                                        onChange={handleChange}
+                                    />
+                                    <span>Hide from Shop (Exclusive)</span>
                                 </label>
                             </div>
 

@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import {
     Users, Check, X, Eye, Clock,
-    UserCheck, AlertCircle, ChevronDown, ChevronUp
+    UserCheck, AlertCircle, ChevronDown, ChevronUp,
+    Smartphone
 } from 'lucide-react';
 import { useMembership } from '../../context/MembershipContext';
+import { useOrders } from '../../context/OrderContext';
+import { useProducts } from '../../context/ProductContext';
 import './MembershipRequests.css';
 
 const MembershipRequests = () => {
@@ -14,13 +17,14 @@ const MembershipRequests = () => {
         approveRequest,
         rejectRequest
     } = useMembership();
+    const { settings } = useOrders();
+    const { products } = useProducts();
 
     const [viewingScreenshot, setViewingScreenshot] = useState(null);
     const [activeTab, setActiveTab] = useState('pending');
     const [expandedMember, setExpandedMember] = useState(null);
 
     const pendingRequests = getPendingRequests();
-    const approvedRequests = getApprovedRequests();
     const allMembers = getAllMembers();
 
     const handleApprove = (requestId) => {
@@ -87,59 +91,85 @@ const MembershipRequests = () => {
                         </div>
                     ) : (
                         pendingRequests.map(request => (
-                            <div key={request.id} className="request-card">
-                                <div className="request-info">
-                                    <div className="user-avatar">
-                                        {request.name.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div className="user-details">
-                                        <h3>{request.name}</h3>
-                                        <p>{request.email}</p>
-                                        <div className="request-plan-badge">
-                                            {request.planName || (request.planId === 'elite' ? 'Elite Member' : 'Premium Member')}
+                            <div key={request.id} className="request-card-wrapper">
+                                <div className="request-card">
+                                    <div className="request-info">
+                                        <div className="user-avatar">
+                                            {request.name.charAt(0).toUpperCase()}
                                         </div>
-                                        <span className="mobile">{request.mobile}</span>
+                                        <div className="user-details">
+                                            <h3>{request.name}</h3>
+                                            <p>{request.email}</p>
+                                            <div className="request-plan-badge">
+                                                {request.planName || (request.planId === 'elite' ? 'Elite Member' : 'Premium Member')}
+                                            </div>
+                                            <span className="mobile">{request.mobile}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="request-meta">
+                                        <span className="submitted-time">
+                                            <Clock size={14} />
+                                            {new Date(request.submittedAt).toLocaleDateString('en-IN', {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
+                                        </span>
+                                    </div>
+
+                                    <div className="request-screenshot">
+                                        <button
+                                            className="view-screenshot-btn"
+                                            onClick={() => setViewingScreenshot(request.screenshotUrl)}
+                                        >
+                                            <Eye size={18} />
+                                            View Screenshot
+                                        </button>
+                                    </div>
+
+                                    <div className="request-actions">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={() => handleApprove(request.id)}
+                                        >
+                                            <Check size={18} />
+                                            Approve
+                                        </button>
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() => handleReject(request.id)}
+                                        >
+                                            <X size={18} />
+                                            Reject
+                                        </button>
                                     </div>
                                 </div>
 
-                                <div className="request-meta">
-                                    <span className="submitted-time">
-                                        <Clock size={14} />
-                                        {new Date(request.submittedAt).toLocaleDateString('en-IN', {
-                                            day: 'numeric',
-                                            month: 'short',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })}
-                                    </span>
-                                </div>
-
-                                <div className="request-screenshot">
-                                    <button
-                                        className="view-screenshot-btn"
-                                        onClick={() => setViewingScreenshot(request.screenshotUrl)}
-                                    >
-                                        <Eye size={18} />
-                                        View Screenshot
-                                    </button>
-                                </div>
-
-                                <div className="request-actions">
-                                    <button
-                                        className="btn btn-success"
-                                        onClick={() => handleApprove(request.id)}
-                                    >
-                                        <Check size={18} />
-                                        Approve
-                                    </button>
-                                    <button
-                                        className="btn btn-danger"
-                                        onClick={() => handleReject(request.id)}
-                                    >
-                                        <X size={18} />
-                                        Reject
-                                    </button>
-                                </div>
+                                {request.selectedSarees && request.selectedSarees.length > 0 && (
+                                    <div className="selected-benefit-sarees">
+                                        <h4>Selected Benefits:</h4>
+                                        <div className="benefit-sarees-grid">
+                                            {request.selectedSarees.map(sareeId => {
+                                                const saree = products.find(p => p.id === sareeId);
+                                                return saree ? (
+                                                    <div key={sareeId} className="benefit-saree-item">
+                                                        <img src={saree.images?.[0] || saree.image} alt={saree.name} />
+                                                        <div className="benefit-saree-info">
+                                                            <span className="saree-name">{saree.name}</span>
+                                                            <span className="saree-id">#{saree.id.slice(-6)}</span>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div key={sareeId} className="benefit-saree-item error">
+                                                        <span>Product not found ({sareeId})</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ))
                     )}
@@ -220,6 +250,23 @@ const MembershipRequests = () => {
                                                     {member.goldCoinClaimed ? '🪙 Earned' : 'Pending'}
                                                 </span>
                                             </div>
+
+                                            {member.selectedSarees && member.selectedSarees.length > 0 && (
+                                                <div className="detail-item detail-item--full">
+                                                    <span className="label">Selected Benefits</span>
+                                                    <div className="benefit-sarees-grid benefit-sarees-grid--small">
+                                                        {member.selectedSarees.map(sareeId => {
+                                                            const saree = products.find(p => p.id === sareeId);
+                                                            return saree ? (
+                                                                <div key={sareeId} className="benefit-saree-item">
+                                                                    <img src={saree.images?.[0] || saree.image} alt={saree.name} />
+                                                                    <span className="saree-name">{saree.name}</span>
+                                                                </div>
+                                                            ) : null;
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
 
                                         {member.referrals.length > 0 && (
