@@ -12,7 +12,7 @@ const AdminLayout = () => {
     const isAuthenticated = auth ? JSON.parse(auth).isAuthenticated : false;
 
     if (!isAuthenticated) {
-        return <Navigate to="/admin/login" replace />;
+        return <Navigate to="/_gurusareesadmin_@_/login" replace />;
     }
 
     return (

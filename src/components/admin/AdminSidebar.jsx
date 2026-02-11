@@ -17,18 +17,18 @@ const AdminSidebar = ({ isOpen, onClose }) => {
 
     const handleLogout = () => {
         localStorage.removeItem('adminAuth');
-        navigate('/admin/login');
+        navigate('/_gurusareesadmin_@_/login');
     };
 
     const navItems = [
-        { to: '/admin/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
-        { to: '/admin/analytics', icon: <BarChart3 size={20} />, label: 'Analytics' },
-        { to: '/admin/products', icon: <Package size={20} />, label: 'Products' },
-        { to: '/admin/orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
-        { to: '/admin/users', icon: <Users size={20} />, label: 'Users' },
-        { to: '/admin/memberships', icon: <Users size={20} />, label: 'Memberships' },
-        { to: '/admin/reward-claims', icon: <Gift size={20} />, label: 'Reward Claims' },
-        { to: '/admin/settings', icon: <Settings size={20} />, label: 'Settings' }
+        { to: '/_gurusareesadmin_@_/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+        { to: '/_gurusareesadmin_@_/analytics', icon: <BarChart3 size={20} />, label: 'Analytics' },
+        { to: '/_gurusareesadmin_@_/products', icon: <Package size={20} />, label: 'Products' },
+        { to: '/_gurusareesadmin_@_/orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
+        { to: '/_gurusareesadmin_@_/users', icon: <Users size={20} />, label: 'Users' },
+        { to: '/_gurusareesadmin_@_/memberships', icon: <Users size={20} />, label: 'Memberships' },
+        { to: '/_gurusareesadmin_@_/reward-claims', icon: <Gift size={20} />, label: 'Reward Claims' },
+        { to: '/_gurusareesadmin_@_/settings', icon: <Settings size={20} />, label: 'Settings' }
     ];
 
     return (

@@ -167,8 +167,8 @@ function App() {
                   } />
 
                   {/* Admin Routes */}
-                  <Route path="/admin/login" element={<AdminLogin />} />
-                  <Route path="/admin" element={<AdminLayout />}>
+                  <Route path="/_gurusareesadmin_@_/login" element={<AdminLogin />} />
+                  <Route path="/_gurusareesadmin_@_" element={<AdminLayout />}>
                     <Route index element={<Dashboard />} />
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="products" element={<AdminProducts />} />

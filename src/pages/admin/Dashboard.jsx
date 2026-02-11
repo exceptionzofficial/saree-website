@@ -100,7 +100,7 @@ const Dashboard = () => {
                 <div className="dashboard__section">
                     <div className="dashboard__section-header">
                         <h2>Recent Orders</h2>
-                        <Link to="/admin/orders" className="dashboard__section-link">
+                        <Link to="/_gurusareesadmin_@_/orders" className="dashboard__section-link">
                             View All <ArrowRight size={16} />
                         </Link>
                     </div>
@@ -121,7 +121,7 @@ const Dashboard = () => {
                                         <span className="dashboard__order-total">₹{order.total.toLocaleString()}</span>
                                         <span className="dashboard__order-date">{formatDate(order.createdAt)}</span>
                                     </div>
-                                    <Link to="/admin/orders" className="dashboard__order-view">
+                                    <Link to="/_gurusareesadmin_@_/orders" className="dashboard__order-view">
                                         <Eye size={16} />
                                     </Link>
                                 </div>
@@ -142,15 +142,15 @@ const Dashboard = () => {
                     </div>
 
                     <div className="dashboard__actions">
-                        <Link to="/admin/products" className="dashboard__action">
+                        <Link to="/_gurusareesadmin_@_/products" className="dashboard__action">
                             <Package size={24} />
                             <span>Add New Product</span>
                         </Link>
-                        <Link to="/admin/orders" className="dashboard__action">
+                        <Link to="/_gurusareesadmin_@_/orders" className="dashboard__action">
                             <ShoppingBag size={24} />
                             <span>View Orders</span>
                         </Link>
-                        <Link to="/admin/settings" className="dashboard__action">
+                        <Link to="/_gurusareesadmin_@_/settings" className="dashboard__action">
                             <TrendingUp size={24} />
                             <span>Update Settings</span>
                         </Link>
@@ -163,7 +163,7 @@ const Dashboard = () => {
                             <div>
                                 <strong>{stats.paymentPending} payments</strong> awaiting verification
                             </div>
-                            <Link to="/admin/orders" className="btn btn-sm btn-primary">
+                            <Link to="/_gurusareesadmin_@_/orders" className="btn btn-sm btn-primary">
                                 Review
                             </Link>
                         </div>

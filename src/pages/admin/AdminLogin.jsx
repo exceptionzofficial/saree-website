@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, Eye, EyeOff } from 'lucide-react';
+import { adminAuthAPI } from '../../services/api';
 import './AdminLogin.css';
 
 const AdminLogin = () => {
@@ -13,34 +14,35 @@ const AdminLogin = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Admin credentials
-    const ADMIN_USERNAME = 'gurubagavansarees';
-    const ADMIN_PASSWORD = 'gurubagavan@123';
 
     const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
         setError('');
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
-        // Simulate login delay
-        setTimeout(() => {
-            if (credentials.username === ADMIN_USERNAME && credentials.password === ADMIN_PASSWORD) {
+        try {
+            const response = await adminAuthAPI.login(credentials);
+            if (response.token) {
                 localStorage.setItem('adminAuth', JSON.stringify({
                     isAuthenticated: true,
-                    username: credentials.username,
+                    username: response.user.username,
+                    token: response.token,
                     loginTime: new Date().toISOString()
                 }));
-                navigate('/admin/dashboard');
+                navigate('/_gurusareesadmin_@_/dashboard');
             } else {
-                setError('Invalid username or password. Please contact the administrator if you forgot your credentials.');
+                setError('Login failed. Please try again.');
             }
+        } catch (err) {
+            setError(err.message || 'Invalid username or password.');
+        } finally {
             setLoading(false);
-        }, 800);
+        }
     };
 
     return (

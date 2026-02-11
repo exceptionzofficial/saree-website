@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Save, Check, Plus, X, Megaphone } from 'lucide-react';
+import { Save, Check, Plus, X, Megaphone, Lock, ShieldCheck } from 'lucide-react';
+import { adminAuthAPI } from '../../services/api';
 import { useOrders } from '../../context/OrderContext';
 import './Settings.css';
 
@@ -18,7 +19,15 @@ const AdminSettings = () => {
         membershipPlans: settings.membershipPlans || []
     });
     const [newAnnouncement, setNewAnnouncement] = useState('');
+    const [securityData, setSecurityData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
     const [saved, setSaved] = useState(false);
+    const [securitySaved, setSecuritySaved] = useState(false);
+    const [securityError, setSecurityError] = useState('');
+    const [securityLoading, setSecurityLoading] = useState(false);
 
     // Sync form data with settings when they load
     useEffect(() => {
@@ -79,6 +88,38 @@ const AdminSettings = () => {
         updateSettings(formData);
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
+    };
+
+    const handleSecurityChange = (e) => {
+        setSecurityData({ ...securityData, [e.target.name]: e.target.value });
+        setSecurityError('');
+    };
+
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
+        if (securityData.newPassword !== securityData.confirmPassword) {
+            setSecurityError('New passwords do not match');
+            return;
+        }
+
+        setSecurityLoading(true);
+        setSecurityError('');
+
+        try {
+            const auth = JSON.parse(localStorage.getItem('adminAuth'));
+            await adminAuthAPI.changePassword({
+                currentPassword: securityData.currentPassword,
+                newPassword: securityData.newPassword
+            }, auth.token);
+
+            setSecuritySaved(true);
+            setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+            setTimeout(() => setSecuritySaved(false), 3000);
+        } catch (err) {
+            setSecurityError(err.message || 'Failed to update password');
+        } finally {
+            setSecurityLoading(false);
+        }
     };
 
     return (
@@ -355,6 +396,67 @@ const AdminSettings = () => {
                                 placeholder="Full store address"
                             />
                         </div>
+                    </div>
+                </div>
+
+                {/* Security Settings */}
+                <div className="admin-settings__section">
+                    <div className="admin-settings__section-header">
+                        <h2><Lock size={20} style={{ marginRight: '8px', display: 'inline' }} />Security Settings</h2>
+                        <p>Protect your admin account by updating your password regularly</p>
+                    </div>
+
+                    <div className="admin-settings__grid">
+                        <div className="admin-settings__field">
+                            <label>Current Password</label>
+                            <input
+                                type="password"
+                                name="currentPassword"
+                                value={securityData.currentPassword}
+                                onChange={handleSecurityChange}
+                                placeholder="Enter current password"
+                            />
+                        </div>
+
+                        <div className="admin-settings__field">
+                            <label>New Password</label>
+                            <input
+                                type="password"
+                                name="newPassword"
+                                value={securityData.newPassword}
+                                onChange={handleSecurityChange}
+                                placeholder="Enter new password"
+                            />
+                        </div>
+
+                        <div className="admin-settings__field">
+                            <label>Confirm New Password</label>
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                value={securityData.confirmPassword}
+                                onChange={handleSecurityChange}
+                                placeholder="Confirm new password"
+                            />
+                        </div>
+                    </div>
+
+                    {securityError && <p className="admin-settings__error-text">{securityError}</p>}
+
+                    <div className="admin-settings__actions" style={{ marginTop: '1rem', justifyContent: 'flex-start' }}>
+                        <button
+                            type="button"
+                            className={`btn ${securitySaved ? 'btn-success' : 'btn-outline'}`}
+                            onClick={handlePasswordChange}
+                            disabled={securityLoading || !securityData.currentPassword || !securityData.newPassword}
+                        >
+                            {securityLoading ? 'Updating...' : securitySaved ? (
+                                <>
+                                    <ShieldCheck size={18} />
+                                    Password Updated!
+                                </>
+                            ) : 'Update Password'}
+                        </button>
                     </div>
                 </div>
 
