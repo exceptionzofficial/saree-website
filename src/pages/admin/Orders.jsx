@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { Search, Filter, Eye, Check, X, ChevronDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, Filter, Eye, Check, X, ChevronDown, FileText } from 'lucide-react';
 import { useOrders } from '../../context/OrderContext';
+import { generateInvoice } from '../../utils/invoiceGenerator';
+import logoImg from '../../assets/logo.png';
 import './Orders.css';
 
 const AdminOrders = () => {
@@ -8,7 +10,8 @@ const AdminOrders = () => {
         orders,
         updateOrderStatus,
         verifyPayment,
-        rejectPayment
+        rejectPayment,
+        settings
     } = useOrders();
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -16,6 +19,22 @@ const AdminOrders = () => {
     const [paymentFilter, setPaymentFilter] = useState('');
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [viewingScreenshot, setViewingScreenshot] = useState(null);
+    const [logoBase64, setLogoBase64] = useState(null);
+
+    // Load logo and convert to base64 for PDF
+    useEffect(() => {
+        const img = new Image();
+        img.src = logoImg;
+        img.crossOrigin = 'Anonymous'; // To avoid CORS issues if logo is from a different domain
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            setLogoBase64(canvas.toDataURL('image/png'));
+        };
+    }, []);
 
     const filteredOrders = orders.filter(order => {
         const orderIdVal = order.orderId || order.id || '';
@@ -58,6 +77,10 @@ const AdminOrders = () => {
         if (selectedOrder && (selectedOrder.orderId === orderId || selectedOrder.id === orderId)) {
             setSelectedOrder({ ...selectedOrder, paymentStatus: 'rejected' });
         }
+    };
+
+    const handleGenerateInvoice = (order) => {
+        generateInvoice(order, settings, logoBase64);
     };
 
     const statusOptions = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
@@ -156,12 +179,23 @@ const AdminOrders = () => {
                     <div className="admin-orders__details">
                         <div className="admin-orders__details-header">
                             <h2>Order Details</h2>
-                            <button
-                                className="admin-orders__details-close"
-                                onClick={() => setSelectedOrder(null)}
-                            >
-                                <X size={20} />
-                            </button>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => handleGenerateInvoice(selectedOrder)}
+                                    title="Download Invoice"
+                                    style={{ padding: '8px 16px' }}
+                                >
+                                    <FileText size={18} />
+                                    Invoice
+                                </button>
+                                <button
+                                    className="admin-orders__details-close"
+                                    onClick={() => setSelectedOrder(null)}
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
                         </div>
 
                         <div className="admin-orders__details-content">
