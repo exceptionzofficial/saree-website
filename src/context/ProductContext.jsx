@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { products as initialProducts, categories as fallbackCategories, colors } from '../data/products';
 import { productsAPI, categoriesAPI } from '../services/api';
+import { colors } from '../data/products';
 
 const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState(fallbackCategories);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [useAPI, setUseAPI] = useState(true);
@@ -49,24 +49,20 @@ export const ProductProvider = ({ children }) => {
                 setProducts(apiProducts.map(normalizeProduct));
                 setUseAPI(true);
             } else {
-                setProducts(initialProducts.map(normalizeProduct));
-                setUseAPI(false);
+                setProducts([]);
+                setUseAPI(true); // Still using API architecture even if empty
             }
 
             // Set categories
             if (apiCategories && apiCategories.length > 0) {
                 setCategories(apiCategories);
             } else {
-                setCategories(fallbackCategories);
+                setCategories([]);
             }
         } catch (err) {
-            console.warn('API unavailable, using local data:', err.message);
-            setProducts(initialProducts.map(p => ({
-                ...p,
-                discountPrice: p.discountPrice || p.price || 0,
-                price: p.price || p.originalPrice || 0,
-            })));
-            setCategories(fallbackCategories);
+            console.warn('API unavailable:', err.message);
+            setProducts([]);
+            setCategories([]);
             setUseAPI(false);
         }
 
