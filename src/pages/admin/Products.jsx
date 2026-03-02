@@ -185,8 +185,8 @@ const AdminProducts = () => {
                 name: formData.name,
                 slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
                 description: formData.description,
-                price: parseFloat(formData.price),
-                originalPrice: parseFloat(formData.originalPrice) || parseFloat(formData.price),
+                price: parseFloat(formData.price) || 0,
+                originalPrice: parseFloat(formData.originalPrice) || parseFloat(formData.price) || 0,
                 category: categoryToUse,
                 material: formData.material,
                 fabric: formData.material, // Alias for compatibility with ProductDetail
@@ -402,26 +402,24 @@ const AdminProducts = () => {
                             </div>
 
                             <div className="admin-products__field">
-                                <label>Description *</label>
+                                <label>Description</label>
                                 <textarea
                                     name="description"
                                     value={formData.description}
                                     onChange={handleChange}
                                     rows={3}
-                                    required
                                 />
                             </div>
 
                             <div className="admin-products__form-row">
                                 <div className="admin-products__field">
-                                    <label>Selling Price (₹) *</label>
+                                    <label>Selling Price (₹)</label>
                                     <input
                                         type="number"
                                         name="price"
                                         value={formData.price}
                                         onChange={handleChange}
                                         min="0"
-                                        required
                                     />
                                 </div>
                                 <div className="admin-products__field">
@@ -439,12 +437,11 @@ const AdminProducts = () => {
 
                             <div className="admin-products__form-row">
                                 <div className="admin-products__field">
-                                    <label>Category *</label>
+                                    <label>Category</label>
                                     <select
                                         name="category"
                                         value={formData.category}
                                         onChange={handleChange}
-                                        required
                                     >
                                         <option value="">Select Category</option>
                                         {categories.map(cat => (
@@ -475,14 +472,13 @@ const AdminProducts = () => {
                                     )}
                                 </div>
                                 <div className="admin-products__field">
-                                    <label>Material *</label>
+                                    <label>Material</label>
                                     <input
                                         type="text"
                                         name="material"
                                         value={formData.material}
                                         onChange={handleChange}
                                         placeholder="e.g., Pure Silk"
-                                        required
                                     />
                                 </div>
                             </div>
