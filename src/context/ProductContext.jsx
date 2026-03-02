@@ -41,7 +41,7 @@ export const ProductProvider = ({ children }) => {
                 tags: Array.isArray(p.tags) ? p.tags : [],
                 applicablePlans: Array.isArray(p.applicablePlans) ? p.applicablePlans :
                     (typeof p.applicablePlans === 'string' ? JSON.parse(p.applicablePlans) : []),
-                hideFromShop: p.hideFromShop === true || p.hideFromShop === 'true' || (Array.isArray(p.applicablePlans) && p.applicablePlans.length > 0)
+                hideFromShop: p.hideFromShop === true || p.hideFromShop === 'true'
             });
 
             // Set products
@@ -216,7 +216,7 @@ export const ProductProvider = ({ children }) => {
         loadData();
     };
 
-    const addCategory = async (categoryData) => {
+    const addCategory = async (categoryData, file = null) => {
         try {
             const formData = new FormData();
             Object.keys(categoryData).forEach(key => {
@@ -224,12 +224,48 @@ export const ProductProvider = ({ children }) => {
                     formData.append(key, categoryData[key]);
                 }
             });
+            if (file) {
+                formData.append('image', file);
+            }
 
             const newCategory = await categoriesAPI.create(formData);
             setCategories(prev => [...prev, newCategory]);
             return newCategory;
         } catch (err) {
             console.error('Error adding category:', err);
+            throw err;
+        }
+    };
+
+    const updateCategory = async (id, categoryData, file = null) => {
+        try {
+            const formData = new FormData();
+            Object.keys(categoryData).forEach(key => {
+                if (key === 'image' && typeof categoryData[key] === 'string') {
+                    formData.append('existingImage', categoryData[key]);
+                } else if (categoryData[key] !== undefined && categoryData[key] !== null) {
+                    formData.append(key, categoryData[key]);
+                }
+            });
+            if (file) {
+                formData.append('image', file);
+            }
+
+            const updatedCategory = await categoriesAPI.update(id, formData);
+            setCategories(prev => prev.map(cat => cat.id === id ? updatedCategory : cat));
+            return updatedCategory;
+        } catch (err) {
+            console.error('Error updating category:', err);
+            throw err;
+        }
+    };
+
+    const deleteCategory = async (id) => {
+        try {
+            await categoriesAPI.delete(id);
+            setCategories(prev => prev.filter(cat => cat.id !== id));
+        } catch (err) {
+            console.error('Error deleting category:', err);
             throw err;
         }
     };
@@ -254,6 +290,8 @@ export const ProductProvider = ({ children }) => {
         deleteProduct,
         refreshProducts,
         addCategory,
+        updateCategory,
+        deleteCategory,
     };
 
     return (

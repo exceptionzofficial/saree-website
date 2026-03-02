@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
-import { Plus, Search, Edit2, Trash2, X, Upload, Image } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Search, Edit2, Trash2, X, Upload, Image, Layers } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
 import { useOrders } from '../../context/OrderContext';
 import './Products.css';
@@ -7,6 +8,7 @@ import './Products.css';
 const AdminProducts = () => {
     const { products, categories, addProduct, updateProduct, deleteProduct, addCategory, useAPI } = useProducts();
     const { settings } = useOrders();
+    const navigate = useNavigate();
     const membershipPlans = settings?.membershipPlans || [];
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -41,6 +43,8 @@ const AdminProducts = () => {
 
     const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
+    const [newCategoryImage, setNewCategoryImage] = useState(null);
+    const [newCategoryImagePreview, setNewCategoryImagePreview] = useState('');
 
     const filteredProducts = products.filter(product => {
         const matchesSearch = !searchTerm || (product.name || '').toLowerCase().includes(searchTerm.toLowerCase());
@@ -75,6 +79,8 @@ const AdminProducts = () => {
         setImagePreviewUrls([]);
         setShowNewCategoryInput(false);
         setNewCategoryName('');
+        setNewCategoryImage(null);
+        setNewCategoryImagePreview('');
     };
 
     const openModal = (product = null) => {
@@ -177,8 +183,8 @@ const AdminProducts = () => {
                     name: newCategoryName.trim(),
                     description: `Category for ${newCategoryName.trim()}`,
                     order: categories.length + 1
-                });
-                categoryToUse = newCat.id || newCat.slug;
+                }, newCategoryImage);
+                categoryToUse = newCat.id || newCat.slug || newCat._id;
             }
 
             const productData = {
@@ -200,7 +206,7 @@ const AdminProducts = () => {
                 featured: formData.featured,
                 bestseller: formData.bestseller,
                 applicablePlans: formData.applicablePlans,
-                hideFromShop: formData.hideFromShop || (formData.applicablePlans?.length > 0),
+                hideFromShop: formData.hideFromShop,
                 images: formData.existingImages
             };
 
@@ -257,10 +263,16 @@ const AdminProducts = () => {
                         {useAPI && <span className="admin-products__api-badge">● Live</span>}
                     </p>
                 </div>
-                <button className="btn btn-primary" onClick={() => openModal()}>
-                    <Plus size={18} />
-                    Add Product
-                </button>
+                <div className="admin-products__header-actions">
+                    <button className="btn btn-outline" onClick={() => navigate('/_gurusareesadmin_@_/categories')}>
+                        <Layers size={18} />
+                        Manage Categories
+                    </button>
+                    <button className="btn btn-primary" onClick={() => openModal()}>
+                        <Plus size={18} />
+                        Add Product
+                    </button>
+                </div>
             </div>
 
             {/* Filters */}
@@ -377,297 +389,325 @@ const AdminProducts = () => {
                             </button>
                         </div>
 
-                        <form className="admin-products__form" onSubmit={handleSubmit}>
-                            <div className="admin-products__form-row">
-                                <div className="admin-products__field">
-                                    <label>Product Name *</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        required
-                                    />
+                        <form className="admin-products__modal-form" onSubmit={handleSubmit}>
+                            <div className="admin-products__modal-body">
+                                <div className="admin-products__form-row">
+                                    <div className="admin-products__field">
+                                        <label>Product Name *</label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="admin-products__field">
+                                        <label>Slug (URL)</label>
+                                        <input
+                                            type="text"
+                                            name="slug"
+                                            value={formData.slug}
+                                            onChange={handleChange}
+                                            placeholder="auto-generated if left empty"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="admin-products__field">
-                                    <label>Slug (URL)</label>
-                                    <input
-                                        type="text"
-                                        name="slug"
-                                        value={formData.slug}
-                                        onChange={handleChange}
-                                        placeholder="auto-generated if left empty"
-                                    />
-                                </div>
-                            </div>
 
-                            <div className="admin-products__field">
-                                <label>Description</label>
-                                <textarea
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                    rows={3}
-                                />
-                            </div>
-
-                            <div className="admin-products__form-row">
                                 <div className="admin-products__field">
-                                    <label>Selling Price (₹)</label>
-                                    <input
-                                        type="number"
-                                        name="price"
-                                        value={formData.price}
+                                    <label>Description</label>
+                                    <textarea
+                                        name="description"
+                                        value={formData.description}
                                         onChange={handleChange}
-                                        min="0"
+                                        rows={3}
                                     />
                                 </div>
+
+                                <div className="admin-products__form-row">
+                                    <div className="admin-products__field">
+                                        <label>Selling Price (₹)</label>
+                                        <input
+                                            type="number"
+                                            name="price"
+                                            value={formData.price}
+                                            onChange={handleChange}
+                                            min="0"
+                                        />
+                                    </div>
+                                    <div className="admin-products__field">
+                                        <label>Original Price (₹)</label>
+                                        <input
+                                            type="number"
+                                            name="originalPrice"
+                                            value={formData.originalPrice}
+                                            onChange={handleChange}
+                                            min="0"
+                                            placeholder="For showing discount"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="admin-products__form-row">
+                                    <div className="admin-products__field">
+                                        <label>Category</label>
+                                        <select
+                                            name="category"
+                                            value={formData.category}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="">Select Category</option>
+                                            {categories.map(cat => (
+                                                <option key={cat.id} value={cat.id || cat.slug}>{cat.name}</option>
+                                            ))}
+                                            <option value="new">+ Add New Category...</option>
+                                        </select>
+                                        {showNewCategoryInput && (
+                                            <div className="admin-products__new-category-box">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Category name"
+                                                    value={newCategoryName}
+                                                    onChange={(e) => setNewCategoryName(e.target.value)}
+                                                    autoFocus
+                                                />
+                                                <div className="admin-products__new-category-image">
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files[0];
+                                                            if (file) {
+                                                                setNewCategoryImage(file);
+                                                                const reader = new FileReader();
+                                                                reader.onloadend = () => setNewCategoryImagePreview(reader.result);
+                                                                reader.readAsDataURL(file);
+                                                            }
+                                                        }}
+                                                        id="new-cat-img"
+                                                        style={{ display: 'none' }}
+                                                    />
+                                                    <label htmlFor="new-cat-img" className="admin-products__new-category-upload-btn">
+                                                        <Upload size={14} />
+                                                        {newCategoryImage ? 'Change Image' : 'Add Image'}
+                                                    </label>
+                                                    {newCategoryImagePreview && (
+                                                        <img src={newCategoryImagePreview} alt="Preview" className="admin-products__new-category-preview" />
+                                                    )}
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-ghost btn-sm"
+                                                    onClick={() => {
+                                                        setShowNewCategoryInput(false);
+                                                        setNewCategoryName('');
+                                                        setNewCategoryImage(null);
+                                                        setNewCategoryImagePreview('');
+                                                    }}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="admin-products__field">
+                                        <label>Material</label>
+                                        <input
+                                            type="text"
+                                            name="material"
+                                            value={formData.material}
+                                            onChange={handleChange}
+                                            placeholder="e.g., Pure Silk"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="admin-products__form-row">
+                                    <div className="admin-products__field">
+                                        <label>Color</label>
+                                        <input
+                                            type="text"
+                                            name="color"
+                                            value={formData.color}
+                                            onChange={handleChange}
+                                            placeholder="e.g., Red, Blue"
+                                        />
+                                    </div>
+                                    <div className="admin-products__field">
+                                        <label>Weight</label>
+                                        <input
+                                            type="text"
+                                            name="weight"
+                                            value={formData.weight}
+                                            onChange={handleChange}
+                                            placeholder="e.g., 500g"
+                                        />
+                                    </div>
+
+                                </div>
+
+                                <div className="admin-products__section-divider">
+                                    <span>Additional Details</span>
+                                </div>
+
+                                <div className="admin-products__form-row">
+                                    <div className="admin-products__field">
+                                        <label>Saree Length</label>
+                                        <input
+                                            type="text"
+                                            name="length"
+                                            value={formData.length}
+                                            onChange={handleChange}
+                                            placeholder="e.g., 6.3 meters"
+                                        />
+                                    </div>
+                                    <div className="admin-products__field">
+                                        <label>Blouse Piece</label>
+                                        <input
+                                            type="text"
+                                            name="blouse"
+                                            value={formData.blouse}
+                                            onChange={handleChange}
+                                            placeholder="e.g., 0.8 meters"
+                                        />
+                                    </div>
+                                </div>
+
                                 <div className="admin-products__field">
-                                    <label>Original Price (₹)</label>
-                                    <input
-                                        type="number"
-                                        name="originalPrice"
-                                        value={formData.originalPrice}
+                                    <label>Features (Comma separated)</label>
+                                    <textarea
+                                        name="features"
+                                        value={formData.features}
                                         onChange={handleChange}
-                                        min="0"
-                                        placeholder="For showing discount"
+                                        rows={2}
+                                        placeholder="e.g., Pure silk, Handwoven, Zari border"
                                     />
                                 </div>
-                            </div>
 
-                            <div className="admin-products__form-row">
                                 <div className="admin-products__field">
-                                    <label>Category</label>
-                                    <select
-                                        name="category"
-                                        value={formData.category}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="">Select Category</option>
-                                        {categories.map(cat => (
-                                            <option key={cat.id} value={cat.id || cat.slug}>{cat.name}</option>
+                                    <label>Available for Membership Plans</label>
+                                    <div className="admin-products__plans-selection">
+                                        {membershipPlans.map(plan => (
+                                            <label key={plan.id} className="admin-products__plan-checkbox">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={formData.applicablePlans?.includes(plan.id)}
+                                                    onChange={(e) => {
+                                                        const newPlans = e.target.checked
+                                                            ? [...(formData.applicablePlans || []), plan.id]
+                                                            : (formData.applicablePlans || []).filter(id => id !== plan.id);
+                                                        setFormData({ ...formData, applicablePlans: newPlans });
+                                                    }}
+                                                />
+                                                <span>{plan.name}</span>
+                                            </label>
                                         ))}
-                                        <option value="new">+ Add New Category...</option>
-                                    </select>
-                                    {showNewCategoryInput && (
-                                        <div className="admin-products__new-category">
-                                            <input
-                                                type="text"
-                                                placeholder="Enter new category name"
-                                                value={newCategoryName}
-                                                onChange={(e) => setNewCategoryName(e.target.value)}
-                                                autoFocus
-                                            />
-                                            <button
-                                                type="button"
-                                                className="btn btn-outline btn-sm"
-                                                onClick={() => {
-                                                    setShowNewCategoryInput(false);
-                                                    setNewCategoryName('');
-                                                }}
-                                            >
-                                                Cancel
-                                            </button>
+                                        {membershipPlans.length === 0 && (
+                                            <p className="admin-products__hint">No membership plans configured in Settings</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="admin-products__field">
+                                    <label>Care Instructions</label>
+                                    <textarea
+                                        name="care"
+                                        value={formData.care}
+                                        onChange={handleChange}
+                                        rows={2}
+                                        placeholder="e.g., Dry clean only, Do not bleach"
+                                    />
+                                </div>
+
+                                {/* Image Upload Section */}
+                                <div className="admin-products__field">
+                                    <label>Product Images</label>
+                                    <div className="admin-products__image-upload">
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={handleFileSelect}
+                                            accept="image/*"
+                                            multiple
+                                            style={{ display: 'none' }}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="admin-products__upload-btn"
+                                            onClick={() => fileInputRef.current?.click()}
+                                        >
+                                            <Upload size={20} />
+                                            Upload Images
+                                        </button>
+                                        <span className="admin-products__upload-hint">
+                                            {useAPI ? 'Images will be uploaded to cloud storage' : 'Supports JPG, PNG, WebP'}
+                                        </span>
+                                    </div>
+
+                                    {/* Image Previews */}
+                                    {imagePreviewUrls.length > 0 && (
+                                        <div className="admin-products__image-previews">
+                                            {imagePreviewUrls.map((url, index) => (
+                                                <div key={index} className="admin-products__image-preview">
+                                                    <img src={url} alt={`Preview ${index + 1}`} />
+                                                    <button
+                                                        type="button"
+                                                        className="admin-products__image-remove"
+                                                        onClick={() => removeImage(index)}
+                                                    >
+                                                        <X size={14} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {imagePreviewUrls.length === 0 && (
+                                        <div className="admin-products__no-images">
+                                            <Image size={32} />
+                                            <p>No images added yet</p>
                                         </div>
                                     )}
                                 </div>
-                                <div className="admin-products__field">
-                                    <label>Material</label>
-                                    <input
-                                        type="text"
-                                        name="material"
-                                        value={formData.material}
-                                        onChange={handleChange}
-                                        placeholder="e.g., Pure Silk"
-                                    />
+
+                                <div className="admin-products__checkboxes">
+                                    <label className="admin-products__checkbox">
+                                        <input
+                                            type="checkbox"
+                                            name="inStock"
+                                            checked={formData.inStock}
+                                            onChange={handleChange}
+                                        />
+                                        <span>In Stock</span>
+                                    </label>
+                                    <label className="admin-products__checkbox">
+                                        <input
+                                            type="checkbox"
+                                            name="featured"
+                                            checked={formData.featured}
+                                            onChange={handleChange}
+                                        />
+                                        <span>Featured</span>
+                                    </label>
+                                    <label className="admin-products__checkbox">
+                                        <input
+                                            type="checkbox"
+                                            name="bestseller"
+                                            checked={formData.bestseller}
+                                            onChange={handleChange}
+                                        />
+                                        <span>Bestseller</span>
+                                    </label>
+                                    <label className="admin-products__checkbox">
+                                        <input
+                                            type="checkbox"
+                                            name="hideFromShop"
+                                            checked={formData.hideFromShop}
+                                            onChange={handleChange}
+                                        />
+                                        <span>Hide from Shop (Exclusive)</span>
+                                    </label>
                                 </div>
-                            </div>
-
-                            <div className="admin-products__form-row">
-                                <div className="admin-products__field">
-                                    <label>Color</label>
-                                    <input
-                                        type="text"
-                                        name="color"
-                                        value={formData.color}
-                                        onChange={handleChange}
-                                        placeholder="e.g., Red, Blue"
-                                    />
-                                </div>
-                                <div className="admin-products__field">
-                                    <label>Weight</label>
-                                    <input
-                                        type="text"
-                                        name="weight"
-                                        value={formData.weight}
-                                        onChange={handleChange}
-                                        placeholder="e.g., 500g"
-                                    />
-                                </div>
-
-                            </div>
-
-                            <div className="admin-products__section-divider">
-                                <span>Additional Details</span>
-                            </div>
-
-                            <div className="admin-products__form-row">
-                                <div className="admin-products__field">
-                                    <label>Saree Length</label>
-                                    <input
-                                        type="text"
-                                        name="length"
-                                        value={formData.length}
-                                        onChange={handleChange}
-                                        placeholder="e.g., 6.3 meters"
-                                    />
-                                </div>
-                                <div className="admin-products__field">
-                                    <label>Blouse Piece</label>
-                                    <input
-                                        type="text"
-                                        name="blouse"
-                                        value={formData.blouse}
-                                        onChange={handleChange}
-                                        placeholder="e.g., 0.8 meters"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="admin-products__field">
-                                <label>Features (Comma separated)</label>
-                                <textarea
-                                    name="features"
-                                    value={formData.features}
-                                    onChange={handleChange}
-                                    rows={2}
-                                    placeholder="e.g., Pure silk, Handwoven, Zari border"
-                                />
-                            </div>
-
-                            <div className="admin-products__field">
-                                <label>Available for Membership Plans</label>
-                                <div className="admin-products__plans-selection">
-                                    {membershipPlans.map(plan => (
-                                        <label key={plan.id} className="admin-products__plan-checkbox">
-                                            <input
-                                                type="checkbox"
-                                                checked={formData.applicablePlans?.includes(plan.id)}
-                                                onChange={(e) => {
-                                                    const newPlans = e.target.checked
-                                                        ? [...(formData.applicablePlans || []), plan.id]
-                                                        : (formData.applicablePlans || []).filter(id => id !== plan.id);
-                                                    setFormData({ ...formData, applicablePlans: newPlans });
-                                                }}
-                                            />
-                                            <span>{plan.name}</span>
-                                        </label>
-                                    ))}
-                                    {membershipPlans.length === 0 && (
-                                        <p className="admin-products__hint">No membership plans configured in Settings</p>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="admin-products__field">
-                                <label>Care Instructions</label>
-                                <textarea
-                                    name="care"
-                                    value={formData.care}
-                                    onChange={handleChange}
-                                    rows={2}
-                                    placeholder="e.g., Dry clean only, Do not bleach"
-                                />
-                            </div>
-
-                            {/* Image Upload Section */}
-                            <div className="admin-products__field">
-                                <label>Product Images</label>
-                                <div className="admin-products__image-upload">
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        onChange={handleFileSelect}
-                                        accept="image/*"
-                                        multiple
-                                        style={{ display: 'none' }}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="admin-products__upload-btn"
-                                        onClick={() => fileInputRef.current?.click()}
-                                    >
-                                        <Upload size={20} />
-                                        Upload Images
-                                    </button>
-                                    <span className="admin-products__upload-hint">
-                                        {useAPI ? 'Images will be uploaded to cloud storage' : 'Supports JPG, PNG, WebP'}
-                                    </span>
-                                </div>
-
-                                {/* Image Previews */}
-                                {imagePreviewUrls.length > 0 && (
-                                    <div className="admin-products__image-previews">
-                                        {imagePreviewUrls.map((url, index) => (
-                                            <div key={index} className="admin-products__image-preview">
-                                                <img src={url} alt={`Preview ${index + 1}`} />
-                                                <button
-                                                    type="button"
-                                                    className="admin-products__image-remove"
-                                                    onClick={() => removeImage(index)}
-                                                >
-                                                    <X size={14} />
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {imagePreviewUrls.length === 0 && (
-                                    <div className="admin-products__no-images">
-                                        <Image size={32} />
-                                        <p>No images added yet</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="admin-products__checkboxes">
-                                <label className="admin-products__checkbox">
-                                    <input
-                                        type="checkbox"
-                                        name="inStock"
-                                        checked={formData.inStock}
-                                        onChange={handleChange}
-                                    />
-                                    <span>In Stock</span>
-                                </label>
-                                <label className="admin-products__checkbox">
-                                    <input
-                                        type="checkbox"
-                                        name="featured"
-                                        checked={formData.featured}
-                                        onChange={handleChange}
-                                    />
-                                    <span>Featured</span>
-                                </label>
-                                <label className="admin-products__checkbox">
-                                    <input
-                                        type="checkbox"
-                                        name="bestseller"
-                                        checked={formData.bestseller}
-                                        onChange={handleChange}
-                                    />
-                                    <span>Bestseller</span>
-                                </label>
-                                <label className="admin-products__checkbox">
-                                    <input
-                                        type="checkbox"
-                                        name="hideFromShop"
-                                        checked={formData.hideFromShop}
-                                        onChange={handleChange}
-                                    />
-                                    <span>Hide from Shop (Exclusive)</span>
-                                </label>
                             </div>
 
                             <div className="admin-products__form-actions">

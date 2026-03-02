@@ -8,7 +8,8 @@ import {
     X,
     Users,
     Gift,
-    BarChart3
+    BarChart3,
+    Layers
 } from 'lucide-react';
 import './AdminSidebar.css';
 
@@ -24,6 +25,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { to: '/_gurusareesadmin_@_/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
         { to: '/_gurusareesadmin_@_/analytics', icon: <BarChart3 size={20} />, label: 'Analytics' },
         { to: '/_gurusareesadmin_@_/products', icon: <Package size={20} />, label: 'Products' },
+        { to: '/_gurusareesadmin_@_/categories', icon: <Layers size={20} />, label: 'Categories' },
         { to: '/_gurusareesadmin_@_/orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
         { to: '/_gurusareesadmin_@_/users', icon: <Users size={20} />, label: 'Users' },
         { to: '/_gurusareesadmin_@_/memberships', icon: <Users size={20} />, label: 'Memberships' },
