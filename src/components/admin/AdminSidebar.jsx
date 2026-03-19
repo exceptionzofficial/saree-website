@@ -9,7 +9,8 @@ import {
     Users,
     Gift,
     BarChart3,
-    Layers
+    Layers,
+    FileText
 } from 'lucide-react';
 import './AdminSidebar.css';
 
@@ -27,6 +28,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { to: '/_gurusareesadmin_@_/products', icon: <Package size={20} />, label: 'Products' },
         { to: '/_gurusareesadmin_@_/categories', icon: <Layers size={20} />, label: 'Categories' },
         { to: '/_gurusareesadmin_@_/orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
+        { to: '/_gurusareesadmin_@_/invoice-generator', icon: <FileText size={20} />, label: 'Invoice Generator' },
         { to: '/_gurusareesadmin_@_/users', icon: <Users size={20} />, label: 'Users' },
         { to: '/_gurusareesadmin_@_/memberships', icon: <Users size={20} />, label: 'Memberships' },
         { to: '/_gurusareesadmin_@_/reward-claims', icon: <Gift size={20} />, label: 'Reward Claims' },

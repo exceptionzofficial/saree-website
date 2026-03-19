@@ -44,6 +44,7 @@ import RewardClaims from './pages/admin/RewardClaims';
 import AdminSettings from './pages/admin/Settings';
 import Analytics from './pages/admin/Analytics';
 import AdminCategories from './pages/admin/Categories';
+import InvoiceGenerator from './pages/admin/InvoiceGenerator';
 
 import './App.css';
 
@@ -179,6 +180,7 @@ function App() {
                     <Route path="memberships" element={<AdminMemberships />} />
                     <Route path="reward-claims" element={<RewardClaims />} />
                     <Route path="analytics" element={<Analytics />} />
+                    <Route path="invoice-generator" element={<InvoiceGenerator />} />
                     <Route path="settings" element={<AdminSettings />} />
                   </Route>
                 </Routes>
