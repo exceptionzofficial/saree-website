@@ -40,13 +40,13 @@ export const generateInvoice = (order, settings, logo) => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
-    doc.text(settings.storeName || 'Gurubagavan Sarees', textXPostion, 20);
-
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(settings.storeEmail || '', textXPostion, 28);
-    doc.text(settings.storePhone || '', textXPostion, 34);
-
+    doc.text(settings.storeName || 'Gurubagavan Sarees', textXPostion, 24);
+    if (settings.gstNumber || settings.gst) {
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`GST: ${settings.gstNumber || settings.gst}`, textXPostion, 31);
+    }
+    
     // Invoice Title
     yPos = 55;
     doc.setTextColor(0, 0, 0);
@@ -69,12 +69,26 @@ export const generateInvoice = (order, settings, logo) => {
     doc.text('From:', 15, yPos);
     yPos += 6;
     doc.setFont('helvetica', 'normal');
+    
+    // Store Name below 'From:' if user wants it there too (optional, but storeAddress is usually name + lines)
+    // Actually, storeName is already in header, let's keep details below address.
+    
     if (settings.storeAddress) {
         const addressLines = doc.splitTextToSize(settings.storeAddress, 70);
         addressLines.forEach(line => {
             doc.text(line, 15, yPos);
             yPos += 5;
         });
+    }
+    
+    // Add Email and Phone to From section
+    if (settings.storeEmail) {
+        doc.text(`Email: ${settings.storeEmail}`, 15, yPos);
+        yPos += 5;
+    }
+    if (settings.storePhone) {
+        doc.text(`Phone: ${settings.storePhone}`, 15, yPos);
+        yPos += 5;
     }
 
     // Customer Details
@@ -99,93 +113,112 @@ export const generateInvoice = (order, settings, logo) => {
 
     // Items Table
     yPos += 10;
-    const tableStart = yPos;
+    const tableHeaderY = yPos;
 
     // Table Header
-    doc.setFillColor(240, 240, 240);
-    doc.rect(15, yPos - 5, pageWidth - 30, 10, 'F');
+    doc.setFillColor(245, 245, 245);
+    doc.rect(15, yPos - 6, pageWidth - 30, 10, 'F');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
-    doc.text('Item', 20, yPos);
-    doc.text('Qty', pageWidth - 80, yPos, { align: 'right' });
-    doc.text('Price', pageWidth - 50, yPos, { align: 'right' });
-    doc.text('Total', pageWidth - 20, yPos, { align: 'right' });
+    doc.setTextColor(50, 50, 50);
+    
+    // Column positions
+    const colItem = 20;
+    const colQty = 140;
+    const colPrice = 170;
+    const colTotal = 195;
+
+    doc.text('Item Description', colItem, yPos);
+    doc.text('Qty', colQty, yPos, { align: 'right' });
+    doc.text('Price', colPrice, yPos, { align: 'right' });
+    doc.text('Total', colTotal, yPos, { align: 'right' });
 
     yPos += 8;
     doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
 
     // Table Rows
     order.items.forEach((item, index) => {
-        if (yPos > pageHeight - 60) {
+        // Calculate name height
+        const itemName = item.name || '';
+        const nameLines = doc.splitTextToSize(itemName, 90);
+        const itemHeight = Math.max(nameLines.length * 5, 8);
+
+        if (yPos + itemHeight > pageHeight - 50) {
             doc.addPage();
-            yPos = 20;
+            yPos = 25;
+            // Redraw Header on new page
+            doc.setFillColor(245, 245, 245);
+            doc.rect(15, yPos - 6, pageWidth - 30, 10, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.text('Item Description', colItem, yPos);
+            doc.text('Qty', colQty, yPos, { align: 'right' });
+            doc.text('Price', colPrice, yPos, { align: 'right' });
+            doc.text('Total', colTotal, yPos, { align: 'right' });
+            yPos += 8;
+            doc.setFont('helvetica', 'normal');
         }
 
-        const itemName = item.name || '';
-        const nameLines = doc.splitTextToSize(itemName, 100);
-
         nameLines.forEach((line, lineIndex) => {
-            doc.text(line, 20, yPos + (lineIndex * 5));
+            doc.text(line, colItem, yPos + (lineIndex * 5));
         });
 
         const itemPrice = item.discountPrice || item.price || 0;
-        doc.text(item.quantity?.toString() || '1', pageWidth - 80, yPos, { align: 'right' });
-        doc.text(`Rs. ${itemPrice.toLocaleString('en-IN')}`, pageWidth - 50, yPos, { align: 'right' });
-        doc.text(`Rs. ${(itemPrice * (item.quantity || 1)).toLocaleString('en-IN')}`, pageWidth - 20, yPos, { align: 'right' });
+        doc.text(item.quantity?.toString() || '1', colQty, yPos, { align: 'right' });
+        doc.text(`Rs. ${itemPrice.toLocaleString('en-IN')}`, colPrice, yPos, { align: 'right' });
+        doc.text(`Rs. ${(itemPrice * (item.quantity || 1)).toLocaleString('en-IN')}`, colTotal, yPos, { align: 'right' });
 
-        yPos += Math.max(nameLines.length * 5, 8);
+        yPos += itemHeight + 2;
 
-        // Draw separator line
-        if (index < order.items.length - 1) {
-            doc.setDrawColor(220, 220, 220);
-            doc.line(15, yPos - 2, pageWidth - 15, yPos - 2);
-        }
+        // Draw light separator line
+        doc.setDrawColor(230, 230, 230);
+        doc.line(15, yPos - 1, pageWidth - 15, yPos - 1);
+        yPos += 2;
     });
 
     // Total Section
     yPos += 5;
-    doc.setDrawColor(0, 0, 0);
-    doc.line(15, yPos, pageWidth - 15, yPos);
+    if (yPos > pageHeight - 60) {
+        doc.addPage();
+        yPos = 20;
+    }
+    
+    doc.setDrawColor(41, 84, 168); // Use primary color for final total line
+    doc.setLineWidth(0.5);
+    doc.line(pageWidth - 85, yPos, pageWidth - 15, yPos);
     yPos += 8;
 
     const subtotal = order.items.reduce((sum, item) => sum + ((item.discountPrice || item.price || 0) * (item.quantity || 1)), 0);
     const shipping = order.shippingCharge || 0;
     const total = order.total || (subtotal + shipping);
 
-    doc.setFont('helvetica', 'normal');
-    doc.text('Subtotal:', pageWidth - 60, yPos);
-    doc.text(`Rs. ${subtotal.toLocaleString('en-IN')}`, pageWidth - 20, yPos, { align: 'right' });
+    doc.setFontSize(10);
+    doc.text('Subtotal:', pageWidth - 75, yPos);
+    doc.text(`Rs. ${subtotal.toLocaleString('en-IN')}`, pageWidth - 15, yPos, { align: 'right' });
     yPos += 6;
 
     if (shipping > 0) {
-        doc.text('Shipping:', pageWidth - 60, yPos);
-        doc.text(`Rs. ${shipping.toLocaleString('en-IN')}`, pageWidth - 20, yPos, { align: 'right' });
+        doc.text('Shipping:', pageWidth - 75, yPos);
+        doc.text(`Rs. ${shipping.toLocaleString('en-IN')}`, pageWidth - 15, yPos, { align: 'right' });
         yPos += 6;
     }
 
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
-    doc.text('Total:', pageWidth - 60, yPos);
-    doc.text(`Rs. ${total.toLocaleString('en-IN')}`, pageWidth - 20, yPos, { align: 'right' });
+    doc.setTextColor(41, 84, 168);
+    doc.text('Grand Total:', pageWidth - 75, yPos);
+    doc.text(`Rs. ${total.toLocaleString('en-IN')}`, pageWidth - 15, yPos, { align: 'right' });
 
-
-
-    // Notes section
-    yPos += 15;
-    if (yPos > pageHeight - 50) {
+    // Computer Generated Note
+    yPos += 30;
+    if (yPos > pageHeight - 30) {
         doc.addPage();
-        yPos = 20;
+        yPos = 30;
     }
+    doc.setTextColor(150, 150, 150);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'italic');
-    doc.text('Thank you for shopping with us!', 15, yPos);
-
-    // Signature Section
-    yPos = pageHeight - 40;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.text('Authorized Signature', pageWidth - 60, yPos);
-    doc.line(pageWidth - 60, yPos + 5, pageWidth - 15, yPos + 5);
+    doc.text('This is a computer-generated invoice and does not require a physical signature.', pageWidth / 2, yPos, { align: 'center' });
 
     // Footer
     doc.setFontSize(8);

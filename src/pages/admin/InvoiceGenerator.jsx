@@ -24,6 +24,7 @@ const InvoiceGenerator = () => {
 
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [orderId, setOrderId] = useState(`OFF-${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
+    const [shippingCharge, setShippingCharge] = useState(settings.shippingCharge || 0);
 
     // Load logo and convert to base64 for PDF
     useEffect(() => {
@@ -99,11 +100,16 @@ const InvoiceGenerator = () => {
                 quantity: item.quantity,
                 discountPrice: item.price
             })),
-            total: calculateSubtotal() + (settings.shippingCharge || 0),
-            shippingCharge: settings.shippingCharge || 0
+            total: calculateSubtotal() + shippingCharge,
+            shippingCharge: shippingCharge
         };
 
-        generateInvoice(order, settings, logoBase64);
+        const settingsWithGst = {
+            ...settings,
+            gstNumber: "33IHMPB2726R1ZV"
+        };
+
+        generateInvoice(order, settingsWithGst, logoBase64);
     };
 
     return (
@@ -242,13 +248,21 @@ const InvoiceGenerator = () => {
                                 <span>Subtotal</span>
                                 <span>₹{calculateSubtotal().toLocaleString()}</span>
                             </div>
-                            <div className="invoice-gen__summary-row">
+                            <div className="invoice-gen__summary-row shipping-edit">
                                 <span>Shipping Charge</span>
-                                <span>₹{(settings.shippingCharge || 0).toLocaleString()}</span>
+                                <div className="invoice-gen__shipping-input">
+                                    <span>₹</span>
+                                    <input
+                                        type="number"
+                                        value={shippingCharge}
+                                        onChange={(e) => setShippingCharge(parseFloat(e.target.value) || 0)}
+                                        min="0"
+                                    />
+                                </div>
                             </div>
                             <div className="invoice-gen__summary-row total">
                                 <span>Grand Total</span>
-                                <span>₹{(calculateSubtotal() + (settings.shippingCharge || 0)).toLocaleString()}</span>
+                                <span>₹{(calculateSubtotal() + shippingCharge).toLocaleString()}</span>
                             </div>
                         </div>
                         <button className="btn btn-primary btn-lg" onClick={handleGenerateInvoice}>
