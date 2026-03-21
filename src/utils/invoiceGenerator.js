@@ -188,14 +188,22 @@ export const generateInvoice = (order, settings, logo) => {
     doc.line(pageWidth - 85, yPos, pageWidth - 15, yPos);
     yPos += 8;
 
-    const subtotal = order.items.reduce((sum, item) => sum + ((item.discountPrice || item.price || 0) * (item.quantity || 1)), 0);
+    const subtotal = order.subtotal || order.items.reduce((sum, item) => sum + ((item.discountPrice || item.price || 0) * (item.quantity || 1)), 0);
+    const gstAmount = order.gstAmount || 0;
+    const gstPercentage = order.gstPercentage || 0;
     const shipping = order.shippingCharge || 0;
-    const total = order.total || (subtotal + shipping);
+    const total = order.total || (subtotal + gstAmount + shipping);
 
     doc.setFontSize(10);
     doc.text('Subtotal:', pageWidth - 75, yPos);
     doc.text(`Rs. ${subtotal.toLocaleString('en-IN')}`, pageWidth - 15, yPos, { align: 'right' });
     yPos += 6;
+
+    if (gstAmount > 0) {
+        doc.text(`GST (${gstPercentage}%):`, pageWidth - 75, yPos);
+        doc.text(`Rs. ${gstAmount.toLocaleString('en-IN')}`, pageWidth - 15, yPos, { align: 'right' });
+        yPos += 6;
+    }
 
     if (shipping > 0) {
         doc.text('Shipping:', pageWidth - 75, yPos);

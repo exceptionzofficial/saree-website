@@ -24,7 +24,8 @@ const InvoiceGenerator = () => {
 
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [orderId, setOrderId] = useState(`OFF-${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
-    const [shippingCharge, setShippingCharge] = useState(settings.shippingCharge || 0);
+    const [shippingCharge, setShippingCharge] = useState(0);
+    const [gstPercentage, setGstPercentage] = useState(5);
 
     // Load logo and convert to base64 for PDF
     useEffect(() => {
@@ -85,6 +86,9 @@ const InvoiceGenerator = () => {
             return;
         }
 
+        const subtotal = calculateSubtotal();
+        const gstAmount = subtotal * (gstPercentage / 100);
+
         const order = {
             id: orderId,
             orderId: orderId,
@@ -100,7 +104,10 @@ const InvoiceGenerator = () => {
                 quantity: item.quantity,
                 discountPrice: item.price
             })),
-            total: calculateSubtotal() + shippingCharge,
+            subtotal: subtotal,
+            gstPercentage: gstPercentage,
+            gstAmount: gstAmount,
+            total: subtotal + gstAmount + shippingCharge,
             shippingCharge: shippingCharge
         };
 
@@ -260,9 +267,26 @@ const InvoiceGenerator = () => {
                                     />
                                 </div>
                             </div>
+                            <div className="invoice-gen__summary-row shipping-edit">
+                                <span>GST Percentage</span>
+                                <div className="invoice-gen__shipping-input">
+                                    <input
+                                        type="number"
+                                        value={gstPercentage}
+                                        onChange={(e) => setGstPercentage(parseFloat(e.target.value) || 0)}
+                                        min="0"
+                                        max="100"
+                                    />
+                                    <span>%</span>
+                                </div>
+                            </div>
+                            <div className="invoice-gen__summary-row">
+                                <span>GST Amount</span>
+                                <span>₹{(calculateSubtotal() * (gstPercentage / 100)).toLocaleString()}</span>
+                            </div>
                             <div className="invoice-gen__summary-row total">
                                 <span>Grand Total</span>
-                                <span>₹{(calculateSubtotal() + shippingCharge).toLocaleString()}</span>
+                                <span>₹{(calculateSubtotal() + (calculateSubtotal() * (gstPercentage / 100)) + shippingCharge).toLocaleString()}</span>
                             </div>
                         </div>
                         <button className="btn btn-primary btn-lg" onClick={handleGenerateInvoice}>
